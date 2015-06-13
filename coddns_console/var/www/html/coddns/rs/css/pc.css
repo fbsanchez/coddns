@@ -229,17 +229,14 @@ footer a{
     text-decoration: none;
     color: #EC8606;
 }
-footer a:hover{
-    text-decoration: underline;
-}
 footer img{
     cursor: pointer;
     padding: 2px;
-    background: #fff;
-    border-radius: 5px;
+	width: 35px;
+	height: 35px;
 }
 footer img:hover{
-    box-shadow: 0 0 2px #AAA;
+    background-color: #AAA;
 }
 footer:hover {
     height: 15em;
