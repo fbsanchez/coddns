@@ -3,7 +3,7 @@ session_start();
 include_once ("include/config.php");
 require_once ("lib/ipv4.php");
 require_once ("lib/responsive.php");
-$_SESSION["email"] = "fborja.sanchez@artica.es";
+
 /**
  * Language selector
  *
@@ -152,13 +152,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <a class="pl<?php if (( isset ($_GET["z"])) && ($_GET["z"] == "downloads")) echo " pl_select";?>"
 	      href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>&z=downloads"><?php echo $text[$lan]["downloads"];?></a>
     <?php if (isset ($_SESSION["email"])) {?>
-<?php
-/*
         <a class="pl<?php if (( isset ($_GET["z"])) && ($_GET["z"] == "usermod")) echo " pl_select";?>"
 	      href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>&z=usermod"><?php echo $text[$lan]["nav_account"];?></a>
         <a class="pl" href="logout.php"><?php echo $text[$lan]["nav_logout"]; ?></a>
-*/
-?>
     <?php }?>
 
         <div class="lang">
@@ -205,9 +201,9 @@ else {
         case "downloads":
             include ("downloads.php");
             break;
-//        case "usermod":
-//           include ("usr/user_actions.php");
-//           break;
+        case "usermod":
+            include ("usr/user_actions.php");
+            break;
         default:
             include ("main.php");
             break;

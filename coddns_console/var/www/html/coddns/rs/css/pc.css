@@ -64,7 +64,7 @@ header div.img{
     position: relative;
     top: 0;
     left: 0;
-    background: url('/coddns/rs/img/artica_people.png') no-repeat center;
+    background: transparent url("/rs/img/coddns_225.png") no-repeat scroll center center;
 }
 header div#navigation {
     width: 100%;
