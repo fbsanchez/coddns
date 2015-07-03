@@ -1,12 +1,15 @@
 <?php
+
+require_once ("../include/config.php");
+
 if (! isset ($_SESSION["email"]) ){
-	header ("Location: /");
+	header ("Location: " . $config["html_root"]);
     exit(1);
 }
 
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
-    header ("Location: /?lang=es");
+    header ("Location: " . $config["html_root"] . "/?lang=es");
     exit (1);
 }
 
@@ -89,6 +92,6 @@ $text["de"]["send"] = "Change it";
     </ul>
     <div id="response"></div>
     </form>
-    <a href="/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
+    <a href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
 </section>
 </body>
