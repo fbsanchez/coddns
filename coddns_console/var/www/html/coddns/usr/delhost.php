@@ -16,10 +16,14 @@ require_once("lib/pgclient.php");
 <body>
 <?php
 if(! isset($_SESSION["email"]) ){
-    header ("Location: /");
+    header ("Location: " . $config["html_root"]);
     exit (1);
 }
 
+
+if (! isset ($_POST["delh"]) ){
+	die ("woops...");
+}
 
 $pgclient = new PgClient($db_config);
 
@@ -38,7 +42,7 @@ $out = shell_exec("dnsmgr d " . $host . " A");
 
 $pgclient->disconnect();
 
-echo "<div><p>Se ha eliminado " . $host . " correctamente<p><a href='/'>Volver</a></div>";
+echo "<div><p>Se ha eliminado " . $host . " correctamente<p><a href='" . $config["html_root"] . "/'>Volver</a></div>";
 
 session_write_close();
 ?>
@@ -48,6 +52,6 @@ session_write_close();
 
 <?php
 if (! strlen($out) > 0)
-    header("Location: /");
+    header("Location: " . $config["html_root"]);
 
 ?>

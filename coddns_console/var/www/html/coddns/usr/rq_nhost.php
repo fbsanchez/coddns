@@ -11,13 +11,13 @@ defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
 session_start();
 
 if (! isset ($_SESSION["email"]) ){
-    header ("Location: /");
+    header ("Location: /" . $config["html_root"]);
     exit(1);
 }
 
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
-    header ("Location: /?lang=es");
+    header ("Location: /" . $config["html_root"] . "?lang=es");
     exit (1);
 }
 
@@ -57,7 +57,7 @@ if (   (! isset ($_POST["h"])  )
     || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/',$_POST["h"])) ) {
 ?>
     <p><?php echo $text[$lan]["err_f"]; ?></p>
-    <a href="/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
+    <a href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
 <?php
     exit (1);
 }
@@ -82,19 +82,20 @@ $pgclient->exeq($q);
 if( $pgclient->lq_nresults() > 0 )
     die ("Ese nombre de host no est&aacute; disponible<br><a href='/'>Volver</a>");
 
+// LAUNCH DNS UPDATER
+$out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip);
+
 $q = "insert into hosts (oid, tag, ip) values ( (select id from usuarios where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), '" . $ip . "');";
 $pgclient->exeq($q);
 
 
-// LAUNCH DNS UPDATER
-$out = shell_exec("dnsmgr a " . $host . " A " . $ip);
 
 echo "Agregado correctamente [" .  $out . "] ";
 $pgclient->disconnect();
 session_write_close();
 
 if (! strlen($out) > 0)
-    header ("Location: /");
+    header ("Location: " . $config["html_root"]);
 
 
 ?>

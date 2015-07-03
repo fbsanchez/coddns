@@ -4,12 +4,12 @@ require_once("lib/pgclient.php");
 
 
 if (! isset ($_SESSION["email"])) {
-    header ("Location: /");
+    header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
-    header ("Location: /?lang=es");
+    header ("Location: " . $config["html_root"] . "/?lang=es");
     exit (1);
 }
 
@@ -93,14 +93,14 @@ $text["de"]["dberror"]       = "Wooops, please contact the administrator at foot
         }
         td.del{
             cursor: pointer;
-            background: url('/rs/img/delete.png') no-repeat center;
+            background: url('<?php echo $config["html_root"];?>/rs/img/delete.png') no-repeat center;
             background-size: 1em;
             width: 1.4em;
             height: 1.4em;
         }
         td.edit{
             cursor: pointer;
-            background: url('/rs/img/edit.png') no-repeat center;
+            background: url('<?php echo $config["html_root"];?>/rs/img/edit.png') no-repeat center;
             background-size: 1em;
             width: 1.4em;
             height: 1.4em;
@@ -164,11 +164,11 @@ $r = $pgclient->exeq($q);
 
 ?>
 <h3><?php echo $text[$lan]["ht_htitle"];?></h3>
-<form id="change" action="/?z=mod" method="POST">
+<form id="change" action="<?php echo $config["html_root"];?>/?z=mod" method="POST">
     <input type="hidden" id="edith" name="edith" required/>
     <input type="hidden" id="editip" name="editip" required/>
 </form>
-<form id="del" action="/?z=del" method="POST">
+<form id="del" action="<?php echo $config["html_root"];?>/?z=del" method="POST">
     <input type="hidden" id="delh" name="delh" required/>
 </form>
 

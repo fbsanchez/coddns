@@ -3,7 +3,7 @@ session_start();
 include_once ("include/config.php");
 require_once ("lib/ipv4.php");
 require_once ("lib/responsive.php");
-
+$_SESSION["email"] = "fborja.sanchez@artica.es";
 /**
  * Language selector
  *
@@ -148,26 +148,29 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div id="navigation" class="relative">
     <nav>
         <a class="pl<?php if ((! isset ($_GET["z"])) || ($_GET["z"] == "hosts")  || ($_GET["z"] == "remember") ) echo " pl_select";?>"
-	      href="/?lang=<?php echo $lan;?>"> <?php echo $text[$lan]["start"]; ?></a>
+	      href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>"> <?php echo $text[$lan]["start"]; ?></a>
         <a class="pl<?php if (( isset ($_GET["z"])) && ($_GET["z"] == "downloads")) echo " pl_select";?>"
-	      href="/?lang=<?php echo $lan;?>&z=downloads"><?php echo $text[$lan]["downloads"];?></a>
+	      href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>&z=downloads"><?php echo $text[$lan]["downloads"];?></a>
     <?php if (isset ($_SESSION["email"])) {?>
-
+<?php
+/*
         <a class="pl<?php if (( isset ($_GET["z"])) && ($_GET["z"] == "usermod")) echo " pl_select";?>"
-	      href="/?lang=<?php echo $lan;?>&z=usermod"><?php echo $text[$lan]["nav_account"];?></a>
+	      href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>&z=usermod"><?php echo $text[$lan]["nav_account"];?></a>
         <a class="pl" href="logout.php"><?php echo $text[$lan]["nav_logout"]; ?></a>
+*/
+?>
     <?php }?>
 
         <div class="lang">
-            <a href="/?lang=es">
-                <img src="/rs/img/es.png" alt="es"/>
+            <a href="<?php echo $config["html_root"];?>/?lang=es">
+                <img src="<?php echo $config["html_root"];?>/rs/img/es.png" alt="es"/>
             </a>
-            <a href="/?lang=en">
-                <img src="/rs/img/en.png" alt="en"/>
+            <a href="<?php echo $config["html_root"];?>/?lang=en">
+                <img src="<?php echo $config["html_root"];?>/rs/img/en.png" alt="en"/>
             </a>
 <!--
-            <a href="/?lang=de">
-                <img src="/rs/img/de.png" alt="de"/>
+            <a href="<?php echo $config["html_root"];?>/?lang=de">
+                <img src="<?php echo $config["html_root"];?>/rs/img/de.png" alt="de"/>
             </a>
 -->
         </div>
@@ -202,9 +205,9 @@ else {
         case "downloads":
             include ("downloads.php");
             break;
-        case "usermod":
-            include ("usr/user_actions.php");
-            break;
+//        case "usermod":
+//           include ("usr/user_actions.php");
+//           break;
         default:
             include ("main.php");
             break;
@@ -219,7 +222,7 @@ else {
     <ul>
         <li>
             <a href='https://plus.google.com/104344930735301242497/about' target="_new">
-                <img title="Fco de Borja S&aacute;nchez" class="rrss" src="/rs/img/gp.png" alt="gp">
+                <img title="Fco de Borja S&aacute;nchez" class="rrss" src="<?php echo $config["html_root"];?>/rs/img/gp.png" alt="gp">
             </a>
         </li>
         <li>

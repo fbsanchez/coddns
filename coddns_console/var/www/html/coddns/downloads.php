@@ -1,6 +1,7 @@
 <?php
+require_once ("include/config.php");
 if (!isset($lan))
-    header ("Location: /");
+    header ("Location: " . $config["root_html"] );
 
 /* CASTELLANO */
 $text["es"]["d_title"] = "Descargas";
@@ -31,5 +32,5 @@ $text["de"]["d_windows_header"] ="You can download the dynamic DNS updater clien
     <p><?php echo $text[$lan]["d_windows_header"];?><a href="downloads/ddns_updater_Windows.zip"><?php echo $text[$lan]["d_link"];?></a></p>
     <br>
     <br>
-    <a href="/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
+    <a href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
 </section>

@@ -3,7 +3,7 @@ require_once("include/config.php");
 require_once ("lib/ipv4.php");
 
 if ( (! isset($_SESSION["email"])) || (!isset ($_POST["edith"])) || (! isset ($_POST["editip"]))  ){
-    header ("Location: /");
+    header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
 
@@ -21,8 +21,8 @@ function select_my_ip(){
 
 <body>
 <section>
-<a href="/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
-<form onsubmit="return false;" method="POST" action="/usr/rq_modhost.php">
+<a href="<?php echo $config["html_root"]?>/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
+<form onsubmit="return false;" method="POST" action="<?php echo $config["html_root"];?>/usr/rq_modhost.php">
     <ul>
         <li>
             <label>Host:</label><input style="border: none; font-size: 1em;text-align: right;" type="text" readonly name="edith" value="<?php echo $_POST["edith"]; ?>"></input>

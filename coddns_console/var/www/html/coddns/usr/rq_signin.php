@@ -7,7 +7,7 @@ session_start();
 
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
-    header(" Location:/?lang=es");
+    header(" Location:" . $config["root_html"] . "/?lang=es");
     exit (1);
 }
 
@@ -52,10 +52,10 @@ $pass = hash ("sha512",$salt . $rq_pass);
 
 $pgclient->connect() or die ($text[$lan]["dberror"]);
 
-$q = "Select * from usuarios where lower(mail)=lower('" . $user . "');";
+$q = "Select * from " . $db_config["schema"] . ".usuarios where lower(mail)=lower('" . $user . "');";
 $pgclient->exeq($q) or die ($text[$lan]["dberror"]);
 if ($pgclient->lq_nresults() == 0){ // ADD NEW USER
-    $q = "insert into usuarios (mail,pass, ip_last_login, first_login) values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now());";
+    $q = "insert into " . $db_config["schema"] . ".usuarios (mail,pass, ip_last_login, first_login) values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now());";
     $pgclient->exeq($q) or die ($text[$lan]["dberror"]);
 
     $recipient = $user;                    //recipient
