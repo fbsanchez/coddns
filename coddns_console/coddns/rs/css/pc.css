@@ -27,7 +27,7 @@ header{
     width: 100%;
     min-width: 800px;
     margin-bottom: 3em;
-    background: #133445;
+    background: #444;
     box-shadow: 0px 5px 8px 0px #ccc;
     color: #FFF;
 }
@@ -69,7 +69,7 @@ header div.img{
 header div#navigation {
     width: 100%;
     height: 1.85em;
-    background: #133445;
+    background: #444;
 }
 header div.relative {
 
@@ -202,7 +202,7 @@ footer{
     width: 150px;
     height: 2em;
     font-size: 0.8em;
-    background: #133445;
+    background: #444;
     text-align: left;
     color: #fff;
     overflow: hidden;
