@@ -13,6 +13,9 @@ $pg_config = array("username"=>"ddnsp",
 $db_type = "pgsql";
 $db_config = $pg_config;
 
+// domain name: fqdn base for the system
+// html_root: if you want to access http://yousite.yourdomain/coddns
+//            set it to /coddns, is the nav location
 $config = array ("domainname" => "example.lan",
 		 "html_root"  => "/");
 
