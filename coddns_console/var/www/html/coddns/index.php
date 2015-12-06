@@ -204,6 +204,9 @@ else {
         case "usermod":
             include ("usr/user_actions.php");
             break;
+	case "guides":
+	    include ("pub/index.php");
+	    break;
         default:
             include ("main.php");
             break;
