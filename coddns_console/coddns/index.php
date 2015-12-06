@@ -139,7 +139,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 <header>
-<div class="img" onclick="window.location='/?lang=<?php echo $lan;?>';">&nbsp;</div>
+<div class="img" onclick="window.location='<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>';">&nbsp;</div>
 <div class="text">
 	<h1>Custom Open Dynamic DNS <span style="font-size:0.5em;font-style:italic;">[rc1]</span></h1>
     <h2><?php echo $text[$lan]["welcome"]; ?></h2>
