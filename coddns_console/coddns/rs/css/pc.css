@@ -27,7 +27,7 @@ header{
     width: 100%;
     min-width: 800px;
     margin-bottom: 3em;
-    background: #444;
+    background: #424242;
     box-shadow: 0px 5px 8px 0px #ccc;
     color: #FFF;
 }
@@ -38,7 +38,7 @@ img{
     border:none;
 }
 header a.pl{
-    color: #444;
+    color: #424242;
     padding: 5px 10px;
     margin: auto 15px;
     transition: background 0.3s 0s;
@@ -69,7 +69,7 @@ header div.img{
 header div#navigation {
     width: 100%;
     height: 1.85em;
-    background: #444;
+    background: #424242;
 }
 header div.relative {
 
@@ -202,7 +202,7 @@ footer{
     width: 150px;
     height: 2em;
     font-size: 0.8em;
-    background: #444;
+    background: #424242;
     text-align: left;
     color: #fff;
     overflow: hidden;
