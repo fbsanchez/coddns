@@ -4,7 +4,7 @@ if (!isset($_SESSION)){
     session_start();
 }
 
-if (isset ($_SESSION["email"])) {
+if (!isset ($_SESSION["email"])) {
     header ("Location: /");
     exit (1);
 }
