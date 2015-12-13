@@ -1,11 +1,9 @@
 header{
-	height: 50px;
-	width: 100%;
-	display: block;
-	box-shadow: 0px 0px 10px 0px #888;
-	margin: 0 auto 15px; 
-	background: #444;
-	color: #fff;
+	height: 100%;
+	width: 50px;
+	position: fixed;
+	left: 0;
+	top: 0;
 }
 
 header div#menu_launcher{
