@@ -4,8 +4,9 @@ require_once("lib/pgclient.php");
 
 
 if (! isset ($_SESSION["email"])) {
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
+    session_write_close();
+    header ("Location: " . $config["html_root"] . "/?lang=es&z=login");
+    exit (0);
 }
 if( !isset($_SESSION["lan"]) ){
     session_write_close();

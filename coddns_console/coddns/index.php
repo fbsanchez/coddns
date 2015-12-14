@@ -4,6 +4,10 @@ include_once ("include/config.php");
 require_once ("lib/ipv4.php");
 require_once ("lib/responsive.php");
 
+if (!file_exists("include/config.php")){
+    header("Location: install.php");
+}
+
 /**
  * Language selector
  *
@@ -86,10 +90,12 @@ $text["de"]["nav_logout"]      ="Logout";
     if(isOverHTTPS()) {
 ?>
 <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <?php
 } else {
 ?>
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <?php
 }
 
@@ -150,6 +156,9 @@ if (! isset ($_GET["z"]))
     include ("main.php");
 else {
     switch ($_GET["z"]){
+        case "login":
+            include ("usr/login.php");
+            break;
         case "hosts":
             include ("usr/hosts.php");
             break;
@@ -182,23 +191,7 @@ else {
 
 ?>
 </section>
-<footer>
 
-    <h3><?php echo $text[$lan]["footer_title"];?></h3>
-    <ul>
-        <li>
-            <a href='https://plus.google.com/104344930735301242497/about' target="_new">
-                <img title="Fco de Borja S&aacute;nchez" class="rrss" src="<?php echo $config["html_root"];?>/rs/img/gp.png" alt="gp">
-            </a>
-        </li>
-        <li>
-            <a href="cpolicy.html"><?php echo $text[$lan]["cookie_policy"];?></a>
-        </li>
-        <li>
-            <a href="terms.html"><?php echo $text[$lan]["terms"];?></a>
-        </li>
-    </ul>
-</footer>
 </body>
 
 </html>

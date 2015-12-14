@@ -1,11 +1,68 @@
 header{
-	height: 100%;
-	width: 50px;
+	height: 30px;
+	width: 30px;
 	position: fixed;
 	left: 0;
 	top: 0;
+	background: #424242;
+	box-shadow: 0 0 1px #ccc;
+	overflow: hidden;
+	color: #ddd;
+	transition: width 0.2s 0s, height 0.2s 0.2s;
 }
 
-header div#menu_launcher{
-	
+header:hover{
+	width: 200px;
+	height: 100%;
+}
+
+header div#launcher {
+	margin: 5px;
+	width: 25px;
+	height: 25px;
+	cursor: pointer;
+}
+.box-shadow-menu {
+  position: relative;
+  padding-left: 1.25em;
+}
+.box-shadow-menu:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  width: 20px;
+  height: 0.15em;
+  background: #fff;
+  box-shadow: 
+    0 0.25em 0 0 #fff,
+    0 0.5em 0 0 #fff;
+}
+
+header div#menu{
+	width: 200px;
+	margin-left: 30px;
+	margin-top: 50px;
+}
+
+header div#menu ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+header a {
+	color: #EC8606;
+	text-decoration: none;
+}
+header a:hover {
+	font-weight: bold;
+}
+
+
+nav {
+	width: 400px;
+	min-width: 400px;
+	margin: 50px 50px 0;
+	font-size: 0.8em;
 }

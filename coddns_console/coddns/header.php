@@ -4,10 +4,33 @@
 ?>
 
 <header>
+<div id="launcher" class="box-shadow-menu">
 
-Hola, soy la nueva estructura para el header
+</div>
+<div id="menu">
+
+    <ul>
+        <li><a href="<?php echo $config["html_root"];?>">Inicio</a></li>
+        <li>Descargas</li>
+        <li><a href="<?php echo $config["html_root"];?>/?z=hosts">&Aacute;rea personal</a></li>
+        <li>
+            <a href='https://plus.google.com/104344930735301242497/about' target="_new">
+                <img title="Fco de Borja S&aacute;nchez" class="rrss" src="<?php echo $config["html_root"];?>/rs/img/gp.png" alt="gp">
+            </a>
+        </li>
+        <li>
+            <a href="cpolicy.html"><?php echo $text[$lan]["cookie_policy"];?></a>
+        </li>
+        <li>
+            <a href="terms.html"><?php echo $text[$lan]["terms"];?></a>
+        </li>
+    </ul>
+
+</div>
 
 </header>
+
+
 <?php 
 /* old header
 <header>
@@ -45,4 +68,7 @@ Hola, soy la nueva estructura para el header
     </nav>
 </div>
 </header>
+
+*/
 ?>
+

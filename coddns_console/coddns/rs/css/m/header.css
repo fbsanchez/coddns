@@ -1,8 +1,60 @@
 header{
-	height: 50px;
-	width: 100%;
-	position: top;
-	display: block;
-	box-shadow: 0px 0px 2px 1px #888;
-	margin: 0 auto 15px; 
+	height: 5%;
+	width: 5%;
+	position: fixed;
+	right: 0;
+	top: 0;
+	background: #424242;
+	box-shadow: 0 0 1px #ccc;
+	overflow: hidden;
+	overflow-y:auto;
+	color: #ddd;
+	transition: width 0.3s 0s, height: 0.3s 0s;
+}
+
+header:hover{
+	width: 50%;
+	height: 50%;
+}
+
+header div#launcher {
+	margin: 0.em;
+	width: 25px;
+	height: 25px;
+}
+.box-shadow-menu {
+  position: relative;
+  padding-left: 1.25em;
+}
+.box-shadow-menu:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  width: 1em;
+  height: 0.15em;
+  background: #fff;
+  box-shadow: 
+    0 0.25em 0 0 #fff,
+    0 0.5em 0 0 #fff;
+}
+
+header div#menu{
+	width: 40em;
+	margin-left: 3em;
+	margin-top: 3em;
+}
+
+header div#menu ul {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+}
+
+header a {
+	color: #EC8606;
+	text-decoration: none;
+}
+header a:hover {
+	font-weight: bold;
 }

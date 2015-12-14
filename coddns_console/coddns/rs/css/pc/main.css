@@ -1,17 +1,16 @@
 *{
     margin: 0;
     padding: 0;
-    font-family: Source Sans Pro;
+    font-family: Roboto,'Source Sans Pro';
     box-sizing: border-box;
 }
 html{
 	width: 100%;
-	background: #ddd;
+    background: #fff;
 }
 body{
 	width: 100%;
 	padding-bottom: 150px;
-    color: #424242;
 }
 b{
     color: #222;
@@ -120,10 +119,8 @@ header div.lang > a {
 }
 */
 section#main_section{
-    width: 98%;
-	height: 2%;
+    width: 100%;
 	background: #fff;
-	box-shadow: 0 0 3px #888;
 	margin: 0px auto;
 	padding-top: 50px;
 	padding-bottom: 50px;
