@@ -20,22 +20,22 @@ SET search_path TO sch_ddnsp,public;
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 --
--- Name: usuarios; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres; Tablespace:
 --
 
-CREATE TABLE IF NOT EXISTS usuarios (
-    id bigint NOT NULL,
+CREATE TABLE IF NOT EXISTS users (
+    id int NOT NULL,
     mail character varying(250) NOT NULL,
     pass text NOT NULL,
     last_login timestamp with time zone,
     first_login timestamp with time zone DEFAULT now(),
-    ip_last_login inet,
-    ip_first_login inet,
+    ip_last_login int,
+    ip_first_login int,
     hash text,
     max_time_valid_hash timestamp with time zone,
-	CONSTRAINT pkey_usuarios PRIMARY KEY (id),
-	CONSTRAINT const_usuarios_unique_mail UNIQUE (mail),
-	CONSTRAINT usuarios_hash_key UNIQUE (hash)
+	CONSTRAINT pkey_users PRIMARY KEY (id),
+	CONSTRAINT const_users_unique_mail UNIQUE (mail),
+	CONSTRAINT users_hash_key UNIQUE (hash)
 
 );
 
@@ -45,28 +45,28 @@ CREATE TABLE IF NOT EXISTS usuarios (
 --
 
 CREATE TABLE IF NOT EXISTS hosts (
-    id bigint NOT NULL,
-    oid bigint NOT NULL,
+    id int NOT NULL,
+    oid int NOT NULL,
     tag character varying(200) NOT NULL,
-    ip inet,
+    ip int,
     created timestamp with time zone DEFAULT now(),
     last_updated timestamp with time zone DEFAULT now(),
 	CONSTRAINT pkey_host PRIMARY KEY (id),
 	CONSTRAINT const_hosts_unique_tag UNIQUE (tag),
-	CONSTRAINT fkey_host_owner FOREIGN KEY (oid) REFERENCES usuarios(id) MATCH FULL
+	CONSTRAINT fkey_host_owner FOREIGN KEY (oid) REFERENCES users(id) ON DELETE CASCADE
 );
 
 --
--- Name: usuarios_id_seq; Type: SEQUENCE; Schema: sch_ddnsp; Owner: postgres
+-- Name: users_id_seq; Type: SEQUENCE; Schema: sch_ddnsp; Owner: postgres
 --
 
-CREATE SEQUENCE usuarios_id_seq
+CREATE SEQUENCE users_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1
-	OWNED BY usuarios.id;
+	OWNED BY users.id;
 
 	--
 -- Name: hosts_id_seq; Type: SEQUENCE; Schema: sch_ddnsp; Owner: postgres
@@ -88,13 +88,13 @@ ALTER TABLE ONLY hosts ALTER COLUMN id SET DEFAULT nextval('hosts_id_seq'::regcl
 --
 -- Name: id; Type: DEFAULT; Schema: sch_ddnsp; Owner: postgres
 --
-ALTER TABLE ONLY usuarios ALTER COLUMN id SET DEFAULT nextval('usuarios_id_seq'::regclass);
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
 
 -- 
 -- GRANTS
 --
 GRANT ALL ON SCHEMA sch_ddnsp TO postgres;
 GRANT ALL ON TABLE hosts TO postgres;
-GRANT ALL ON TABLE usuarios TO postgres;
+GRANT ALL ON TABLE users TO postgres;
 
 
