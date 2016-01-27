@@ -47,6 +47,7 @@ div#ajax_message_wrapper{
     margin-left: -200px;
     border: 1px solid #ddd;
     box-shadow: 0px 2px 3px #ddd;
+    background: #fff;
     transition: max-height 0.3s 0s;
 }
 
