@@ -1,6 +1,6 @@
 header{
-	height: 30px;
-	width: 30px;
+	height: 100%;
+	width: 200px;
 	position: fixed;
 	left: 0;
 	top: 0;
@@ -9,11 +9,6 @@ header{
 	overflow: hidden;
 	color: #ddd;
 	transition: width 0.2s 0s, height 0.2s 0.2s;
-}
-
-header:hover{
-	width: 200px;
-	height: 100%;
 }
 
 header div#launcher {
