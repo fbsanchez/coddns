@@ -1,33 +1,71 @@
 <?php
 
 
-?>
+$start_menu_class     = "pl";
+$downloads_menu_class = "pl";
+$usermod_menu_class = "pl";
 
+if (! isset ($_GET["z"])){
+    $start_menu_class = "pl_select";
+}
+else {
+    switch ($_GET["z"]) {
+        case "hosts":
+        case "remember":
+            $start_menu_class = "pl_select";
+        break;
+        case "downloads":
+            $downloads_menu_class = "pl_select";
+        break;
+        case "usermod":
+        case "login":
+            $usermod_menu_class = "pl_select";
+        break;
+        default:
+            $start_menu_class = "pl_select";
+            $downloads_menu_class = "pl";
+            $usermod_menu_class = "pl";
+        break;
+    }
+}
+
+
+?>
+<script type="text/javascript">
+function red(id,zone,page){
+    menu_item_main.className="pl";
+    menu_item_downloads.className="pl";
+    menu_item_user.className="pl";
+    menu_item_policy.className="pl";
+    menu_item_cookies.className="pl";
+    id.className="pl_select";
+    updateContent(zone,page);
+}
+</script>
 <header>
 <div id="launcher" class="box-shadow-menu">
 
 </div>
 <div id="menu">
-
     <ul>
-        <li><a href="<?php echo $config["html_root"];?>">Inicio</a></li>
-        <li>Descargas</li>
-        <li><a href="<?php echo $config["html_root"];?>/?z=hosts">&Aacute;rea personal</a></li>
+        <li><a id="menu_item_main"      class="<?php echo $start_menu_class;?>"     href="<?php echo $config["html_root"];?>">Inicio</a></li>
+        <li><a id="menu_item_downloads" class="<?php echo $downloads_menu_class;?>" href="<?php echo $config["html_root"];?>/?z=downloads">Descargas</a></li>
+        <li><a id="menu_item_user"      class="<?php echo $usermod_menu_class;?>"   href="<?php echo $config["html_root"];?>/?z=hosts">&Aacute;rea personal</a></li>
+    </ul>
+</div>
+<div id="contact">
+    <ul>
         <li>
-            <a href='https://plus.google.com/104344930735301242497/about' target="_new">
-                <img title="Fco de Borja S&aacute;nchez" class="rrss" src="<?php echo $config["html_root"];?>/rs/img/gp.png" alt="gp">
-            </a>
+            <a id="menu_item_policy"  href="#" class="pl" onclick="red(this,'main_section','cpolicy.html');"><?php echo $text[$lan]["cookie_policy"];?></a>
         </li>
         <li>
-            <a href="cpolicy.html"><?php echo $text[$lan]["cookie_policy"];?></a>
-        </li>
-        <li>
-            <a href="terms.html"><?php echo $text[$lan]["terms"];?></a>
+            <a id="menu_item_cookies" href="#" class="pl" onclick="red(this,'main_section','terms.html');"><?php echo $text[$lan]["terms"];?></a>
         </li>
     </ul>
-
+    <a target="_new" title="Fco de Borja S&aacute;nchez" href='https://plus.google.com/104344930735301242497/about'>
+        <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/gp.png') #DA4835 no-repeat center;"></div>
+    </a>
 </div>
-
 </header>
 
 

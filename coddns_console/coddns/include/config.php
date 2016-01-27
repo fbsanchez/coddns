@@ -3,20 +3,20 @@
 /*
  * Database configuration
  */
-$pg_config = array("username"=>"ddnsp",
+$pg_config = array("engine"  =>"mysql", // Could be mysql or postgresql
+                   "username"=>"coddns",
                    "password"=>'p4ssw0rd',
                    "hostname"=>"localhost",
-                   "port"    =>"5432",
-                   "name"    =>"db_ddnsp",
-                   "schema"  =>"sch_ddnsp");
+                   "port"    =>"3306",
+                   "name"    =>"coddns",
+                   "schema"  =>"");
 
-$db_type = "pgsql";
 $db_config = $pg_config;
 
 // domain name: fqdn base for the system
 // html_root: if you want to access http://yousite.yourdomain/coddns
 //            set it to /coddns, is the nav location
-$config = array ("domainname" => "coddns.devel",
+$config = array ("domainname" => "example.lan",
 		 "html_root"  => "/coddns");
 
 defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);

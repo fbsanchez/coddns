@@ -2,13 +2,9 @@ header{
 	height: 100%;
 	width: 200px;
 	position: fixed;
-	left: 0;
-	top: 0;
-	background: #424242;
+	background: #1F282B;
 	box-shadow: 0 0 1px #ccc;
-	overflow: hidden;
 	color: #ddd;
-	transition: width 0.2s 0s, height 0.2s 0.2s;
 }
 
 header div#launcher {
@@ -36,28 +32,48 @@ header div#launcher {
 
 header div#menu{
 	width: 200px;
-	margin-left: 30px;
+	padding-left: 30px;
 	margin-top: 50px;
 }
 
-header div#menu ul {
+header * ul {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
 }
 
 header a {
-	color: #EC8606;
+	padding: 3px;
+	margin: 0 auto;
+	color: #999EA2;
 	text-decoration: none;
 }
-header a:hover {
-	font-weight: bold;
-}
 
+header a.pl:hover, header a.pl_select {
+    color: #FFF;
+    border-bottom: 2px solid #EC8606;
+}
 
 nav {
 	width: 400px;
 	min-width: 400px;
 	margin: 50px 50px 0;
 	font-size: 0.8em;
+}
+
+header div#contact{
+    width: 200px;
+    padding-left: 30px;
+    position: absolute;
+    bottom: 0;
+    height: 170px;
+}
+
+header div#contact div.pic{
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+}
+header div#contact div.pic:hover{
+	box-shadow: 0 0 2px #ddd;
 }

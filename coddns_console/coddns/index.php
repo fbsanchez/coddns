@@ -147,7 +147,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <!-- End Google Tag Manager -->
 
 <?php include_once("header.php");?>
-
+<div id="main">
 <section id="main_section">
 <?php
 
@@ -190,8 +190,21 @@ else {
 }
 
 ?>
-</section>
 
+<a onclick="updateContent('ajax_message','cpolicy.html',null,null,function (){ajax_message_wrapper.style['max-height'] = '200px';});"> Try ajax message</a><br>
+<a onclick="updateContent('ajax_message','ip.php',null,null,function (){ajax_message_wrapper.style['max-height'] = '200px';});"> Try ajax message with the IP</a>
+</section>
+<div id ="ajax_message_wrapper">
+<script type="text/javascript">
+    function ajax_message_tweak(val){
+        ajax_message_wrapper.style["max-height"] = val+"px";
+    }
+</script>
+    <a href="#" id ="ajax_message_close" onclick="ajax_message_tweak(0);">Cerrar</a>
+    <div id="ajax_message" onchange="ajax_message_tweak(200);"></div>
+
+</div>
+</div>
 </body>
 
 </html>
