@@ -18,13 +18,13 @@ class DBClient {
   var $client;
 
   function DBClient($db_config){
-    $this->dbengine = $db_config["dbengine"];
+    $this->engine = $db_config["engine"];
 
-    if ($this->dbengine == "postgresql") {
-      $this->client = new PgClient($db_config)
+    if ($this->engine == "postgresql") {
+      $this->client = new PgClient($db_config);
     }
-    elseif ($this->dbengine == "mysql") {
-      $this->client = new MyClient($db_config)
+    elseif ($this->engine == "mysql") {
+      $this->client = new MyClient($db_config);
     }
   }
 

@@ -5,7 +5,7 @@
  */
 $pg_config = array("engine"  =>"mysql", // Could be mysql or postgresql
                    "username"=>"coddns",
-                   "password"=>'p4ssw0rd',
+                   "password"=>'coddns',
                    "hostname"=>"localhost",
                    "port"    =>"3306",
                    "name"    =>"coddns",

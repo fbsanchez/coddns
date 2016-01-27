@@ -1,7 +1,7 @@
 <?php
 require_once ("../include/config.php");
 require_once ("../lib/ipv4.php");
-require_once ("../lib/pgclient.php");
+require_once ("../lib/db.php");
 
 session_start();
 
@@ -45,18 +45,18 @@ $text_mail_welcome_body    = "Hola!\n\n Ya formas parte de los usuariuos de cust
 $text_mail_welcome_subject = "Gracias por registrarte!";
 
 
-$pgclient = new PgClient($db_config);
+$dbclient = new DBClient($db_config);
 
-$user = $pgclient->prepare($_POST["u"], "email");
+$user = $dbclient->prepare($_POST["u"], "email");
 $pass = hash ("sha512",$salt . $rq_pass);
 
-$pgclient->connect() or die ($text[$lan]["dberror"]);
+$dbclient->connect() or die ($text[$lan]["dberror"]);
 
-$q = "Select * from " . $db_config["schema"] . ".usuarios where lower(mail)=lower('" . $user . "');";
-$pgclient->exeq($q) or die ($text[$lan]["dberror"]);
-if ($pgclient->lq_nresults() == 0){ // ADD NEW USER
-    $q = "insert into " . $db_config["schema"] . ".usuarios (mail,pass, ip_last_login, first_login) values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now());";
-    $pgclient->exeq($q) or die ($text[$lan]["dberror"]);
+$q = "Select * from " . $db_config["schema"] . ".users where lower(mail)=lower('" . $user . "');";
+$dbclient->exeq($q) or die ($text[$lan]["dberror"]);
+if ($dbclient->lq_nresults() == 0){ // ADD NEW USER
+    $q = "insert into " . $db_config["schema"] . ".users (mail,pass, ip_last_login, first_login) values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now());";
+    $dbclient->exeq($q) or die ($text[$lan]["dberror"]);
 
     $recipient = $user;                    //recipient
     $mail_body = $text_mail_welcome_body;  //mail body
@@ -70,7 +70,7 @@ else {
     exit(1);
 }
 
-$pgclient->disconnect();
+$dbclient->disconnect();
 
 $_SESSION["email"] = $user;
 $_SESSION["time"]  = time();

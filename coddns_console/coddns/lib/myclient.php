@@ -38,13 +38,13 @@ class MyClient{
   }
 
   function connect(){
-    $this->link = mysqli_connect("host='"   . $this->hostname .
-                             "' port='"     . $this->port .
-                             "' dbname='"   . $this->db .
-                             "' user='"     . $this->username .
-                             "' password='" . $this->password . "'");
+    $this->link = mysqli_connect($this->hostname,
+                            $this->username,
+                            $this->password,
+                            $this->db,
+                            $this->port);
     if(!$this->link){
-      $this->error = mysqli_error($this->db);
+      $this->error =  mysqli_connect_errno() . PHP_EOL;
       return false;
     }
     $this->exeq("set search_path to '" . $this->schema . "'");
@@ -56,13 +56,13 @@ class MyClient{
    */
   function exeq($query){
     $this->last_query = $query;
-    $pgq_ex = mysqli_query($this->link, $query);
-    if(!$pgq_ex){
+    $result = mysqli_query($this->link, $query);
+    if(!$result){
       $this->error = mysqli_error($this->link);
       return null;
     }
-    $this->nresults = mysqli_num_rows($pgq_ex);
-    return $pgq_ex;
+    $this->nresults = mysqli_num_rows($result);
+    return $result;
   }
 
   function lq_error(){
