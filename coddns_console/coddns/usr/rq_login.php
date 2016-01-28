@@ -3,11 +3,6 @@ require_once (dirname(__FILE__) . "/../include/config.php");
 require_once (dirname(__FILE__) . "/../lib/ipv4.php");
 require_once (dirname(__FILE__) . "/../lib/db.php");
 
-if (! defined("_VALID_ACCESS")) {
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
-}
-
 session_start();
 
 $lan = $_SESSION["lan"];

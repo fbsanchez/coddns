@@ -11,6 +11,10 @@ if (!file_exists(dirname(__FILE__) . "/include/config.php")){
     header("Location: install.php");
 }
 
+if (get_user_auth() && (isset($_GET["z"])) && ($_GET["z"] == "login")){
+	$_GET["z"] = "hosts";
+}
+
 /**
  * Language selector
  *
