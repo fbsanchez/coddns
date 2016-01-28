@@ -1,5 +1,7 @@
 <?php
 
+include_once(dirname(__FILE__) . "/../include/config.php");
+
 /* USER-AGENTS
 ================================================== */
 function check_user_agent ( $type = NULL ) {
@@ -34,6 +36,27 @@ function check_user_agent ( $type = NULL ) {
 function isOverHTTPS(){
     if (isset($_SERVER["HTTPS"]) && $_SERVER['SERVER_PORT'] == '443')
         return true;
+    return false;
+}
+
+
+function check_user_auth(){
+    if (! get_user_auth() ) {
+        session_write_close();
+        header ("Location: " . $config["html_root"] . "/?lang=es&z=login");
+        exit (0);
+    }
+}
+
+function get_user_auth(){
+    if (! isset ($_SESSION)) {
+        session_start();    
+    }
+    if (isset ($_SESSION["email"])) {
+        session_write_close();
+        return true;
+    }
+    session_write_close();
     return false;
 }
 

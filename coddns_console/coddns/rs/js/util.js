@@ -179,15 +179,31 @@ function fsgo(fid, zoneid, url, reloadSC, launchEvent){
  *
  **********************/
 
-window.onscroll = fix_nav;
+// window.onscroll = fix_nav;
 
 
-function fix_nav(){
-	if (window.scrollY > 170){
-		navigation.className="fixed";
-	}
-	else {
-		navigation.className="relative";
-	}
+// function fix_nav(){
+// 	if (window.scrollY > 170){
+// 		navigation.className="fixed";
+// 	}
+// 	else {
+// 		navigation.className="relative";
+// 	}
+// }
+
+visible_menu = 1;
+
+function minimize_menu(){
+  if (visible_menu == 1){
+    visible_menu = 0;
+    header.className = "minimized";
+    return false;
+  }
+  visible_menu = 1;
+  header.className = "";
+  return false;
 }
 
+function raise_ajax_message(){
+  ajax_message_wrapper.style['max-height'] = '200px';
+}

@@ -1,15 +1,11 @@
 <?php
-require_once ("../include/config.php");
-require_once ("../lib/ipv4.php");
-require_once ("../lib/pgclient.php");
+require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/ipv4.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
+
+check_user_auth();
 
 session_start();
-
-if( !isset($_SESSION["lan"]) ){
-    session_write_close();
-    header ("Location: /?lang=es");
-    exit (1);
-}
 $lan = $_SESSION["lan"];
 
 
@@ -54,29 +50,29 @@ if ($_POST["p"] != $_POST["cp"]){
     exit(3);
 }
 
-$pgclient = new PgClient($db_config);
+$dbclient = new DBClient($db_config);
 
-$user  = $pgclient->prepare($_POST["u"], "email");
+$user  = $dbclient->prepare($_POST["u"], "email");
 $pass  = hash ("sha512",$salt . $rq_npass);
-$token = $pgclient->prepare($_POST["t"], "text");
+$token = $dbclient->prepare($_POST["t"], "text");
 
-$pgclient->connect() or die ($text[$lan]["dberror"]);
+$dbclient->connect() or die ($text[$lan]["dberror"]);
 
-$q = "Select * from usuarios where lower(mail)=lower('" . $user . "') and hash='" . $token . "' and now() < max_time_valid_hash;";
-$pgclient->exeq($q);
-if ($pgclient->lq_nresults() == 0){ // No results, no valid hash
+$q = "Select * from users where lower(mail)=lower('" . $user . "') and hash='" . $token . "' and now() < max_time_valid_hash;";
+$dbclient->exeq($q);
+if ($dbclient->lq_nresults() == 0){ // No results, no valid hash
     echo $text[$lan]["err4"];
     exit (4);
 }
 
-$q = "update usuarios set pass='" . $pass . "' where lower(mail)=lower('" . $user . "');";
-$pgclient->exeq($q);
-$q = "update usuarios set hash='' where lower(mail)=lower('" . $user . "');";
-$pgclient->exeq($q);
-$q = "update usuarios set max_time_valid_hash=null where lower(mail)=lower('" . $user . "');";
-$pgclient->exeq($q);
+$q = "update users set pass='" . $pass . "' where lower(mail)=lower('" . $user . "');";
+$dbclient->exeq($q);
+$q = "update users set hash='' where lower(mail)=lower('" . $user . "');";
+$dbclient->exeq($q);
+$q = "update users set max_time_valid_hash=null where lower(mail)=lower('" . $user . "');";
+$dbclient->exeq($q);
 
-$pgclient->disconnect();
+$dbclient->disconnect();
 
 
 echo $text[$lan]["ok"];

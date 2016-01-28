@@ -17,7 +17,7 @@ $db_config = $pg_config;
 // html_root: if you want to access http://yousite.yourdomain/coddns
 //            set it to /coddns, is the nav location
 $config = array ("domainname" => "example.lan",
-		 "html_root"  => "/coddns");
+		 "html_root"  => "");
 
 defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
 defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);

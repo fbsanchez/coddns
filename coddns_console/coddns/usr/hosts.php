@@ -1,13 +1,17 @@
 <?php
-require_once("include/config.php");
-require_once("lib/pgclient.php");
+
+require_once(dirname(__FILE__) . "/../include/config.php");
+require_once(dirname(__FILE__) . "/../lib/db.php");
+require_once(dirname(__FILE__) . "/../lib/util.php");
 
 
-if (! isset ($_SESSION["email"])) {
-    session_write_close();
-    header ("Location: " . $config["html_root"] . "/?lang=es&z=login");
-    exit (0);
+if (! defined("_VALID_ACCESS")) {
+    header ("Location: " . $config["html_root"] . "/?lang=es");
+    exit (1);
 }
+
+check_user_auth();
+
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
     header ("Location: " . $config["html_root"] . "/?lang=es");
@@ -65,47 +69,8 @@ $text["de"]["dberror"]       = "Wooops, please contact the administrator at foot
 <html>
 <head>
     <title>resultados</title>
-    <style type="text/css">
-        table {
-            padding: 5px;
-            margin: 0 auto;
-            border-collapse: collapse;
-        }
-        thead{
-            text-align: center;
-            background: #133445;
-            color: white;
-        }
-        thead td {
-            padding: 5px;
-        }
-        tbody *{
-            padding: 5px;
-        }
-        td {
-            border: 1px solid #ddd;
-        }
-        tbody tr:hover{
-            background: #E8F1F9;
-        }
-        button, input[type="submit"]{
-            padding-left: 5px;
-            padding-right: 5px;
-        }
-        td.del{
-            cursor: pointer;
-            background: url('<?php echo $config["html_root"];?>/rs/img/delete.png') no-repeat center;
-            background-size: 1em;
-            width: 1.4em;
-            height: 1.4em;
-        }
-        td.edit{
-            cursor: pointer;
-            background: url('<?php echo $config["html_root"];?>/rs/img/edit.png') no-repeat center;
-            background-size: 1em;
-            width: 1.4em;
-            height: 1.4em;
-        }
+    <link rel="stylesheet" style type="text/css" href="rs/css/pc/hosts.css"/>
+        
     </style>
 <script>
 var t="";
@@ -129,7 +94,7 @@ echo $text[$lan]["hosts_welcome"];
 ?>
 </section>
 <section class="uarea">
-    <form id="newhost" method="POST" action="usr/rq_nhost.php">
+    <form id="newhost" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/rq_nhost.php', true,raise_ajax_message);return false;">
     <ul>
         <li>
             <label><?php echo $text[$lan]["label_tag"];?></label>
@@ -156,12 +121,12 @@ echo $text[$lan]["hosts_welcome"];
 
 
 <?php
-$pgclient = new PgClient($db_config);
+$dbclient = new DBClient($db_config);
 
-$pgclient->connect() or die($text[$lan]["dberror"]);
+$dbclient->connect() or die($text[$lan]["dberror"]);
 
-$q = "select tag, ip from hosts where oid=(select id from usuarios where mail='" . $_SESSION["email"] . "');";
-$r = $pgclient->exeq($q);
+$q = "select tag, ip from hosts where oid=(select id from users where mail='" . $_SESSION["email"] . "');";
+$r = $dbclient->exeq($q);
 
 ?>
 <h3><?php echo $text[$lan]["ht_htitle"];?></h3>
@@ -183,8 +148,15 @@ $r = $pgclient->exeq($q);
     </thead>
     <tbody>
 <?php
-while ($row = pg_fetch_array ($r)) {
-    echo "<tr><td>" . $row["tag"] . "</td><td>" . $row["ip"] . "</td><td class='edit' title='editar' onclick=\"editip.value='" . $row["ip"] . "';edith.value='" . $row["tag"] . "';change.submit();\"></td><td class='del' title='eliminar' onclick=\"delh.value='" . $row["tag"] . "'; if (confirm('Seguro que desea eliminar " . $row["tag"] . "?')) {del.submit();}\"></td></tr>";
+while ($row = $dbclient->fetch_array ($r)) {
+?>
+    <tr>
+        <td><?php echo $row["tag"]?></td>
+        <td><?php echo $row["ip"]?></td>
+        <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["ip"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
+        <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {del.submit();}"></td>
+    </tr>
+<?php
 }
 ?>
     </tbody>

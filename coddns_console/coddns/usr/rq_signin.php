@@ -1,7 +1,7 @@
 <?php
-require_once ("../include/config.php");
-require_once ("../lib/ipv4.php");
-require_once ("../lib/db.php");
+require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
+require_once (dirname(__FILE__) . "/../lib/ipv4.php");
 
 session_start();
 

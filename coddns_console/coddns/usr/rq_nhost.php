@@ -1,7 +1,9 @@
 <?php
-require_once ("../include/config.php");
-require_once ("../lib/pgclient.php");
-require_once ("../lib/ipv4.php");
+require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
+require_once (dirname(__FILE__) . "/../lib/ipv4.php");
+
+check_user_auth();
 
 defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
 defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);
@@ -41,9 +43,6 @@ $text["en"]["ip_f"]  = "The IP address is not valid";
 <html>
 <head>
     <title><?php echo $text[$lan]["title"]; ?></title>
-    <style type="text/css">
-        body{width: 500px; padding: 10px;text-align: center; margin: 150px auto; border: 1px dashed #ddd; border-radius: 5px;}
-    </style>
 </head>
 
 <body>
@@ -67,31 +66,31 @@ if ( $check < 0 || $check == FALSE ){
     exit (2);
 }
 
-$pgclient= new PgClient($db_config);
-$pgclient->connect() or die ("ERR");
+$dbclient= new DBClient($db_config);
+$dbclient->connect() or die ("ERR");
 
 
 
-$host = $pgclient->prepare($_POST["h"], "letters") . "." . $config["domainname"];
+$host = $dbclient->prepare($_POST["h"], "letters") . "." . $config["domainname"];
 $ip   = $_POST["ip"];
 
 // INSERT NEW HOST IF NO ONE EXISTS
 $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
-$pgclient->exeq($q);
+$dbclient->exeq($q);
 
-if( $pgclient->lq_nresults() > 0 )
+if( $dbclient->lq_nresults() > 0 )
     die ("Ese nombre de host no est&aacute; disponible<br><a href='/'>Volver</a>");
 
 // LAUNCH DNS UPDATER
 $out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip);
 
 $q = "insert into hosts (oid, tag, ip) values ( (select id from usuarios where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), '" . $ip . "');";
-$pgclient->exeq($q);
+$dbclient->exeq($q);
 
 
 
 echo "Agregado correctamente [" .  $out . "] ";
-$pgclient->disconnect();
+$dbclient->disconnect();
 session_write_close();
 
 if (! strlen($out) > 0)

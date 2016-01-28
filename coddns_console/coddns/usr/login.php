@@ -1,5 +1,12 @@
 <?php
 
+include_once(dirname(__FILE__) . "/../include/config.php");
+
+if (! defined("_VALID_ACCESS")) {
+    header ("Location: " . $config["html_root"] . "/?lang=es");
+    exit (1);
+}
+
 
 /* CASTELLANO */
 $text["es"]["main_reg"]    = "Registrarme";

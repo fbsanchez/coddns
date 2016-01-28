@@ -1,7 +1,7 @@
 <?php
 
-require_once ("myclient.php");
-require_once ("pgclient.php");
+require_once (dirname(__FILE__) . "/myclient.php");
+require_once (dirname(__FILE__) . "/pgclient.php");
 
 class DBClient {
   var $username;
@@ -43,7 +43,12 @@ class DBClient {
   function disconnect(){
     return $this->client->disconnect();
   }
-
+  function fetch_object($result){
+    return $this->client->fetch_object($result);
+  }
+  function fetch_array($result){
+    return $this->client->fetch_array($result);
+  }
 
   /**
    * DB Utilities

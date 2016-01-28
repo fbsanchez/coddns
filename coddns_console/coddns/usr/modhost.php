@@ -1,4 +1,12 @@
 <?php
+
+include_once(dirname(__FILE__) . "/../include/config.php");
+
+if (! defined("_VALID_ACCESS")) {
+    header ("Location: " . $config["html_root"] . "/");
+    exit (1);
+}
+
 require_once("include/config.php");
 require_once ("lib/ipv4.php");
 

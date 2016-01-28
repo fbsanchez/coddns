@@ -5,17 +5,25 @@ header{
 	background: #1F282B;
 	box-shadow: 0 0 1px #ccc;
 	color: #ddd;
+	overflow: hidden;
+	transition: width 0.2s 0s, height 0.4s 0.2s;
+}
+
+header.minimized {
+    height: 25px;
+    width: 30px;
 }
 
 header div#launcher {
-	margin: 5px;
+	margin: 3px;
 	width: 25px;
 	height: 25px;
 	cursor: pointer;
+	z-index: 1000;
 }
+
 .box-shadow-menu {
   position: relative;
-  padding-left: 1.25em;
 }
 .box-shadow-menu:before {
   content: "";

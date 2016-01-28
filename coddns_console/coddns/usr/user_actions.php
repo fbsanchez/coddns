@@ -1,19 +1,17 @@
 <?php
 
-require_once ("../include/config.php");
+require_once (dirname(__FILE__) . "/../include/config.php");
 
-if (! isset ($_SESSION["email"]) ){
-	header ("Location: " . $config["html_root"]);
-    exit(1);
-}
-
-if( !isset($_SESSION["lan"]) ){
-    session_write_close();
-    header ("Location: " . $config["html_root"] . "/?lang=es");
+if (! defined("_VALID_ACCESS")) {
+    header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
 
+check_user_auth();
+
+session_start();
 $lan = $_SESSION["lan"];
+session_write_close();
 
 /* CASTELLANO */
 $text["es"]["ua_welcome"]    = "

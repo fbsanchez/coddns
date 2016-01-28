@@ -1,5 +1,13 @@
 <?php
 
+include_once (dirname(__FILE__) . "/../lib/config.php");
+
+if (! defined("_VALID_ACCESS")) {
+    header ("Location: " . $config["html_root"] . "/");
+    exit (1);
+}
+
+
 if (isset ($_SESSION["email"])) {
     header ("Location: /");
     exit (1);
@@ -37,7 +45,7 @@ $text["en"]["title"]  ="Forgotten password";
     <h1><?php echo $text[$lan]["title"];?></h1>
     <br>
     <?php echo $text[$lan]["message"]; ?>
-    <form id="remember" onsubmit="fsgo('remember', 'response', '/usr/sendtoken.php');return false;">
+    <form id="remember" onsubmit="fsgo('remember', 'response', '<?php echo $config["html_root"]; ?>/usr/sendtoken.php');return false;">
     <ul>
         <li>
             <input style="float:none;" type="email" name="u" required placeholder="<?php echo $text[$lan]["mail"];?>"/>

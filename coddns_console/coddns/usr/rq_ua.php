@@ -1,15 +1,11 @@
 <?php
-require_once ("../include/config.php");
-require_once ("../lib/ipv4.php");
-require_once ("../lib/pgclient.php");
+require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
+require_once (dirname(__FILE__) . "/../lib/ipv4.php");
+
+check_user_auth();
 
 session_start();
-
-if( !isset($_SESSION["lan"]) ){
-    session_write_close();
-    header ("Location: /?lang=es");
-    exit (1);
-}
 
 $lan = $_SESSION["lan"];
 

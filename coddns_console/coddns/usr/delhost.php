@@ -1,6 +1,13 @@
 <?php
-require_once("include/config.php");
-require_once("lib/pgclient.php");
+
+require_once(dirname(__FILE__) . "/../include/config.php");
+require_once(dirname(__FILE__) . "/../lib/pgclient.php");
+
+if (! defined("_VALID_ACCESS")) {
+	header ("Location: " . $config["html_root"] . "/?lang=es");
+    exit (1);
+}
+
 ?>
 <!DOCTYPE html>
 

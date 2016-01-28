@@ -77,95 +77,12 @@ class PgClient{
     pg_close($this->link);
   }
 
-  function date_checker($date){
-    list ($y, $m, $d) = explode ("-", $date);
-    if(checkdate($m, $d, $y))
-      return "$y-$m-$d";
-    return null;
+  function fetch_object($result){
+    return pg_fetch_object($result);
   }
-
-  function datetime_checker($date){
-    list ($y, $m, $d) = explode ("-",$date);
-    if(strstr($d, "T")){
-      list ($d, $h) = explode("T",$d);
-    }
-    else{
-      list ($d, $h) = explode(" ",$d);
-    }
-    list ($h, $mi) = explode(":",$h);
-
-    if ($d>31){
-      $t = $y;
-      $y = $d;
-      $d = $t;
-    }
-
-    $h = intval($h);
-    $mi = intval($mi);
-    if((checkdate($m, $d, $y)) && ($h>=0) && ($h<=23) && ($mi>=0) && ($mi<=59)){
-        return "$y-$m-$d $h:$mi";
-    } else {
-    echo "a:$y-m:$m-d:$d h:$h:mi$mi";
-        return null;
-    }
+  function fetch_array($result){
+    return pg_fetch_array($result);
   }
-
-  /**
-   * Clears input for a sql argument
-   * XXX: Needs a harder check...
-   */
-  function prepare($clsqlarg, $type){
-    switch($type){
-    case "email":     return strip_tags (preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg), "<b><u><p>");
-    case "number":    return floatval($clsqlarg);
-    case "letters":   return strip_tags (preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg), "<b><u><p>");
-    case "text":{
-      $search  = array("<script", "</script>", "%0A");
-      return str_replace("%", "$",(
-              urlencode(
-                strip_tags (
-                  str_replace($search,"", $clsqlarg),
-                  "")
-              )));
-    }
-    case "rich_text":{
-      $search  = array("<script", "</script>", "%0A");
-      $replace = array(""       , ""         , "<br>");
-      return str_replace("%", "$",(
-              urlencode(
-                strip_tags (
-                  str_replace($search,$replace, $clsqlarg),
-                  "<b><u><p><a>")
-              )));
-    }
-    case "url": {
-      $search  = array("<script", "</script>");
-      return str_replace("%", "$",(
-              urlencode(
-                strip_tags (
-                  str_replace($search,"", $clsqlarg),
-                  "")
-              )));
-    }
-    case "date":{
-        if($tmp = $this->date_checker($clsqlarg))
-          return $tmp;
-        return null;
-      }
-    case "datetime":{
-        if($tmp = $this->datetime_checker($clsqlarg))
-          return $tmp;
-        return null;
-      }
-    default: return null;
-    }
-  }
-
-  function decode($v){
-    return urldecode(str_replace("$", "%",($v)));
-  }
-
-
 }
 
 

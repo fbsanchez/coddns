@@ -1,10 +1,13 @@
 <?php
-session_start();
-include_once ("include/config.php");
-require_once ("lib/ipv4.php");
-require_once ("lib/responsive.php");
 
-if (!file_exists("include/config.php")){
+defined("_VALID_ACCESS") or define ("_VALID_ACCESS", 1);
+
+session_start();
+include_once (dirname(__FILE__) . "/include/config.php");
+require_once (dirname(__FILE__) . "/lib/ipv4.php");
+require_once (dirname(__FILE__) . "/lib/util.php");
+
+if (!file_exists(dirname(__FILE__) . "/include/config.php")){
     header("Location: install.php");
 }
 
@@ -33,6 +36,7 @@ else{
 /* shorter var name... */
 $lan = $_SESSION["lan"];
 
+session_write_close();
 
 /* CASTELLANO */
 $text["es"]["welcome"]   ="Bienvenido";
@@ -188,20 +192,18 @@ else {
             break;
     }
 }
-
 ?>
 
-<a onclick="updateContent('ajax_message','cpolicy.html',null,null,function (){ajax_message_wrapper.style['max-height'] = '200px';});"> Try ajax message</a><br>
-<a onclick="updateContent('ajax_message','ip.php',null,null,function (){ajax_message_wrapper.style['max-height'] = '200px';});"> Try ajax message with the IP</a>
 </section>
 <div id ="ajax_message_wrapper">
 <script type="text/javascript">
     function ajax_message_tweak(val){
         ajax_message_wrapper.style["max-height"] = val+"px";
+        return false;
     }
 </script>
-    <a href="#" id ="ajax_message_close" onclick="ajax_message_tweak(0);">Cerrar</a>
-    <div id="ajax_message" onchange="ajax_message_tweak(200);"></div>
+    <a href="#" id ="ajax_message_close" onclick="ajax_message_tweak(0);return false;">Cerrar</a>
+    <div id="ajax_message" onchange="ajax_message_tweak(200);return false;"></div>
 
 </div>
 </div>

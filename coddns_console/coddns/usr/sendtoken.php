@@ -1,7 +1,12 @@
 <?php
-require_once ("../include/config.php");
-require_once ("../lib/ipv4.php");
-require_once ("../lib/pgclient.php");
+require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
+require_once (dirname(__FILE__) . "/../lib/ipv4.php");
+
+if (! defined("_VALID_ACCESS")) {
+    header ("Location: " . $config["html_root"] . "/");
+    exit (1);
+}
 
 session_start();
 
@@ -9,7 +14,7 @@ session_start();
 $text["es"]["ok"]   = "<div class='ok'>Se ha enviado un email a " . $_POST["u"] . " con las instrucciones para resetear su contrase&ntilde;a.</div>";
 $text["es"]["err1"] = "<div class='err'>Rellene todos los datos</div>";
 $text["es"]["err2"] = "<div class='err'>No cumple las longitudes minimas</div>";
-$text["es"]["err3"] = "<div class='err'>No hay usuarios con los datos provistos, prueba a crear uno nuevo.</div>";
+$text["es"]["err3"] = "<div class='err'>No hay users con los datos provistos, prueba a crear uno nuevo.</div>";
 $text["es"]["dberror"] = "<div class='err'>Woooops, contacte con el administrador del sitio.</div>";
 
 
@@ -46,16 +51,16 @@ if ( strlen($_POST["u"]) < MIN_USER_LENGTH){
 
 $salt="as!09**31sfSAFasfaNYGFB";
 
-$pgclient = new PgClient($db_config);
+$dbclient = new DBClient($db_config);
 $strenght = 4;
-$user = $pgclient->prepare($_POST["u"], "email");
+$user = $dbclient->prepare($_POST["u"], "email");
 $hash = hash ("sha256",$salt . openssl_random_pseudo_bytes($strenght) . rand());
 
-$pgclient->connect() or die ($text[$lan]["dberror"]);
+$dbclient->connect() or die ($text[$lan]["dberror"]);
 
-$q = "Select * from usuarios where lower(mail)=lower('" . $user . "');";
-$r = pg_fetch_object ($pgclient->exeq($q));
-if ($pgclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
+$q = "Select * from users where lower(mail)=lower('" . $user . "');";
+$r = $dbclient->fetch_object ($dbclient->exeq($q));
+if ($dbclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
     echo $text[$lan]["err3"];
     exit (3);
 }
@@ -102,10 +107,10 @@ $email_sender              = "noreply@" . $config["domainname"];
 $text_mail_welcome_body    = $text[$lan]["mailbody"];
 $text_mail_welcome_subject = $text[$lan]["subject"];
 
-$q = "update usuarios set hash='" . $hash . "', max_time_valid_hash = now()+Interval '30 minutes' where lower(mail)=lower('" . $user . "');";
-$pgclient->exeq($q);
+$q = "update users set hash='" . $hash . "', max_time_valid_hash = now()+Interval '30 minutes' where lower(mail)=lower('" . $user . "');";
+$dbclient->exeq($q);
 
-$pgclient->disconnect();
+$dbclient->disconnect();
 
 
 $recipient = $user;                    //recipient

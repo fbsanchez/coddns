@@ -1,15 +1,14 @@
 <?php
-require_once ("../include/config.php");
-require_once ("../lib/ipv4.php");
-require_once ("../lib/pgclient.php");
+require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/ipv4.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
 
-session_start();
-
-if( !isset($_SESSION["lan"]) ){
-    session_write_close();
-    header ("Location: /?lang=es");
+if (! defined("_VALID_ACCESS")) {
+    header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
+
+session_start();
 
 $lan = $_SESSION["lan"];
 
@@ -43,21 +42,21 @@ if ( ( strlen($_POST["u"]) < MIN_USER_LENGTH) || ( strlen($rq_pass) < MIN_PASS_L
     exit(2);
 }
 
-$pgclient = new PgClient($db_config);
-$user = $pgclient->prepare($_POST["u"], "email");
+$dbclient = new DBClient($db_config);
+$user = $dbclient->prepare($_POST["u"], "email");
 $pass = hash ("sha512",$salt . $rq_pass);
 
-$pgclient->connect() or die ($text[$lan]["dberror"]);
+$dbclient->connect() or die ($text[$lan]["dberror"]);
 
-$q = "Select * from usuarios where lower(mail)=lower('" . $user . "') and pass='" . $pass . "';";
-$r = pg_fetch_object ($pgclient->exeq($q));
-if ($pgclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
+$q = "Select * from users where lower(mail)=lower('" . $user . "') and pass='" . $pass . "';";
+$r = $dbclient->fetch_object ($dbclient->exeq($q));
+if ($dbclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
     echo $text[$lan]["err3"];
     exit (3);
 }
-$q = "update usuarios set last_login=now(), ip_last_login='" . _ip() . "' where lower(mail)=lower('" . $user . "');";
-$pgclient->exeq($q) or die($text[$lan]["dberror"]);
-$pgclient->disconnect();
+$q = "update users set last_login=now(), ip_last_login='" . _ip() . "' where lower(mail)=lower('" . $user . "');";
+$dbclient->exeq($q) or die($text[$lan]["dberror"]);
+$dbclient->disconnect();
 
 $_SESSION["email"] = $user;
 $_SESSION["time"]  = time();

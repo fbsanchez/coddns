@@ -1,7 +1,8 @@
 <?php
-require_once ("../include/config.php");
-require_once ("../lib/pgclient.php");
+require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/pgclient.php");
 
+check_user_auth();
 
 defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
 defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);

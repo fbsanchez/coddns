@@ -1,7 +1,7 @@
 <?php
 /* @AUTHOR: Fco de Borja Sanchez  */
 /* */
-require_once("include/config.php");
+include_once (dirname(__FILE__) . "/include/config.php");
 
 session_start();
 $lan=$_SESSION["lan"];

@@ -1,11 +1,16 @@
 <?php
 
-if (!isset($_SESSION)){
-    session_start();
+include_once(dirname(__FILE__) . "/../include/config.php");
+
+if (! defined("_VALID_ACCESS")) {
+    header ("Location: " . $config["html_root"] . "/");
+    exit (1);
 }
 
+session_start();
+
 if (!isset ($_SESSION["email"])) {
-    header ("Location: /");
+    header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
 if( !isset($_SESSION["lan"]) ){
