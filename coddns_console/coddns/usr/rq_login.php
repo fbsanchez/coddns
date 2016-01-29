@@ -5,6 +5,9 @@ require_once (dirname(__FILE__) . "/../lib/db.php");
 
 session_start();
 
+if (!isset($_SESSION["lan"])){
+	$_SESSION["lan"] = "es";
+}
 $lan = $_SESSION["lan"];
 
 /* CASTELLANO */

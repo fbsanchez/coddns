@@ -64,7 +64,12 @@ class MyClient{
       $this->error = mysqli_error($this->link);
       return null;
     }
-    $this->nresults = mysqli_num_rows($result);
+    if ($result === true) { // UPDATE / DELETE queries
+      $this->nresults = 1;
+    }
+    else {
+      $this->nresults = mysqli_num_rows($result);
+    }
     return $result;
   }
 

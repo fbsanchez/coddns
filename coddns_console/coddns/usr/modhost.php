@@ -2,8 +2,15 @@
 
 include_once(dirname(__FILE__) . "/../include/config.php");
 
+session_start();
+if (!isset($_SESSION["lan"])){
+    $_SESSION["lan"] = "es";
+}
+$lan = $_SESSION["lan"];
+session_write_close();
+
 if (! defined("_VALID_ACCESS")) {
-    header ("Location: " . $config["html_root"] . "/");
+    header ("Location: " . $config["html_root"] . "/?lang=" . $lan);
     exit (1);
 }
 

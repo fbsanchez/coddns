@@ -7,14 +7,15 @@ if (! defined("_VALID_ACCESS")) {
     exit (1);
 }
 
+session_start();
 
 if (isset ($_SESSION["email"])) {
-    header ("Location: /");
+    header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
-    header ("Location: /?lang=es");
+    header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
 

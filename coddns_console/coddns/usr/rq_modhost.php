@@ -2,7 +2,7 @@
 require_once (dirname(__FILE__) . "/../include/config.php");
 require_once (dirname(__FILE__) . "/../lib/pgclient.php");
 
-check_user_auth();
+//check_user_auth();
 
 defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
 defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);
@@ -11,9 +11,15 @@ defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
 
 session_start();
 if(! isset ($_SESSION["email"])){
-    header ("Location: /");
+    header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
+
+if (!isset($_SESSION["lan"])){
+    $_SESSION["lan"] = "es";
+}
+$lan = $_SESSION["lan"];
+
 
 if ( (! isset ($_POST["edith"])) || (! isset($_POST["nip"])) ){
     echo "Rellene todos los datos";
@@ -67,7 +73,7 @@ if( $pgclient->lq_nresults() == 1 ){
     echo "OK";
 }
 else{
-    header ("Location: /err403.html");
+    header ("Location: " . $config["html_root"] . "/err403.html");
     echo "ERR";
     exit (3);
 }
@@ -75,7 +81,6 @@ else{
 
 
 $pgclient->disconnect();
-session_write_close();
 
 header ("Location: /");
 ?>

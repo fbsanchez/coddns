@@ -4,19 +4,20 @@ require_once(dirname(__FILE__) . "/../include/config.php");
 require_once(dirname(__FILE__) . "/../lib/db.php");
 require_once(dirname(__FILE__) . "/../lib/util.php");
 
+check_user_auth();
 
 if (! defined("_VALID_ACCESS")) {
     header ("Location: " . $config["html_root"] . "/?lang=es");
     exit (1);
 }
 
-check_user_auth();
-
+session_start();
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
     header ("Location: " . $config["html_root"] . "/?lang=es");
     exit (1);
 }
+session_write_close();
 
 $lan = $_SESSION["lan"];
 

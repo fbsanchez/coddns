@@ -7,11 +7,15 @@ if (! defined("_VALID_ACCESS")) {
     exit (1);
 }
 
-check_user_auth();
+//check_user_auth();
 
 session_start();
+if (!isset($_SESSION["lan"])){
+    $_SESSION["lan"] = "es";
+}
 $lan = $_SESSION["lan"];
 session_write_close();
+
 
 /* CASTELLANO */
 $text["es"]["ua_welcome"]    = "

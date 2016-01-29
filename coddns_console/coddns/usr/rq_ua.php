@@ -3,11 +3,14 @@ require_once (dirname(__FILE__) . "/../include/config.php");
 require_once (dirname(__FILE__) . "/../lib/db.php");
 require_once (dirname(__FILE__) . "/../lib/ipv4.php");
 
-check_user_auth();
+//check_user_auth();
 
 session_start();
-
+if (!isset($_SESSION["lan"])){
+    $_SESSION["lan"] = "es";
+}
 $lan = $_SESSION["lan"];
+session_write_close();
 
 /* CASTELLANO */
 /* ENGLISH */
@@ -55,7 +58,6 @@ $pgclient->exeq($q);
 
 $pgclient->disconnect();
 
-session_write_close();
 echo "<div class='ok'>Contrase&ntilde;a actualizada con &eacute;xito</div>";
 
 ?>

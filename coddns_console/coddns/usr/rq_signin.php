@@ -7,7 +7,7 @@ session_start();
 
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
-    header(" Location:" . $config["root_html"] . "/?lang=es");
+    header(" Location:" . $config["html_root"] . "/?lang=es");
     exit (1);
 }
 

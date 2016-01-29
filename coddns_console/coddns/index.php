@@ -12,7 +12,7 @@ if (!file_exists(dirname(__FILE__) . "/include/config.php")){
 }
 
 if (get_user_auth() && (isset($_GET["z"])) && ($_GET["z"] == "login")){
-	$_GET["z"] = "hosts";
+    $_GET["z"] = "hosts";
 }
 
 /**
@@ -26,9 +26,11 @@ $text = array("es"=>$es,"en"=>$en,"de"=>$de);
 
 if(isset($_GET["lang"])){
     switch ($_GET["lang"]){
-        case "es": $_SESSION["lan"] = "es";break;
-        case "en": $_SESSION["lan"] = "en";break;
-        case "de": $_SESSION["lan"] = "de";break;
+        case "es": 
+        case "en": 
+        case "de": 
+            $_SESSION["lan"] = $_GET["lang"];
+            break;
         default: $_SESSION["lan"]   = "es";
     }
 }

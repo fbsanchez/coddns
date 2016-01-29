@@ -3,8 +3,15 @@
 require_once(dirname(__FILE__) . "/../include/config.php");
 require_once(dirname(__FILE__) . "/../lib/pgclient.php");
 
+session_start();
+if (!isset($_SESSION["lan"])){
+	$_SESSION["lan"] = "es";
+}
+$lan = $_SESSION["lan"];
+session_write_close();
+
 if (! defined("_VALID_ACCESS")) {
-	header ("Location: " . $config["html_root"] . "/?lang=es");
+	header ("Location: " . $config["html_root"] . "/?lang=" . $lan);
     exit (1);
 }
 
@@ -51,7 +58,6 @@ $pgclient->disconnect();
 
 echo "<div><p>Se ha eliminado " . $host . " correctamente<p><a href='" . $config["html_root"] . "/'>Volver</a></div>";
 
-session_write_close();
 ?>
 </body>
 
@@ -59,6 +65,6 @@ session_write_close();
 
 <?php
 if (! strlen($out) > 0)
-    header("Location: " . $config["html_root"]);
+    header("Location: " . $config["html_root"] . "/?lang=" . $lan);
 
 ?>
