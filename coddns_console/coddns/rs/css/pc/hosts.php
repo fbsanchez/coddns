@@ -39,3 +39,11 @@ td.edit{
     width: 1.4em;
     height: 1.4em;
 }
+td.del{
+    cursor: pointer;
+    background: url('<?php echo $config["html_root"];?>/rs/img/delete.png') no-repeat center;
+    background-size: 1em;
+    width: 1.4em;
+    height: 1.4em;
+}
+

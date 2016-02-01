@@ -70,7 +70,11 @@ $text["de"]["dberror"]       = "Wooops, please contact the administrator at foot
 <html>
 <head>
     <title>resultados</title>
-    <link rel="stylesheet" style type="text/css" href="rs/css/pc/hosts.css"/>
+    <style type="text/css"/>
+		<?php
+		include_once (dirname(__FILE__) . "/../rs/css/pc/hosts.php");
+
+		?>
         
     </style>
 <script>
@@ -126,7 +130,7 @@ $dbclient = new DBClient($db_config);
 
 $dbclient->connect() or die($text[$lan]["dberror"]);
 
-$q = "select tag, ip from hosts where oid=(select id from users where mail='" . $_SESSION["email"] . "');";
+$q = "select tag, INET_NTOA(ip) ip from hosts where oid=(select id from users where mail='" . $_SESSION["email"] . "');";
 $r = $dbclient->exeq($q);
 
 ?>

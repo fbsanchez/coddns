@@ -89,7 +89,7 @@ if( $dbclient->lq_nresults() > 0 )
 // LAUNCH DNS UPDATER
 $out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip);
 
-$q = "insert into hosts (oid, tag, ip) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), '" . $ip . "');";
+$q = "insert into hosts (oid, tag, ip) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), INET_ATON('" . $ip . "') );";
 $dbclient->exeq($q);
 
 $dbclient->disconnect();
@@ -100,7 +100,7 @@ if (preg_match("/ERR/", $out)) {
 }
 else {
     echo $text[$lan]["ok"];
-    header ("Location: " . $config["html_root"] . "/");
+//    header ("Location: " . $config["html_root"] . "/");
 }
 
 ?>
