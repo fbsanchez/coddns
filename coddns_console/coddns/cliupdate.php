@@ -1,7 +1,7 @@
 <?php
 require_once ("include/config.php");
 require_once ("lib/ipv4.php");
-require_once ("lib/pgclient.php");
+require_once ("lib/db.php");
 
 defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
 defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);
@@ -18,11 +18,11 @@ if   ( ( strlen($_POST["u"]) < LENGTH_USER_MIN )
     die ("ERR");
 
 
-$pgclient = new PgClient($db_config);
+$dbclient = new DBClient($db_config);
 
-$pgclient->connect() or die ("ERR");
+$dbclient->connect() or die ("ERR");
 
-$user = $pgclient->prepare($_POST["u"], "email");
+$user = $dbclient->prepare($_POST["u"], "email");
 $rq_pass = base64_decode($_POST["p"]);
 $pass = hash ("sha512",$salt . $rq_pass);
 
@@ -39,29 +39,29 @@ if(    ( $main != $checkm )
     || ( strlen($host) < LENGTH_HOST_MIN )
     || ( strlen($host) > LENGTH_HOST_MAX ))
     die ("ERR: nombre de host no valido");
-$host =  $pgclient->prepare($host, "letters") . "." . $config["domainname"];
+$host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
 
-$q="select * from usuarios where mail='" . $user . "' and pass='" . $pass . "';";
-$pgclient->exeq($q);
+$q="select * from users where mail='" . $user . "' and pass='" . $pass . "';";
+$dbclient->exeq($q);
 
-if( $pgclient->lq_nresults() == 0 ) {/* no user */
+if( $dbclient->lq_nresults() == 0 ) {/* no user */
 //    error_log("[TRICK]: Lanzo query de insert...");
 //    error_log("[TRICK]: Agregado usuario " . $user .  " from  " .  _ip());
-    die ("ERR: Registrese en http://coddns.org");
+    die ("ERR: Registrese en http://" . $config["domainname"]);
 }
 else {
 
     // 1- CHECK ACTUAL IP
-    $q="select ip from hosts where oid=(select id from usuarios where mail='" . $user . "') and tag='" . $host . "';";
-    $r = pg_fetch_object( $pgclient->exeq($q) );
-    if ( $pgclient->lq_nresults() == 0 ) {
+    $q="select ip from hosts where oid=(select id from users where mail='" . $user . "') and tag='" . $host . "';";
+    $r = pg_fetch_object( $dbclient->exeq($q) );
+    if ( $dbclient->lq_nresults() == 0 ) {
         die ("ERR: Ese host no esta registrado, confirme en http://" . $check . "." . $checkd );
     }
     if ( $r->ip != _ip() ){
         $ip=_ip();
         // 2- UPDATE IF NECESSARY
-        $q="update hosts set ip='" . $ip . "', last_updated=now() where oid=(select id from usuarios where mail='" . $user . "') and tag='" . $host . "';";
-        $pgclient->exeq($q);
+        $q="update hosts set ip='" . $ip . "', last_updated=now() where oid=(select id from users where mail='" . $user . "') and tag='" . $host . "';";
+        $dbclient->exeq($q);
 
         // LAUNCH DNS UPDATER erase + add
         $out = shell_exec("dnsmgr d " . $host . " A " . $ip);
@@ -74,5 +74,5 @@ else {
     }
 
 }
-$pgclient->disconnect();
+$dbclient->disconnect();
 ?>
