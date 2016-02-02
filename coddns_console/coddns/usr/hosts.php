@@ -34,6 +34,7 @@ $text["es"]["label_getip"]   = "Coger mi IP";
 $text["es"]["f_add"]         = "Agregar";
 $text["es"]["ht_htitle"]     = "Mis hosts";
 $text["es"]["dberror"]       = "Wooops, contacte con el administrador";
+$text["es"]["reg_type"]      = "Tipo de registro";
 
 /* ENGLISH */
 $text["en"]["hosts_welcome"] = "
@@ -48,6 +49,7 @@ $text["en"]["label_getip"]   = "Select my IP";
 $text["en"]["f_add"]         = "Add";
 $text["en"]["ht_htitle"]     = "My hosts";
 $text["en"]["dberror"]       = "Wooops, please contact the administrator at footer";
+$text["en"]["reg_type"]      = "DNS record type";
 
 /* DEUTSCH */
 $text["de"]["hosts_welcome"] = "
@@ -62,7 +64,7 @@ $text["de"]["label_getip"]   = "Select my IP";
 $text["de"]["f_add"]         = "Add";
 $text["de"]["ht_htitle"]     = "My hosts";
 $text["de"]["dberror"]       = "Wooops, please contact the administrator at footer";
-
+$text["de"]["reg_type"]      = "DNS record type";
 
 ?>
 <!DOCTYPE html>
@@ -89,6 +91,16 @@ function select_my_ip(){
     return false;
 }
 
+function toggle_help_ns(){
+	if(help_dns_type.style["max-width"] == ""){
+		help_dns_type.style["max-width"]  = "450px";
+		help_dns_type.style["max-height"] = "230px";
+		help_dns_type.style["padding"]    = "5px 0 0 15px";
+	}
+	else
+		help_dns_type.removeAttribute("style");
+}
+
 </script>
 </head>
 
@@ -105,8 +117,32 @@ echo $text[$lan]["hosts_welcome"];
             <label><?php echo $text[$lan]["label_tag"];?></label>
         </li>
         <li>
-            <input type="text" id="h" name="h" onchange="checkHostName(this);return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/><i class="extension">.<?php echo $config["domainname"]?></i>
-            <div id="rec_info"></div>
+            <div style="float:left;"><input type="text" id="h" name="h" onchange="checkHostName(this);return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/><i class="extension">.<?php echo $config["domainname"]?></i></div>
+			<div style="float:right;">
+				<?php echo $text[$lan]["reg_type"];?> 
+				<select name="rtype">
+<?php
+// Retrieve all DNS Record types available from de DB
+?>
+					<option value="A">A</option>
+					<option value="MX">MX</option>
+					<option value="CNAME">CNAME</option>
+					<option value="NS">NS</option>
+				</select>
+				<div id="launch_help_dns_type" onclick="toggle_help_ns();">&nbsp;</div>
+				<div id="help_dns_type">
+					<div>
+					<p>Los registros de DNS aceptados son:<p>
+					<ol>
+						<li><b>A</b> Registro por defecto, representa un host</li>
+						<li><b>MX</b> Registro de correo, indica que el registro corresponde a un servidor de correo electr&oacute;nico</li>
+						<li><b>CNAME</b> Registro de etiqueta, establece un alias para un host ya registrado</li>
+						<li><b>NS</b> Registro de servidor de nombres, agrega un <i>nameserver</i> que responder&aacute; las peticiones DNS hechas contra su subdominio</li>
+					</ol>
+					</div>
+				</div>
+			</div>
+            <div id="rec_info" style="clear:both;"></div>
         </li>
             <li>
             <label><?php echo $text[$lan]["label_ip"];?></label>

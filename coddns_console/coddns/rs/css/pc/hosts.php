@@ -1,3 +1,34 @@
+section.uarea ul{
+    list-style-type: none;
+    width: 550px;
+    margin: 20px auto;
+}
+div#launch_help_dns_type{
+	float:right;
+	margin-left: 15px;
+	width: 20px;
+	height: 20px;
+	background: url('<?php echo $config["home_html"] . "/rs/img/question_20.png";?>') no-repeat center;
+    background-size: 15px;
+}
+div#help_dns_type {
+	max-height: 0;
+	max-width: 0;
+	overflow: hidden;
+	position: absolute;
+    box-shadow: 0 0 5px #424242;
+	border-radius: 5px;
+	margin-top: -30px;
+	margin-left: 215px;
+	font-size: 0.9em;
+	background: #FFFEEC;
+	transition: max-height 0.3s 0s, max-width 0.3s 0s;
+}
+div#help_dns_type > div {
+    width: 400px;
+    height: 200px;
+    margin-left: 10px;
+}
 table {
     padding: 5px;
     margin: 0 auto;

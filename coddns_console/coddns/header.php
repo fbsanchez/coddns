@@ -53,13 +53,18 @@ else {
 <script type="text/javascript">
 function red(id,zone,page){
     menu_item_main.className="pl";
-    menu_item_downloads.className="pl";
-    menu_item_user.className="pl";
     menu_item_policy.className="pl";
     menu_item_cookies.className="pl";
     menu_item_priv_zone.className="pl";
-    id.className="pl_select";
-    updateContent(zone,page);
+    menu_item_downloads.className="pl";
+<?php if (get_user_auth()) {
+?>
+    menu_item_user.className="pl";
+<?php
+}
+?>
+	id.className="pl_select";
+	updateContent(zone,page);
 }
 </script>
 <header id="header">
