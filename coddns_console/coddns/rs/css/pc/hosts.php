@@ -4,6 +4,7 @@ section.uarea ul{
     margin: 20px auto;
 }
 div#launch_help_dns_type{
+	cursor: pointer;
 	float:right;
 	margin-left: 15px;
 	width: 20px;
