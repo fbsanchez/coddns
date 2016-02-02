@@ -1,7 +1,7 @@
 <?php
 
 include_once(dirname(__FILE__) . "/../include/config.php");
-require_once(dirname(__FILE__) . "/../include/config.php");
+require_once(dirname(__FILE__) . "/../lib/db.php");
 require_once(dirname(__FILE__) . "/../lib/ipv4.php");
 
 session_start();
@@ -21,6 +21,35 @@ if ( (! isset($_SESSION["email"])) || (!isset ($_POST["edith"])) || (! isset ($_
     exit (1);
 }
 
+$dbclient= new DBClient($db_config);
+$dbclient->connect() or die ("ERR");
+
+
+$host = strtok($_POST["edith"],".");
+$main = strtok(".");
+$dom  = strtok(".");
+
+$check = $config["domainname"];
+$checkm = strtok ($check, ".");
+$checkd = strtok (".");
+
+if(    ( $main != $checkm )
+    || ( $dom  != $checkd )
+    || ( strlen($host) < LENGTH_HOST_MIN )
+    || ( strlen($host) > LENGTH_HOST_MAX ))
+    die ("ERR: nombre de host no valido");
+$host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
+
+$q   = "select ip from hosts where tag='$host';";
+$r   = $dbclient->exeq($q);
+$obj = $dbclient->fetch_object($r);
+
+if(!isset($obj)){
+	die ("ERR: Consulta erronea");
+}
+
+$ip = long2ip($obj->ip);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,10 +68,10 @@ function select_my_ip(){
 <form id="modhost" onsubmit="return false;" method="POST" action="?z=hosts" onsubmit="return false;">
     <ul>
         <li>
-            <label>Host:</label><input style="border: none; font-size: 1em;text-align: right;" type="text" readonly name="edith" value="<?php echo $_POST["edith"]; ?>"></input>
+            <label>Host:</label><input style="border: none; font-size: 1em;text-align: right;" type="text" readonly name="edith" value="<?php echo $host; ?>"></input>
         </li>
         <li>
-            <label>IP actual: </label><span style="float: right;"><?php echo $_POST["editip"];?></span>
+            <label>IP actual: </label><span style="float: right;"><?php echo $ip?></span>
         </li>
         <li>
             <label>Nueva IP: </label><input style="text-align: right;" type="text" name="nip" id="nip" value="<?php echo $_POST["editip"];?>"></input>

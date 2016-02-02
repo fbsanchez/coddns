@@ -56,7 +56,6 @@ if(    ( $main != $checkm )
     die ("ERR: nombre de host no valido");
 $host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
 $ip   = $dbclient->prepare($_POST["nip"], "ip");
-$iip  = $dbclient->prepare($ip, "ip");
 
 if ($ip === FALSE){
     echo $text["en"]["ip_f"];
@@ -68,7 +67,7 @@ $q = "select count(tag) from hosts where lower(tag)=lower('" . $host . "') and o
 $dbclient->exeq($q);
 
 if( $dbclient->lq_nresults() == 1 ){
-    $q = "update hosts set ip='" . $iip . "' where tag='" . $host . "';";
+    $q = "update hosts set ip=$ip where tag='" . $host . "';";
     $dbclient->exeq($q);
 
     // LAUNCH DNS UPDATER
@@ -79,8 +78,8 @@ if( $dbclient->lq_nresults() == 1 ){
     echo "OK";
 }
 else{
-    header ("Location: " . $config["html_root"] . "/err403.html");
     echo "ERR";
+    header ("Location: " . $config["html_root"] . "/err403.html");
     exit (3);
 }
 
@@ -90,5 +89,4 @@ $dbclient->disconnect();
 
 //header ("Location: ". $config["html_root"] . "/?z=hosts&lang=". $lan);
 ?>
-
 <script type="text/javascript">location.reload();</script>

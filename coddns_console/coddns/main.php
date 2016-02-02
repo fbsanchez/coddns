@@ -5,7 +5,7 @@ require_once (dirname(__FILE__) . "/lib/util.php");
 
 if( !isset($_SESSION["lan"])){
     session_write_close();
-    header ("Location: " . $config["html_root"] . "?lang=es");
+    header ("Location: " . $config["html_root"] . "/?lang=es");
     exit (1);
 }
 
