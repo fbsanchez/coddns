@@ -1,7 +1,9 @@
 <?php
 
-if (!isset($_SESSION)){
-    session_start();
+if (   (isset ($_SESSION["email"]))
+    || (! isset ($_GET["token"]))) {
+    header ("Location: /");
+    exit (1);
 }
 
 if (!isset ($_SESSION["email"])) {
