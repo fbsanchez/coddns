@@ -38,10 +38,17 @@ header div#launcher {
     0 0.5em 0 0 #fff;
 }
 
+header > a > img {
+    width: 150px;
+    margin: 0 auto;
+    display: block;
+	
+}
+
 header div#menu{
 	width: 200px;
 	padding-left: 30px;
-	margin-top: 50px;
+	margin-top: 20px;
 }
 
 header * ul {

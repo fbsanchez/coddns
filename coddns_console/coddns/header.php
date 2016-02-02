@@ -34,9 +34,8 @@ else {
         case "hosts":
         case "del":
         case "mod":
-            $menu_item_priv_zone = "pl_select";
-            break;
         case "login":
+            $menu_item_priv_zone = "pl_select";
             $usermod_menu_class = "pl_select";
             break;
         default:
@@ -66,7 +65,7 @@ function red(id,zone,page){
 <header id="header">
 <div id="launcher" class="box-shadow-menu" onclick="minimize_menu();return false;">
 </div>
-
+<a href="<?php echo $config["home_html"];?>/"><img src="/rs/img/coddns_225.png" alt="logo"></a>
 <div id="menu">
     <ul>
         <li><a id="menu_item_main"      class="<?php echo $start_menu_class;?>"     href="<?php echo $config["html_root"];?>/">Inicio</a></li>
