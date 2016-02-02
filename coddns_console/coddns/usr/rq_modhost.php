@@ -1,6 +1,6 @@
 <?php
 require_once (dirname(__FILE__) . "/../include/config.php");
-require_once (dirname(__FILE__) . "/../lib/pgclient.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
 
 //check_user_auth();
 
@@ -19,7 +19,7 @@ if (!isset($_SESSION["lan"])){
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
-
+session_write_close();
 
 if ( (! isset ($_POST["edith"])) || (! isset($_POST["nip"])) ){
     echo "Rellene todos los datos";
@@ -38,8 +38,8 @@ if ( $check < 0 || $check == FALSE ){
 }
 
 
-$pgclient = new PgClient($db_config);
-$pgclient->connect() or die ("ERR");
+$dbclient = new DBClient($db_config);
+$dbclient->connect() or die ("ERR");
 
 $host = strtok($_POST["edith"],".");
 $main = strtok(".");
@@ -54,16 +54,22 @@ if(    ( $main != $checkm )
     || ( strlen($host) < LENGTH_HOST_MIN )
     || ( strlen($host) > LENGTH_HOST_MAX ))
     die ("ERR: nombre de host no valido");
-$host =  $pgclient->prepare($host, "letters") . "." . $config["domainname"];
-$ip   = $_POST["nip"];
+$host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
+$ip   = $dbclient->prepare($_POST["nip"], "ip");
+$iip  = $dbclient->prepare($ip, "ip");
+
+if ($ip === FALSE){
+    echo $text["en"]["ip_f"];
+    exit (1);
+}
 
 // UPDATE ONLY AN EXISTENT HOST
-$q = "select count(tag) from hosts where lower(tag)=lower('" . $host . "') and oid=(select id from usuarios where lower(mail)=lower('" . $pgclient->prepare($_SESSION["email"],"email") . "'));";
-$pgclient->exeq($q);
+$q = "select count(tag) from hosts where lower(tag)=lower('" . $host . "') and oid=(select id from users where lower(mail)=lower('" . $dbclient->prepare($_SESSION["email"],"email") . "'));";
+$dbclient->exeq($q);
 
-if( $pgclient->lq_nresults() == 1 ){
-    $q = "update hosts set ip='" . $ip . "' where tag='" . $host . "';";
-    $pgclient->exeq($q);
+if( $dbclient->lq_nresults() == 1 ){
+    $q = "update hosts set ip='" . $iip . "' where tag='" . $host . "';";
+    $dbclient->exeq($q);
 
     // LAUNCH DNS UPDATER
     // -- erase
@@ -80,7 +86,9 @@ else{
 
 
 
-$pgclient->disconnect();
+$dbclient->disconnect();
 
-header ("Location: /");
+//header ("Location: ". $config["html_root"] . "/?z=hosts&lang=". $lan);
 ?>
+
+<script type="text/javascript">location.reload();</script>

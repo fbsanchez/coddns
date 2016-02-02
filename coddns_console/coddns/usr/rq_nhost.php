@@ -13,13 +13,13 @@ defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
 session_start();
 
 if (! isset ($_SESSION["email"]) ){
-    header ("Location: /" . $config["html_root"]);
+    header ("Location: " . $config["html_root"] . "/");
     exit(1);
 }
 
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
-    header ("Location: /" . $config["html_root"] . "?lang=es");
+    header ("Location: " . $config["html_root"] . "/?lang=es");
     exit (1);
 }
 
@@ -77,7 +77,13 @@ $dbclient->connect() or die ("ERR");
 
 
 $host = $dbclient->prepare($_POST["h"], "letters") . "." . $config["domainname"];
-$ip   = $_POST["ip"];
+$ip   = filter_var($_POST["ip"], FILTER_VALIDATE_IP);
+$iip  = $dbclient->prepare($ip, "ip");
+
+if ($ip === FALSE){
+    echo $text["en"]["ip_f"];
+    exit (1);
+}
 
 // INSERT NEW HOST IF NO ONE EXISTS
 $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
@@ -89,7 +95,7 @@ if( $dbclient->lq_nresults() > 0 )
 // LAUNCH DNS UPDATER
 $out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip);
 
-$q = "insert into hosts (oid, tag, ip) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), INET_ATON('" . $ip . "') );";
+$q = "insert into hosts (oid, tag, ip) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), INET_ATON('" . $iip . "') );";
 $dbclient->exeq($q);
 
 $dbclient->disconnect();

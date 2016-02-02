@@ -1,7 +1,7 @@
 <?php
 
 require_once(dirname(__FILE__) . "/../include/config.php");
-require_once(dirname(__FILE__) . "/../lib/pgclient.php");
+require_once(dirname(__FILE__) . "/../lib/db.php");
 
 session_start();
 if (!isset($_SESSION["lan"])){
@@ -39,32 +39,31 @@ if (! isset ($_POST["delh"]) ){
 	die ("woops...");
 }
 
-$pgclient = new PgClient($db_config);
+$dbclient = new DBClient($db_config);
 
-$pgclient->connect() or die("ERR");
+$dbclient->connect() or die("ERR");
 
 $host = strtok($_POST["delh"],".");
-$host =  $pgclient->prepare($host, "letters") . "." . $config["domainname"];
+$host = $dbclient->prepare($host, "letters") . "." . $config["domainname"];
 
-$q = "delete from hosts where oid=(select id from usuarios where lower(mail)=lower('" . $_SESSION["email"] . "')) and lower(tag)=lower('" . $host . "');";
-$pgclient->exeq($q);
+$q = "delete from hosts where oid=(select id from users where lower(mail)=lower('" . $_SESSION["email"] . "')) and lower(tag)=lower('" . $host . "');";
+$dbclient->exeq($q);
 
 
 // LAUNCH DNS UPDATER
 $out = shell_exec("dnsmgr d " . $host . " A");
 
-
-$pgclient->disconnect();
-
-echo "<div><p>Se ha eliminado " . $host . " correctamente<p><a href='" . $config["html_root"] . "/'>Volver</a></div>";
+$dbclient->disconnect();
 
 ?>
-</body>
-
-</html>
 
 <?php
-if (! strlen($out) > 0)
-    header("Location: " . $config["html_root"] . "/?lang=" . $lan);
+if (! strlen($out) > 0) {
+    header("Location: " . $config["html_root"] . "/?z=hosts&lang=" . $lan);
+}
+echo "<div><p>Se ha eliminado " . $host . " correctamente<p><br><a href=\"" . $config["html_root"] . "/?z=hosts&lang=" . $lan . "\">Volver</a></div>";
 
 ?>
+
+</body>
+</html>

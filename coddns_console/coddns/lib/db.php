@@ -135,6 +135,9 @@ class DBClient {
           return $tmp;
         return null;
       }
+      case "ip":{
+        return ip2long($clsqlarg);
+      }
       default: return null;
     }
   }

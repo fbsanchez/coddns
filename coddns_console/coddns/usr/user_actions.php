@@ -94,6 +94,5 @@ $text["de"]["send"] = "Change it";
     </ul>
     <div id="response"></div>
     </form>
-    <a href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
 </section>
 </body>

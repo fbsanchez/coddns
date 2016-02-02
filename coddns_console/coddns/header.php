@@ -32,6 +32,8 @@ else {
             $menu_item_user = "pl_select";
             break;
         case "hosts":
+        case "del":
+        case "mod":
             $menu_item_priv_zone = "pl_select";
             break;
         case "login":
