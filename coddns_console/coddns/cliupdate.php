@@ -57,10 +57,11 @@ else {
     if ( $dbclient->lq_nresults() == 0 ) {
         die ("ERR: Ese host no esta registrado, confirme en http://" . $check . "." . $checkd );
     }
-    if ( $r->ip != _ip() ){
-        $ip=_ip();
+    if ( $r->ip != ip2long(_ip()) ){
+		$ip  = _ip();
+        $iip = long2ip($ip);
         // 2- UPDATE IF NECESSARY
-        $q="update hosts set ip='" . $ip . "', last_updated=now() where oid=(select id from users where mail='" . $user . "') and tag='" . $host . "';";
+        $q="update hosts set ip='" . $iip . "', last_updated=now() where oid=(select id from users where mail='" . $user . "') and tag='" . $host . "';";
         $dbclient->exeq($q);
 
         // LAUNCH DNS UPDATER erase + add
