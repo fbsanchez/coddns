@@ -133,13 +133,15 @@ $dbclient->connect() or die($text[$lan]["dberror"]);
 $q = "select tag, INET_NTOA(ip) ip from hosts where oid=(select id from users where mail='" . $_SESSION["email"] . "');";
 $r = $dbclient->exeq($q);
 
+
+$del_submit= "fsgo('del', 'ajax_message','usr/delhost.php', true,raise_ajax_message);return false;";
 ?>
 <h3><?php echo $text[$lan]["ht_htitle"];?></h3>
 <form id="change" action="<?php echo $config["html_root"];?>/?z=mod" method="POST">
     <input type="hidden" id="edith" name="edith" required/>
     <input type="hidden" id="editip" name="editip" required/>
 </form>
-<form id="del" action="<?php echo $config["html_root"];?>/?z=del" method="POST">
+<form id="del" action="#" onsubmit="<?php echo $del_submit;?>" method="POST">
     <input type="hidden" id="delh" name="delh" required/>
 </form>
 
@@ -159,7 +161,7 @@ while ($row = $dbclient->fetch_array ($r)) {
         <td><?php echo $row["tag"]?></td>
         <td><?php echo $row["ip"]?></td>
         <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["ip"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
-        <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {del.submit();}"></td>
+        <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {<?php echo $del_submit;?>}"></td>
     </tr>
 <?php
 }
