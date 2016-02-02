@@ -1,7 +1,10 @@
 <?php
 
 require_once(dirname(__FILE__) . "/../include/config.php");
+require_once(dirname(__FILE__) . "/../lib/util.php");
 require_once(dirname(__FILE__) . "/../lib/db.php");
+
+check_user_auth();
 
 session_start();
 if (!isset($_SESSION["lan"])){
@@ -10,33 +13,8 @@ if (!isset($_SESSION["lan"])){
 $lan = $_SESSION["lan"];
 session_write_close();
 
-if (! defined("_VALID_ACCESS")) {
-	header ("Location: " . $config["html_root"] . "/?lang=" . $lan);
-    exit (1);
-}
-
-?>
-<!DOCTYPE html>
-
-<html>
-
-<head>
-<title>Eliminar un host</title>
-<meta charset="UTF-8">
-<style type="text/css">
-</style>
-
-</head>
-<body>
-<?php
-if(! isset($_SESSION["email"]) ){
-    header ("Location: " . $config["html_root"]);
-    exit (1);
-}
-
-
 if (! isset ($_POST["delh"]) ){
-	die ("woops...");
+	die ("Missing parameter, please warn administrator...");
 }
 
 $dbclient = new DBClient($db_config);
@@ -59,11 +37,21 @@ $dbclient->disconnect();
 
 <?php
 if (! strlen($out) > 0) {
-    header("Location: " . $config["html_root"] . "/?z=hosts&lang=" . $lan);
-}
-echo "<div><p>Se ha eliminado " . $host . " correctamente<p><br><a href=\"" . $config["html_root"] . "/?z=hosts&lang=" . $lan . "\">Volver</a></div>";
-
 ?>
+<div>
+	<p>Error eliminando <?php echo $host;?>: $out<p>
+</div>
 
+<?php
+}
+else {
+?>
+<div>
+	<p>Se ha eliminado <?php echo $host;?> correctamente<p>
+</div>
+<script type="text/javascript">location.reload();</script>
+<?php
+}
+?>
 </body>
 </html>
