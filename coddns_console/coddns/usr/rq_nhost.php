@@ -100,7 +100,9 @@ if (preg_match("/ERR/", $out)) {
 }
 else {
     echo $text[$lan]["ok"];
-    header ("Location: " . $config["html_root"] . "/?z=hosts&lan=" . $lan);
+?>
+    <script type="text/javascript">location.reload();</script>
+    <?php
 }
 
 ?>
