@@ -47,3 +47,7 @@ td.del{
     height: 1.4em;
 }
 
+div#rec_info {
+    height: 1em;
+}
+
