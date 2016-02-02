@@ -95,7 +95,7 @@ if( $dbclient->lq_nresults() > 0 )
 // LAUNCH DNS UPDATER
 $out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip);
 
-$q = "insert into hosts (oid, tag, ip) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), INET_ATON('" . $iip . "') );";
+$q = "insert into hosts (oid, tag, ip) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip);";
 $dbclient->exeq($q);
 
 $dbclient->disconnect();
