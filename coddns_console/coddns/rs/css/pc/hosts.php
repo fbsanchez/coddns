@@ -1,6 +1,6 @@
 section.uarea ul{
     list-style-type: none;
-    width: 550px;
+    width: 100%;
     margin: 20px auto;
 }
 div#launch_help_dns_type{
@@ -13,17 +13,18 @@ div#launch_help_dns_type{
     background-size: 15px;
 }
 div#help_dns_type {
-	max-height: 0;
-	max-width: 0;
-	overflow: hidden;
-	position: absolute;
-    box-shadow: 0 0 5px #424242;
-	border-radius: 5px;
-	margin-top: -30px;
-	margin-left: 215px;
-	font-size: 0.9em;
-	background: #FFFEEC;
-	transition: max-height 0.3s 0s, max-width 0.3s 0s;
+    max-height: 0;
+    max-width: 0;
+    overflow: hidden;
+    position: absolute;
+    box-shadow: 0px 2px 10px -2px #424242;
+    border-radius: 5px;
+    margin-top: 15px;
+    left: 50%;
+    margin-left: -225px;
+    font-size: 0.9em;
+    background: #FFFAA3;
+    transition: max-height 0.3s 0s, max-width 0.3s 0s;
 }
 div#help_dns_type > div {
     width: 400px;
