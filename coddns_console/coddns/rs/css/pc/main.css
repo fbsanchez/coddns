@@ -183,6 +183,7 @@ a#remember:hover{
 
 section.uarea{
     width: 60%;
+    max-width: 720px;
     margin: 0 auto;
 }
 ul{

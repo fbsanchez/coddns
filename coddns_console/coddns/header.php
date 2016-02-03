@@ -101,9 +101,16 @@ else {
             <a id="menu_item_cookies" href="#" class="pl" onclick="red(this,'main_section','terms.html');"><?php echo $text[$lan]["terms"];?></a>
         </li>
     </ul>
+    <div style="float:left;">
     <a target="_new" title="Fco de Borja S&aacute;nchez" href='https://plus.google.com/104344930735301242497/about'>
         <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/gp.png') #DA4835 no-repeat center;"></div>
     </a>
+    </div>
+    <div style="float:right;">
+    <a target="_new2" title="CODDNS en GitHub" href='https://github.com/fbsanchez/coddns'>
+        <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/github.png') #FFF no-repeat center;"></div>
+    </a>
+    </div>
 </div>
 </header>
 

@@ -196,11 +196,14 @@ visible_menu = 1;
 function minimize_menu(){
   if (visible_menu == 1){
     visible_menu = 0;
+    main.style["width"]  = "90%";
+    main.style["margin"] = "0 auto";
     header.className = "minimized";
     return false;
   }
   visible_menu = 1;
   header.className = "";
+  main.removeAttribute("style");
   return false;
 }
 

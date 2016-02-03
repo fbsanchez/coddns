@@ -78,7 +78,9 @@ nav {
 
 header div#contact{
     width: 200px;
-    padding-left: 30px;
+    padding-left: 25px;
+    padding-right: 30px;
+   
     position: absolute;
     bottom: 0;
     height: 170px;
@@ -90,5 +92,5 @@ header div#contact div.pic{
 	border-radius: 50%;
 }
 header div#contact div.pic:hover{
-	box-shadow: 0 0 2px #ddd;
+	box-shadow: 0 0 5px #ddd;
 }

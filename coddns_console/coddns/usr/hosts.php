@@ -119,8 +119,8 @@ echo $text[$lan]["hosts_welcome"];
         <li>
             <div style="float:left;"><input type="text" id="h" name="h" onchange="checkHostName(this);return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/><i class="extension">.<?php echo $config["domainname"]?></i></div>
 			<div style="float:right;">
-				<?php echo $text[$lan]["reg_type"];?> 
-				<select name="rtype">
+				<label><?php echo $text[$lan]["reg_type"];?>:</label> 
+				<select style="margin-left: 15px; width: 90px;" name="rtype">
 <?php
 // Retrieve all DNS Record types available from de DB
 ?>
@@ -148,7 +148,13 @@ echo $text[$lan]["hosts_welcome"];
             <label><?php echo $text[$lan]["label_ip"];?></label>
         </li>
         <li>
-            <input type="text" id="ip" name="ip" value="<?php echo _ip();?>" required/> <button onclick="select_my_ip(); return false;"><?php echo $text[$lan]["label_getip"];?></button>
+            <div style="float:left;">
+                <input type="text" id="ip" name="ip" value="<?php echo _ip();?>" required/> <button onclick="select_my_ip(); return false;"><?php echo $text[$lan]["label_getip"];?></button>
+            </div>
+            <div style="float:right;">
+                <span>TTL:<span> <input style="margin: 0 35px 0 15px; width: 90px;" type="numeric" id="ttl" name="ttl" value="12"/>
+            </div>
+            <div style="clear:both;">&nbsp;</div>
         </li>
         <li>
             <label></label>
