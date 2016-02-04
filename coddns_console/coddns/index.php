@@ -109,18 +109,19 @@ $text["de"]["nav_logout"]      ="Logout";
 <?php
 }
 
-if (! check_user_agent('mobile') ){
-?>
+//if (! check_user_agent('mobile') ){
+//?>
 <link rel="stylesheet" type="text/css" href="rs/css/pc/main.css">
 <link rel="stylesheet" type="text/css" href="rs/css/pc/header.css">
 <?php
+/*
 } else {
 ?>
 <link rel="stylesheet" type="text/css" href="rs/css/m/main.css">
 <link rel="stylesheet" type="text/css" href="rs/css/m/header.css">
 <?php
-}
-?>
+//}
+*/?>
 <script type="text/javascript" src="rs/js/util.js"></script>
 <script type="text/javascript">
     function checkHostName(){

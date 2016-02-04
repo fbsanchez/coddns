@@ -23,4 +23,9 @@ defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
 defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
 $salt = "Set a custom salt to enforce the passwords";
 
+defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
+defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);
+defined ("LENGTH_HOST_MIN") or define ("LENGTH_HOST_MIN", 1);
+defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
+
 ?>
