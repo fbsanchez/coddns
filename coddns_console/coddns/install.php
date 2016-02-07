@@ -29,14 +29,13 @@ $global_ok = 0;
 exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
 if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
 
-
 // check ddns_manager is present
 exec ("which dnsmgr | wc -l", $out, $return);
-if (($return == 0) && ($out[0] >= 1)) { $dnsmgr_ok  = 1; }
+if (($return == 0) && ($out[1] >= 1)) { $dnsmgr_ok  = 1; }
 
 // check nmap is present
 exec ("which nmap | wc -l", $out, $return);
-if (($return == 0) && ($out[0] >= 1)) { $nmap_ok  = 1; }
+if (($return == 0) && ($out[2] >= 1)) { $nmap_ok  = 1; }
 
 
 // check php extensions
