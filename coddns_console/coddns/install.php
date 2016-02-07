@@ -4,9 +4,7 @@
 
 function check_lib($item){
 	if (!extension_loaded($item)) {
-		if (!dl('$item.so')) {
-			return FALSE;
-		}
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -28,15 +26,16 @@ $nmap_ok   = 0;
 
 // check named service:
 exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
-if (($return == 0) && ($out >= 1)) { $named_ok  = 1; }
+if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
+
 
 // check ddns_manager is present
 exec ("which dnsmgr | wc -l", $out, $return);
-if (($return == 0) && ($out >= 1)) { $dnsmgr_ok  = 1; }
+if (($return == 0) && ($out[0] >= 1)) { $dnsmgr_ok  = 1; }
 
 // check nmap is present
 exec ("which nmap | wc -l", $out, $return);
-if (($return == 0) && ($out >= 1)) { $nmap_ok  = 1; }
+if (($return == 0) && ($out[0] >= 1)) { $nmap_ok  = 1; }
 
 
 // check php extensions
@@ -88,7 +87,7 @@ function update_data_form(){
 <body>
 <section id="main_wizard">
 	<header>
-		<img src="/rs/img/coddns_225.png" alt="logo"/>
+		<img src="rs/img/coddns_225.png" alt="logo"/>
 		<p style="float: right;margin: 17px 1em 0px 0px;color: #fff;font-size: 0.72em;">Versi&oacute;n 2.0</p>
 	</header>
 	<article>
