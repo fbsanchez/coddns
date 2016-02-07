@@ -85,7 +85,7 @@ INSERT INTO roles (tag,description)
     ('advanced','Advanced user'),
     ('standar','Standard user');
 
--- Default user
-INSERT INTO users (mail,pass,first_login,last_login,rol)
+-- GROUPS
+INSERT INTO groups (tag,description)
  values
-    ('admin@coddns','',now(),now(),(select id from roles where tag='admin'));
+    ('all', 'Default group');

@@ -62,7 +62,15 @@ div.ok{
 div.fail{
 	background: red;
 }
-
+div.err{
+	font-size: 0.8em;
+    width: 90%;
+    overflow: hidden;
+    text-indent: 30px;
+    max-height: 1.2em;
+    cursor: pointer;
+    transition: max-height 0.5s 0s;
+}
 ul{
 	list-style-type: none;
 	margin: 2px 50px 10px;

@@ -50,7 +50,6 @@ class MyClient{
       $this->error =  mysqli_connect_errno() . PHP_EOL;
       return false;
     }
-    $this->exeq("set search_path to '" . $this->schema . "'");
     return true;
   }
 
@@ -90,6 +89,9 @@ class MyClient{
   }
   function fetch_array($result){
     return mysqli_fetch_array($result);
+  }
+  function escape_string($str){
+    return mysqli_real_escape_string($this->link,$str);
   }
 }
 

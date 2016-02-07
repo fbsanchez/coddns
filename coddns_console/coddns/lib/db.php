@@ -96,33 +96,45 @@ class DBClient {
       case "email":     return strip_tags (preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg), "<b><u><p>");
       case "number":    return floatval($clsqlarg);
       case "letters":   return strip_tags (preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg), "<b><u><p>");
-      case "text":{
+      case "insecure_text":{
         $search  = array("<script", "</script>", "%0A");
         return str_replace("%", "$",(
-          urlencode(
-            strip_tags (
-              str_replace($search,"", $clsqlarg),
-              "")
+            urlencode(
+              strip_tags (
+                str_replace($search,"", $clsqlarg),
+                "")
             )));
+      }
+      case "text":{
+        $search  = array("<script", "</script>", "%0A");
+        return $this->client->escape_string(
+          str_replace("%", "$",(
+            urlencode(
+              strip_tags (
+                str_replace($search,"", $clsqlarg),
+                "")
+            ))));
       }
       case "rich_text":{
         $search  = array("<script", "</script>", "%0A");
         $replace = array(""       , ""         , "<br>");
-        return str_replace("%", "$",(
-          urlencode(
-            strip_tags (
-              str_replace($search,$replace, $clsqlarg),
-              "<b><u><p><a>")
-            )));
+        return $this->client->escape_string(
+          str_replace("%", "$",(
+            urlencode(
+              strip_tags (
+                str_replace($search,$replace, $clsqlarg),
+                "<b><u><p><a>")
+            ))));
       }
       case "url": {
         $search  = array("<script", "</script>");
-        return str_replace("%", "$",(
-          urlencode(
-            strip_tags (
-              str_replace($search,"", $clsqlarg),
-              "")
-            )));
+        return $this->client->escape_string(
+          str_replace("%", "$",(
+            urlencode(
+              strip_tags (
+                str_replace($search,"", $clsqlarg),
+                "")
+            ))));
       }
       case "date":{
         if($tmp = $this->date_checker($clsqlarg))

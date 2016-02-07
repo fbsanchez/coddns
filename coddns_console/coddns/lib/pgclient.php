@@ -83,6 +83,9 @@ class PgClient{
   function fetch_array($result){
     return pg_fetch_array($result);
   }
+  function escape_string($str){
+    return pg_escape_string($str);
+  }
 }
 
 
