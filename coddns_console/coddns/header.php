@@ -121,7 +121,7 @@ else {
     </ul>
     <div style="display:inline-block;">
     <a target="_new" title="Fco de Borja S&aacute;nchez" href='https://plus.google.com/104344930735301242497/about'>
-        <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/gp.png') #DA4835 no-repeat center;background-size:41px;"></div>
+        <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/gp.png') #DA4835 no-repeat center;background-size:30px;"></div>
     </a>
     </div>
     <div style="display: inline-block;margin-left: 15px;">
