@@ -16,41 +16,17 @@ function check_item($item){
 		echo "fail";
 }
 
-// TESTS BEGIN
-
-$named_ok  = 0;
-$dnsmgr_ok = 0;
-$mysqli_ok = 0;
-$pgsql_ok  = 0;
-$nmap_ok   = 0;
-$global_ok = 0;
-
-// check named service:
-exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
-if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
-
-// check ddns_manager is present
-exec ("which dnsmgr | wc -l", $out, $return);
-if (($return == 0) && ($out[1] >= 1)) { $dnsmgr_ok  = 1; }
-
-// check nmap is present
-exec ("which nmap | wc -l", $out, $return);
-if (($return == 0) && ($out[2] >= 1)) { $nmap_ok  = 1; }
-
-
-// check php extensions
-if (check_lib("mysqli"))           { $mysqli_ok = 1; }
-if (check_lib("pgsql"))            { $pgsql_ok  = 1; }
-
-if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
-	$global_ok = 1;
+function print_header($phase) {
+	?>
+	<header>
+		<img src="rs/img/coddns_225.png" alt="logo"/>
+		<p style="float: right;margin: 17px 1em 0px 0px;color: #fff;font-size: 0.72em;">Fase <?php echo $phase;?>/3</p>
+	</header>
+	<?php
 }
 
-// TESTS END
-
-//$service_requeriments = $named_ok + $dnsmgr_ok;
-//$global_requeriments = $service_requeriments + 
 ?>
+
 <!DOCTYPE HTML>
 <hmtl>
 <head>
@@ -89,10 +65,58 @@ function update_data_form(){
 
 <body>
 <section id="main_wizard">
-	<header>
-		<img src="rs/img/coddns_225.png" alt="logo"/>
-		<p style="float: right;margin: 17px 1em 0px 0px;color: #fff;font-size: 0.72em;">Versi&oacute;n 2.0</p>
-	</header>
+
+<?php
+$dbuser = $_POST["dbuser"];
+$dbpass = $_POST["dbpass"];
+$dbname = $_POST["dbname"];
+$dbhost = $_POST["dbhost"];
+$dbport = $_POST["dbport"];
+$schema = $_POST["schema"];
+
+if (   (!isset ($dbuser))
+	|| (!isset ($dbpass))
+	|| (!isset ($dbport))
+	|| (!isset ($dbhost))
+	|| (!isset ($dbname))
+	) { // INSTALL PHASE 1
+
+// TESTS BEGIN
+
+$named_ok  = 0;
+$dnsmgr_ok = 0;
+$mysqli_ok = 0;
+$pgsql_ok  = 0;
+$nmap_ok   = 0;
+$global_ok = 0;
+
+// check named service:
+exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
+if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
+
+// check ddns_manager is present
+exec ("which dnsmgr | wc -l", $out, $return);
+if (($return == 0) && ($out[1] >= 1)) { $dnsmgr_ok  = 1; }
+
+// check nmap is present
+exec ("which nmap | wc -l", $out, $return);
+if (($return == 0) && ($out[2] >= 1)) { $nmap_ok  = 1; }
+
+
+// check php extensions
+if (check_lib("mysqli"))           { $mysqli_ok = 1; }
+if (check_lib("pgsql"))            { $pgsql_ok  = 1; }
+
+if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
+	$global_ok = 1;
+}
+
+// TESTS END
+
+//$service_requeriments = $named_ok + $dnsmgr_ok;
+//$global_requeriments = $service_requeriments + 
+?>
+	<?php print_header(1) ?>
 	<article>
 		<div>
 			<h1>Bienvenido a CODDNS</h1>
@@ -160,22 +184,22 @@ function update_data_form(){
 				</select>
 				<ul id="data_form" style="max-height: 0px;overflow:hidden;transition:max-height 1s 0s;">
 					<li>
-						<label>Servidor:</label><input name="dbh" type="text"/>
+						<label>Servidor:</label><input name="dbhost" type="text" value="localhost"/>
 					</li>
 					<li>
-						<label>Puerto:</label><input id="dbp" name="dbp" type="number" value="3306"/>
+						<label>Puerto:</label><input id="dbp" name="dbport" type="number" value="3306"/>
 					</li>
 					<li>
-						<label>Base de datos:</label><input name="db" type="text"/>
+						<label>Base de datos:</label><input name="dbname" type="text" value="coddns"/>
 					</li>
 					<li id="schema" style="padding:0;max-height:0;overflow:hidden;">
-						<label>Esquema:</label><input name="sch" type="text"/>
+						<label>Esquema:</label><input name="schema" type="text" value="dbnsp"/>
 					</li>
 					<li>
-						<label>Usuario:</label><input name="user" type="text"/>
+						<label>Usuario:</label><input name="dbuser" type="text" value="root"/>
 					</li>
 					<li>
-						<label>Contrase&ntilde;a:</label><input name="pass" type="password"/>
+						<label>Contrase&ntilde;a:</label><input name="dbpass" type="password"/>
 					</li>
 					<li>
 						<input type="submit" value="Instalar"/>
@@ -184,8 +208,25 @@ function update_data_form(){
 			</form>
 		</div>
 	</article>
-</section>
+<?php
+}
+else{
+?>
+	<?php print_header(2) ?>
+	<article>
+		<div>
+			<h1>Procesando SQL...</h1>
+			<p>Gracias por elegir CODDNS como su sistema de gesti&oacute;n integral de servicios de resoluci&oacute;n de nombres de dominio.</p>
+			<br />
+			<p>Por favor, antes de continuar, verifique que se cumplen todos los requisitos en negrita, son <b>imprescindibles</b>.</p>
+		</div>
+	</article>
 
+</section>
+<?php
+}
+?>
+</section>
 </body>
 
 </hmtl>
