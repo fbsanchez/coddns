@@ -6,14 +6,98 @@
 }
 html{
 	width: 100%;
-	background: #ddd;
+	background: #424242;
+}
+header {
+	height: 50px;
+	width: 100%;
+	background: #1F282B;
+}
+header img{
+	width: 125px;
+    height: 100%;
+    margin-left: 2em;
+}
+section#main_wizard {
+	width: 650px;
+	height: 50%;
+	min-height: 400px;
+	background: #fdfdfd;
+	color: #222;
+	margin: 15px auto;
+	box-shadow: 0px 5px 10px #111;
+}
+section article{
+	padding: 15px;
+	width: 100%;
+}
+div.t_label{
+	margin: 15px 5% 5px;
+	cursor: pointer;
 }
 
-div#main_wizard {
+div.tab{
 	width: 90%;
-	height: 700px;
-	background: #fff;
-	margin: 0 auto;
-	padding: 3em;
-	box-shadow: 0 0 2px #444;
+	margin-left: 10%;
+	max-height: 0;
+	overflow: hidden;
+	font-size: 0.9em;
+	transition: max-height 0.5s 0s;
+}
+
+div.status{
+    width: 10px;
+    height: 10px;
+    display: block;
+    border-radius: 50%;
+    margin: 4px;
+    float: left;
+    border: 1px solid #ddd;
+}
+
+div.ok{
+	background: green;
+}
+
+div.fail{
+	background: red;
+}
+
+ul{
+	list-style-type: none;
+	margin: 2px 0px 10px;
+	width: 350px;
+}
+
+ul li{
+	padding: 2px;
+}
+li input{
+    float: right;
+}
+li input[type="email"],
+li input[type="text"],
+li input[type="password"],
+li input[type="number"]{
+    width: 150px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    text-indent: 10px;
+}
+li input[type="submit"]{
+    margin-top: 10px;
+    padding: 5px 10px 5px;
+    border: none;
+    background: #EC8606;
+    color: #FFF;
+    transition: border-radius 0.1s 0s, box-shadow 0.1s 0s;
+    cursor: pointer;
+}
+li input[type="submit"]:hover {
+    border-radius: 15px 0 15px 0px;
+    box-shadow: 0 0 2px #ccc;
+}
+
+section.uarea input[type="text"]{
+    float: none;
 }

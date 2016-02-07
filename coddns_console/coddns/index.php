@@ -2,14 +2,13 @@
 
 defined("_VALID_ACCESS") or define ("_VALID_ACCESS", 1);
 
-session_start();
-include_once (dirname(__FILE__) . "/include/config.php");
-require_once (dirname(__FILE__) . "/lib/ipv4.php");
-require_once (dirname(__FILE__) . "/lib/util.php");
-
 if (!file_exists(dirname(__FILE__) . "/include/config.php")){
     header("Location: install.php");
 }
+
+include_once (dirname(__FILE__) . "/include/config.php");
+require_once (dirname(__FILE__) . "/lib/ipv4.php");
+require_once (dirname(__FILE__) . "/lib/util.php");
 
 if (get_user_auth() && (isset($_GET["z"])) && ($_GET["z"] == "login")){
     $_GET["z"] = "hosts";
@@ -23,6 +22,8 @@ $en   = array();
 $es   = array();
 $de   = array();
 $text = array("es"=>$es,"en"=>$en,"de"=>$de);
+
+session_start();
 
 if(isset($_GET["lang"])){
     switch ($_GET["lang"]){

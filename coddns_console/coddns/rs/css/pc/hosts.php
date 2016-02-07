@@ -84,3 +84,12 @@ div#rec_info {
     height: 1em;
 }
 
+div#myhosts {
+    width: 90%;
+    margin: 40px auto;
+    padding: 10px;
+}
+div#myhosts table{
+    width: 100%;
+    margin: 20px auto;
+}
