@@ -3,15 +3,13 @@
 /*
  * Database configuration
  */
-$pg_config = array("engine"  =>"mysql", // Could be mysql or postgresql
+$db_config = array("engine"  =>"mysql", // Could be mysql or postgresql
                    "username"=>"coddns",
                    "password"=>'coddns',
                    "hostname"=>"localhost",
                    "port"    =>"3306",
                    "name"    =>"coddns",
                    "schema"  =>"");
-
-$db_config = $pg_config;
 
 // domain name: fqdn base for the system
 // html_root: if you want to access http://yousite.yourdomain/coddns

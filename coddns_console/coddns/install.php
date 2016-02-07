@@ -67,6 +67,7 @@ function update_data_form(){
 <section id="main_wizard">
 
 <?php
+$engine = $_POST["engine"];
 $dbuser = $_POST["dbuser"];
 $dbpass = $_POST["dbpass"];
 $dbname = $_POST["dbname"];
@@ -74,7 +75,8 @@ $dbhost = $_POST["dbhost"];
 $dbport = $_POST["dbport"];
 $schema = $_POST["schema"];
 
-if (   (!isset ($dbuser))
+if (   (!isset ($engine))
+	|| (!isset ($dbuser))
 	|| (!isset ($dbpass))
 	|| (!isset ($dbport))
 	|| (!isset ($dbhost))
@@ -212,13 +214,75 @@ if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
 }
 else{
 ?>
-	<?php print_header(2) ?>
+	<?php
+	print_header(2);
+	require_once(dirname(__FILE__) . "/lib/db.php");
+	require_once(dirname(__FILE__) . "/lib/util.php");
+
+	// Create temp configuration
+	/*
+	 * Database configuration
+	 */
+	$db_config = array("engine"  =>"$engine", // Could be mysql or postgresql
+	                   "username"=>"$dbuser",
+	                   "password"=>"$dbpass",
+	                   "hostname"=>"$dbhost",
+	                   "port"    =>"$dbport",
+	                   "name"    =>"$dbname",
+	                   "schema"  =>"$schema");
+
+	switch ($engine) {
+		case "mysql":
+			$sql_file = "coddns_mysql.sql";
+			break;
+		case "postgresql":
+			$sql_file = "coddns_pgsql.sql";
+			break;
+		default:
+			$sql_file = "";
+			die ("Error, please follow the wizard.");
+			break;
+	}
+	
+
+	// Initialize flags
+	$sql_connection_ok = 0;
+	$sql_process_ok    = 0;
+
+	$sql_file = "";
+
+
+	// Connect to SQL
+	$dbclient = new DBClient($db_config);
+
+	if($dbclient->connect()) {
+		$sql_connection_ok = 1;
+	}
+	if ($sql_connection_ok == 1){
+		$r = $dbclient->exeq($sql_file);	
+	}
+
+	$dbclient->disconnect();
+	
+
+
+	?>
 	<article>
 		<div>
-			<h1>Procesando SQL...</h1>
-			<p>Gracias por elegir CODDNS como su sistema de gesti&oacute;n integral de servicios de resoluci&oacute;n de nombres de dominio.</p>
+			<p>Comprobando rutinas SQL...</p>
+			
 			<br />
-			<p>Por favor, antes de continuar, verifique que se cumplen todos los requisitos en negrita, son <b>imprescindibles</b>.</p>
+			<ul>
+				<li>
+					<div class="status <?php check_item($sql_connection_ok);?>">&nbsp;</div> Conexi&oacute;n con el servidor
+				</li>
+				<li>
+					<div class="status <?php check_item($sql_process_ok);?>">&nbsp;</div> Procesado de scripts de despliegue
+				</li>
+			</ul>
+			<?php
+
+			?>
 		</div>
 	</article>
 

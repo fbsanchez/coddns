@@ -214,5 +214,5 @@ while ($row = $dbclient->fetch_array ($r)) {
 </body>
 </html>
 <?php
-
+$dbclient->disconnect();
 ?>

@@ -9,7 +9,7 @@ div#launch_help_dns_type{
 	margin-left: 15px;
 	width: 20px;
 	height: 20px;
-	background: url('<?php echo $config["home_html"] . "/rs/img/question_20.png";?>') no-repeat center;
+	background: url('<?php echo $config["html_root"] . "/rs/img/question_20.png";?>') no-repeat center;
     background-size: 15px;
 }
 div#help_dns_type {

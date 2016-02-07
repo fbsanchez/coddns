@@ -17,3 +17,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# CMS Integration
+coddns_console/coddns/cms/*
