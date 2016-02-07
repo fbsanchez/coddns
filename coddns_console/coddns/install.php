@@ -23,6 +23,7 @@ $dnsmgr_ok = 0;
 $mysqli_ok = 0;
 $pgsql_ok  = 0;
 $nmap_ok   = 0;
+$global_ok = 0;
 
 // check named service:
 exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
@@ -42,6 +43,9 @@ if (($return == 0) && ($out[0] >= 1)) { $nmap_ok  = 1; }
 if (check_lib("mysqli"))           { $mysqli_ok = 1; }
 if (check_lib("pgsql"))            { $pgsql_ok  = 1; }
 
+if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
+	$global_ok = 1;
+}
 
 // TESTS END
 
@@ -98,7 +102,7 @@ function update_data_form(){
 			<p>Por favor, antes de continuar, verifique que se cumplen todos los requisitos en negrita, son <b>imprescindibles</b>.</p>
 		</div>
 		<div class="t_label" onclick="toggle(requeriments);">
-			<div class="status ok">&nbsp;</div>Requisitos
+			<div class="status <?php echo check_item($global_ok);?>">&nbsp;</div>Requisitos
 		</div>
 		<div class="tab" id="requeriments">
 			<i>Software y servicios</i>
