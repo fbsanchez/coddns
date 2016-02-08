@@ -1,7 +1,12 @@
 ﻿<?php
 // CODDNS INSTALLER
 require_once(dirname(__FILE__) . "/lib/db.php");
-require_once(dirname(__FILE__) . "/lib/util.php");
+
+function isOverHTTPS(){
+    if (isset($_SERVER["HTTPS"]) && $_SERVER['SERVER_PORT'] == '443')
+        return true;
+    return false;
+}
 
 function check_lib($item){
 	if (!extension_loaded($item)) {
@@ -32,7 +37,18 @@ function print_header($phase) {
 <hmtl>
 <head>
 <title>CODDNS Installer - Integrated management of name resolution services</title>
+
+<?php
+    if(isOverHTTPS()) {
+?>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+<?php
+} else {
+?>
 <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+<?php
+}
+?>
 <link rel="icon" href="rs/img/coddns.ico">
 <link rel="stylesheet" type="text/css" href="rs/css/pc/install.css">
 <script type="text/javascript">
@@ -80,8 +96,10 @@ if(    (!isset ($_POST["engine"]))
 	) { // NO PHASE 2 expected values received, can be at 1 or 3
 	$phase = 3;
 	if(    (!isset($_POST["html_root"]))
-		|| (!isset($_POST["admuser"]))
-		|| (!isset($_POST["admpass"]))
+		|| (!isset($_POST["user"]))
+		|| (!isset($_POST["pass"]))
+		|| (!isset($_POST["domain"]))
+		|| (!isset($_POST["hash"]))
 	) { // NO PHASE 3 expected values received, I must be on 1
 		$phase = 1;
 	}
@@ -100,6 +118,7 @@ $mysqli_ok = 0;
 $pgsql_ok  = 0;
 $nmap_ok   = 0;
 $global_ok = 0;
+$writable_config_ok = 0;
 
 // check named service:
 exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
@@ -113,13 +132,19 @@ if (($return == 0) && ($out[1] >= 1)) { $dnsmgr_ok  = 1; }
 exec ("which nmap | wc -l", $out, $return);
 if (($return == 0) && ($out[2] >= 1)) { $nmap_ok  = 1; }
 
+// Check if configuration directory is writable
+if (is_writable(dirname(__FILE__) . "/include")){
+	$writable_config_ok = 1;
+}
 
 // check php extensions
 if (check_lib("mysqli"))           { $mysqli_ok = 1; }
 if (check_lib("pgsql"))            { $pgsql_ok  = 1; }
 
-if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
-	$global_ok = 1;
+if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
+	if ($mysqli_ok+$pgsql_ok >= 1){
+		$global_ok = 1;
+	}
 }
 
 // TESTS END
@@ -138,7 +163,7 @@ if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
 		<div class="t_label" onclick="toggle(requeriments);">
 			<div class="status <?php echo check_item($global_ok);?>">&nbsp;</div>Requisitos
 		</div>
-		<div class="tab" id="requeriments">
+		<div class="tab" id="requeriments" <?php if ($global_ok !=1) echo "style='max-height:1000px;'";?> >
 			<i>Software y servicios</i>
 			<ul>
 				<li>
@@ -154,6 +179,10 @@ if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
 				</li>
 				<li>
 					<div class="status ok">&nbsp;</div> <b>PHP</b>
+				</li>
+				<li>
+					<div class="status <?php check_item($writable_config_ok);?>">&nbsp;</div>
+						<b>Permisos de escritura sobre el directorio de configuraci&oacute;n</b>
 				</li>
 			</ul>
 			<b><i>Conectores a bases de datos</i></b> <span style="font-size:0.65em;">(al menos uno)</span>
@@ -172,11 +201,15 @@ if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
 				</li>
 			</ul>
 		</div>
+		<?php
+			// DO NOT SHOW FORM TO PHASE 2 if gobal checks are not completed
+			if($global_ok == 1) {
+		?>
 		<div class="t_label" onclick="toggle(data);">
 			<div class="status">&nbsp;</div>Datos
 		</div>
-		<div class="tab" id="data">
-			<form id="mysql" name="dbdata" method="POST">
+		<div class="tab" id="data" <?php if ($global_ok ==1) echo "style='max-height:1000px;'";?>>
+			<form id="mysql" name="dbdata" method="POST" onsubmit="dbrpass.value=btoa(dbrpass.value);dbpass.value=btoa(dbpass.value);">
 				<label>Motor de la base de datos:</label>
 				<select id="engine" name="engine" onchange="update_data_form();">
 					<option value="" selected>Seleccione</option>
@@ -204,19 +237,19 @@ if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
 						<label>Base de datos:</label><input name="dbname" type="text" value="coddns"/>
 					</li>
 					<li id="schema" style="padding:0;max-height:0;overflow:hidden;">
-						<label>Esquema:</label><input name="schema" type="text" value="dbnsp"/>
+						<label>Esquema:</label><input name="schema" type="text"/>
 					</li>
 					<li>
 						<label>Usuario:</label><input name="dbroot" type="text" value="root"/>
 					</li>
 					<li>
-						<label>Contrase&ntilde;a:</label><input name="dbrpass" type="password"/>
+						<label>Contrase&ntilde;a:</label><input id="dbrpass" name="dbrpass" type="password"/>
 					</li>
 					<li>
 						<label>Nuevo usuario:</label><input name="dbuser" type="text" value="coddns"/>
 					</li>
 					<li>
-						<label>Nueva contrase&ntilde;a:</label><input name="dbpass" type="password"/>
+						<label>Nueva contrase&ntilde;a:</label><input id="dbpass" name="dbpass" type="password"/>
 					</li>
 					<li>
 						<label>Realizar instalaci&oacute;n limpia:</label><input name="dbdrop" type="checkbox" checked/>
@@ -227,19 +260,20 @@ if ($named_ok+$dnsmgr_ok+$mysqli_ok+$pgsql_ok >= 3){
 				</ul>
 			</form>
 		</div>
+		<?php
+	}
+		?>
 	</article>
 <?php
 }
 elseif ($phase == 2) {
-?>
-	<?php
 	print_header(2);
 
 	$engine  = DBClient::prepare($_POST["engine"],"insecure_text");
 	$dbroot  = DBClient::prepare($_POST["dbroot"],"insecure_text");
-	$dbrpass = $_POST["dbrpass"];
+	$dbrpass = base64_decode($_POST["dbrpass"]);
 	$dbuser  = DBClient::prepare($_POST["dbuser"],"insecure_text");
-	$dbpass  = $_POST["dbpass"];
+	$dbpass  = base64_decode($_POST["dbpass"]);
 	$dbname  = DBClient::prepare($_POST["dbname"],"insecure_text");
 	$dbhost  = DBClient::prepare($_POST["dbhost"],"insecure_text");
 	$dbport  = DBClient::prepare($_POST["dbport"],"number");
@@ -291,9 +325,9 @@ elseif ($phase == 2) {
 	if ($sql_connection_ok == 1){
 		$engine  = $dbclient->prepare($_POST["engine"],"text");
 		$dbroot  = $dbclient->prepare($_POST["dbroot"],"text");
-		$dbrpass = $_POST["dbrpass"];
+		$dbrpass = base64_decode($_POST["dbrpass"]);
 		$dbuser  = $dbclient->prepare($_POST["dbuser"],"text");
-		$dbpass  = $_POST["dbpass"];
+		$dbpass  = base64_decode($_POST["dbpass"]);
 		$dbname  = $dbclient->prepare($_POST["dbname"],"text");
 		$dbhost  = $dbclient->prepare($_POST["dbhost"],"text");
 		$dbport  = $dbclient->prepare($_POST["dbport"],"number");
@@ -375,6 +409,20 @@ elseif ($phase == 2) {
 			}
 		}
 		$dbclient->disconnect();
+
+		if ($sql_process_ok == 1) {
+			// Succesfully installed, store config to SESSION
+			$db_config = array("engine"  =>"$engine", // Could be mysql or postgresql
+                   "username"=>"$dbuser",
+                   "password"=>"$dbpass",
+                   "hostname"=>"$dbhost",
+                   "port"    =>"$dbport",
+                   "name"    =>"$dbname",
+                   "schema"  =>"$schema");
+			session_start();
+			$_SESSION["config"] = $db_config;
+			session_write_close();
+		}
 	}
 
 	?>
@@ -443,19 +491,19 @@ elseif ($phase == 2) {
 			<div class="status">&nbsp;</div>Configuraci&oacute;n final del sitio:
 		</div>
 		<div class="tab" style="max-height: 1000px" id="data">
-			<form id="mysql" name="dbdata" method="POST">
+			<form id="mysql" name="finalcfg" method="POST" onsubmit="pass.value=btoa(pass.value);">
 				<ul>
 					<li>
 						<label>Dominio principal:</label><input name="domain" type="text" value="coddns.lan"/>
 					</li>
 					<li>
-						<label>Directorio HTML principal</label><input name="user" type="text" value="<?php echo preg_replace("/install\.php$/","",$_SERVER[REQUEST_URI]);?>"/>
+						<label>Directorio HTML principal</label><input name="html_root" type="text" value="<?php echo preg_replace("/\/install\.php$/","",$_SERVER['REQUEST_URI']);?>"/>
 					</li>
 					<li>
 						<label>Cuenta de administraci&oacute;n:</label><input name="user" type="email"/>
 					</li>
 					<li>
-						<label>Contrase&ntilde;a:</label><input id="dbp" name="pass" type="password"/>
+						<label>Contrase&ntilde;a:</label><input id="pass" name="pass" type="password"/>
 					</li>
 					<li>
 						<label>Semilla hash:</label><input name="hash" type="text" value="<?php echo base64_encode(time());?>"/>
@@ -472,12 +520,131 @@ elseif ($phase == 2) {
 		}
 		?>
 	</article>
-
-</section>
 <?php
 }
 elseif ($phase == 3){
+	session_start();
+	$config = $_SESSION["config"];
+	session_write_close();
+
+	print_header(3);
+
+	$html_root = $_POST["html_root"];
+	$user      = $_POST["user"];
+	$pass      = $_POST["pass"];
+	$domain    = $_POST["domain"];
+	$salt      = $_POST["hash"];
+
+
+
+	// BUILD FINAL CONFIGURATION FILE
+	$str_config  = "<?php\n";
+	$str_config .= "\n";
+	$str_config .= "/*\n";
+	$str_config .= " * Database configuration\n";
+	$str_config .= " */\n";
+	$str_config .= "\$db_config = array(\"engine\"  =>\"" . $config["engine"] . "\", // Could be mysql or postgresql\n";
+	$str_config .= "                   \"username\"=>\"" . $config["username"] . "\",\n";
+	$str_config .= "                   \"password\"=>'" . $config["password"] . "',\n";
+	$str_config .= "                   \"hostname\"=>\"" . $config["hostname"] . "\",\n";
+	$str_config .= "                   \"port\"    =>\"" . $config["port"] . "\",\n";
+	$str_config .= "                   \"name\"    =>\"" . $config["name"] . "\",\n";
+	$str_config .= "                   \"schema\"  =>\"" . $config["schema"] . "\");\n";
+	$str_config .= "\n";
+	$str_config .= "// domain name: FQDN base for the system\n";
+	$str_config .= "// html_root: if you want to access http://yousite.yourdomain/coddns\n";
+	$str_config .= "//            set it to /coddns, is the nav location\n";
+	$str_config .= "\$config = array (\"domainname\" => \"" . $domain . "\",\n";
+	$str_config .= "		 \"html_root\"  => \"" . $html_root . "\");\n";
+	$str_config .= "\n";
+	$str_config .= "defined (\"MIN_USER_LENGTH\") or define (\"MIN_USER_LENGTH\", 4);\n";
+	$str_config .= "defined (\"MIN_PASS_LENGTH\") or define (\"MIN_PASS_LENGTH\", 4);\n";
+	$str_config .= "\$salt = \"" . $salt . "\";\n";
+	$str_config .= "\n";
+	$str_config .= "defined (\"LENGTH_USER_MIN\") or define (\"LENGTH_USER_MIN\", 2);\n";
+	$str_config .= "defined (\"LENGTH_PASS_MIN\") or define (\"LENGTH_PASS_MIN\", 2);\n";
+	$str_config .= "defined (\"LENGTH_HOST_MIN\") or define (\"LENGTH_HOST_MIN\", 1);\n";
+	$str_config .= "defined (\"LENGTH_HOST_MAX\") or define (\"LENGTH_HOST_MAX\", 200);\n";
+	$str_config .= "\n";
+	$str_config .= "?>\n";
+
+	$file = dirname(__FILE__) . "/include/config.php";
+
+	if (! is_writable(dirname(__FILE__) . "/include")){
+		die("El directorio " . dirname(__FILE__) . "/include" . "no es accesible por el instalador, por favor verifique los requisitos");
+	}
+	file_put_contents($file, $str_config);
+
+
+	// FINAL STEP - create admin user using the configuration file
+	require_once (dirname(__FILE__) . "/include/config.php");
+	require_once (dirname(__FILE__) . "/lib/ipv4.php");
+
+	$dbclient = new DBClient($db_config);
+
+	$user = $dbclient->prepare($_POST["user"], "email");
+	$pass = hash ("sha512",$salt . base64_decode($pass));
+
+	$dbclient->connect() or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
+
+	$q = "Select * from " . $db_config["schema"] . ".users where lower(mail)=lower('" . $user . "');";
+	$dbclient->exeq($q) or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
+	if ($dbclient->lq_nresults() == 0){ // ADD NEW USER
+	    
+	    // Create administrator user
+	    $q = "insert into " . $db_config["schema"] . ".users (mail, pass, ip_last_login, first_login, rol) values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now(), (select id from roles where tag='admin'));";
+	    $dbclient->exeq($q) or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
+	    $oid = $dbclient->last_id();
+
+	    // Add user to global group
+	    $q = "insert into " . $db_config["schema"] . ".tusers_groups (oid,gid,admin) values ($oid,(select id from groups where tag='all'),1);";
+	    $dbclient->exeq($q) or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
+
+	    // Welcome mail to user
+	    $text_sender               = "CODDNS";
+		$email_sender              = "noreply@" . $config["domainname"];
+		$text_mail_welcome_body    = "Hola!\n\n Gracias por instalar CODDNS,\nPuedes acceder a la herramienta desde el enlace siguiente:\n " . $_SERVER['HTTP_ORIGIN'] . $html_root . "\n";
+		$text_mail_welcome_subject = "CODDNS Instalacion completada!";
+
+	    $recipient = $user;                    //recipient
+	    $mail_body = $text_mail_welcome_body;  //mail body
+	    $subject = $text_mail_welcome_subject; //subject
+	    $header = "From: " . $text_sender . " <" . $email_sender . ">\r\n"; //optional headerfields
+	    mail($recipient, $subject, $mail_body, $header); //mail command :)
+	}
+	else {
+	    die ("<div onclick='toggle(this);' class='err'>Error: Ese usuario ya existe</div>");
+	    exit(1);
+	}
+
+	$dbclient->disconnect();
+
+	session_start();
+
+	$_SESSION["email"]  = $user;
+	$_SESSION["uid"]    = $oid;
+	$_SESSION["time"]   = time();
+
+	session_write_close();
+
+
+	// CONFIG WRITTEN
 ?>
+	<article>
+	<div style="width: 100px; height: 100px; margin: 15px auto;">
+		<img src="<?php echo $html_root . "rs/img/ok.png"?>" alt="END" />
+	</div>
+	<p>El proceso de instalaci&oacute;n ha finalizado correctamente.</p>
+	<br>
+	<p><b>Datos de acceso</b> (pasar por encima de <i>"contrase&ntilde;a"</i> para visualizarla):</p>
+
+	<ul style="font-size: 0.8em;">
+		<li>Usuario: <?php echo $user;?></li>
+		<li onmouseout="pass.style['display']='none';" onmouseover="pass.style['display']='inline-block';">Contrase&ntilde;a: <div id="pass" style="display:none;"><?php echo base64_decode($_POST["pass"]);?></div></li>
+	</ul>
+	<p>Haga click <a href="<?php echo $_SERVER['HTTP_ORIGIN'] . $html_root; ?>">aqu&iacute;</a> para acceder a la herramienta.</p>
+
+	</article>
 
 <?php
 }
@@ -488,3 +655,9 @@ else
 </body>
 
 </hmtl>
+
+<?php
+
+session_write_close();
+
+?>

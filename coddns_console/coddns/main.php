@@ -3,12 +3,13 @@ include_once (dirname(__FILE__) . "/include/config.php");
 require_once (dirname(__FILE__) . "/lib/ipv4.php");
 require_once (dirname(__FILE__) . "/lib/util.php");
 
+session_start();
 if( !isset($_SESSION["lan"])){
     session_write_close();
     header ("Location: " . $config["html_root"] . "/?lang=es");
     exit (1);
 }
-
+session_write_close();
 /* CASTELLANO */
 $text["es"]["main_welcome"]="
     <h2>&iexcl;Hola!</h2>

@@ -10,6 +10,7 @@ if (!isset($_SESSION["lan"])){
 }
 $lan = $_SESSION["lan"];
 
+session_write_close();
 /* CASTELLANO */
 $text["es"]["err1"] = "<div class='err'>Rellene todos los datos</div>";
 $text["es"]["err2"] = "<div class='err'>No cumple las longitudes minimas</div>";
@@ -56,6 +57,7 @@ $q = "update users set last_login=now(), ip_last_login='" . _ip() . "' where low
 $dbclient->exeq($q) or die($text[$lan]["dberror"]);
 $dbclient->disconnect();
 
+session_start();
 $_SESSION["email"] = $user;
 $_SESSION["time"]  = time();
 

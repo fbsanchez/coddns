@@ -37,7 +37,9 @@ CREATE TABLE IF NOT EXISTS groups (
     id serial,
     tag varchar(200) NOT NULL,
     description text,
-    CONSTRAINT pkey_groups PRIMARY KEY (id)
+    parent bigint unsigned,
+    CONSTRAINT pkey_groups PRIMARY KEY (id),
+    CONSTRAINT fkey_group_parent FOREIGN KEY (parent) REFERENCES groups(id) ON DELETE CASCADE
 ) engine=InnoDB;
 
 
@@ -46,14 +48,12 @@ CREATE TABLE IF NOT EXISTS tusers_groups (
     id serial,
     gid bigint unsigned NOT NULL,
     oid bigint unsigned NOT NULL,
-    parent bigint unsigned NOT NULL,
     view  int(1) NOT NULL default 0,
     edit  int(1) NOT NULL default 0,
     admin int(1) NOT NULL default 0,
     CONSTRAINT pkey_user_group PRIMARY KEY (id),
     CONSTRAINT fkey_user_group_users FOREIGN KEY (oid) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fkey_user_group_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE,
-    CONSTRAINT fkey_user_group_ug FOREIGN KEY (parent) REFERENCES tusers_groups(id) ON DELETE CASCADE
+    CONSTRAINT fkey_user_group_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
 ) engine=InnoDB;
 
 
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS hosts (
     ip int,
     created timestamp DEFAULT CURRENT_TIMESTAMP,
     last_updated timestamp,
-    gid bigint unsigned NOT NULL,
+    gid bigint unsigned NOT NULL default 1,
     CONSTRAINT pkey_hosts PRIMARY KEY (id),
     CONSTRAINT const_hosts_unique_tag UNIQUE (tag),
     CONSTRAINT fkey_host_owner FOREIGN KEY (oid) REFERENCES users(id) ON DELETE CASCADE,

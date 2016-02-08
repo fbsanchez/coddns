@@ -11,7 +11,7 @@ $db_config = array("engine"  =>"mysql", // Could be mysql or postgresql
                    "name"    =>"coddns",
                    "schema"  =>"");
 
-// domain name: fqdn base for the system
+// domain name: FQDN base for the system
 // html_root: if you want to access http://yousite.yourdomain/coddns
 //            set it to /coddns, is the nav location
 $config = array ("domainname" => "coddns.test",
@@ -19,7 +19,7 @@ $config = array ("domainname" => "coddns.test",
 
 defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
 defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
-$salt = "Set a custom salt to enforce the passwords";
+$salt = "MTQ1NDg5NDYyMA==";
 
 defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
 defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);

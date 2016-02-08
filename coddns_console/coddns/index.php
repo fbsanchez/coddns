@@ -2,8 +2,10 @@
 
 defined("_VALID_ACCESS") or define ("_VALID_ACCESS", 1);
 
+
 if (!file_exists(dirname(__FILE__) . "/include/config.php")){
     header("Location: install.php");
+    exit(0);
 }
 
 include_once (dirname(__FILE__) . "/include/config.php");
@@ -161,8 +163,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <?php include_once("header.php");?>
 <div id="main">
 <section id="main_section">
-<?php
 
+<?php
 
 if (! isset ($_GET["z"]))
     include ("main.php");

@@ -11,15 +11,6 @@ if (! defined("_VALID_ACCESS")) {
     exit (1);
 }
 
-session_start();
-if( !isset($_SESSION["lan"]) ){
-    session_write_close();
-    header ("Location: " . $config["html_root"] . "/?lang=es");
-    exit (1);
-}
-session_write_close();
-
-$lan = $_SESSION["lan"];
 
 /* CASTELLANO */
 $text["es"]["hosts_welcome"] = "

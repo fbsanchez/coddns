@@ -49,6 +49,9 @@ class DBClient {
   function fetch_array($result){
     return $this->client->fetch_array($result);
   }
+  function last_id(){
+    return $this->client->last_id();
+  }
 
   /**
    * DB Utilities

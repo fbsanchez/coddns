@@ -93,6 +93,9 @@ class MyClient{
   function escape_string($str){
     return mysqli_real_escape_string($this->link,$str);
   }
+  function last_id(){
+    return mysqli_insert_id($this->link);
+  }
 }
 
 

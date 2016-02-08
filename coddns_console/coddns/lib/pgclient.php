@@ -86,6 +86,11 @@ class PgClient{
   function escape_string($str){
     return pg_escape_string($str);
   }
+  function last_id(){
+    $q = "SELECT lastval();";
+    $val = $this->link->fetch_array($this->link->exeq($q));
+    return $val;
+  }
 }
 
 
