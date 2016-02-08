@@ -1,5 +1,10 @@
 ﻿<?php
 // CODDNS INSTALLER
+
+defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
+defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
+defined ("MIN_DB_LENGTH") or define ("MIN_DB_LENGTH", 2);
+
 require_once(dirname(__FILE__) . "/lib/db.php");
 
 function isOverHTTPS(){
@@ -93,6 +98,9 @@ if(    (!isset ($_POST["engine"]))
 	|| (!isset ($_POST["dbhost"]))
 	|| (!isset ($_POST["dbport"]))
 	|| (!isset ($_POST["dbname"]))
+	|| ( strlen($_POST["dbroot"]) < MIN_USER_LENGTH )
+	|| ( strlen($_POST["dbuser"]) < MIN_USER_LENGTH )
+	|| ( strlen($_POST["dbname"]) < MIN_DB_LENGTH )
 	) { // NO PHASE 2 expected values received, can be at 1 or 3
 	$phase = 3;
 	if(    (!isset($_POST["html_root"]))
@@ -227,8 +235,24 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 					?>
 				</select>
 				<ul id="data_form" style="max-height: 0px;overflow:hidden;transition:max-height 1s 0s;">
+				<script type="text/javascript">
+				function check_dbhost(val){
+					if(   (val.value == "localhost")
+						||(val.value == "127.0.0.1")) {
+						myip_li.style["display"] = "none";
+						myip.required = false;
+					}
+					else {
+						myip_li.style["display"] = "block";
+						myip.required = true;
+					}
+				}
+				</script>
 					<li>
-						<label>Servidor:</label><input name="dbhost" type="text" value="localhost"/>
+						<label>Servidor:</label><input name="dbhost" type="text" value="localhost" onchange="check_dbhost(this);"/>
+					</li>
+					<li id="myip_li" style="display: none;">
+						<label>IP origen:</label><input id="myip" name="myip" type="text"/>
 					</li>
 					<li>
 						<label>Puerto:</label><input id="dbp" name="dbport" type="number" value="3306"/>
@@ -280,6 +304,14 @@ elseif ($phase == 2) {
 	$schema  = DBClient::prepare($_POST["schema"],"insecure_text");
 	$dbdrop  = $_POST["dbdrop"];
 
+	// remove spaces from dbname
+	$dbname = preg_replace('/\s+/', '', $dbname);
+
+	// if no dbuser is provided, use dbroot as well
+	if ("$dbuser" == ""){
+		$dbuser = $dbroot;
+	}
+
 
 	// Create temp configuration
 	/*
@@ -329,10 +361,21 @@ elseif ($phase == 2) {
 		$dbuser  = $dbclient->prepare($_POST["dbuser"],"text");
 		$dbpass  = base64_decode($_POST["dbpass"]);
 		$dbname  = $dbclient->prepare($_POST["dbname"],"text");
-		$dbhost  = $dbclient->prepare($_POST["dbhost"],"text");
+		$dbhost  = strtolower($dbclient->prepare($_POST["dbhost"],"text"));
+		$myip    = strtolower($dbclient->prepare($_POST["myip"],"text"));
 		$dbport  = $dbclient->prepare($_POST["dbport"],"number");
 		$schema  = $dbclient->prepare($_POST["schema"],"text");
 		$dbdrop  = $_POST["dbdrop"];
+
+		if (!isset ($myip)){
+			if (   ($dbhost == "127.0.0.1")
+				|| ($dbhost == "localhost")) {
+				$myip = $dbhost;
+			}
+			else {
+				$myip = $_SERVER["SERVER_ADDR"];
+			}
+		}
 
 		// DROP DATABASE
 		if ("$dbdrop" == "on"){
@@ -357,30 +400,37 @@ elseif ($phase == 2) {
 
 		// GRANT PRIVILEGES
 		if ($create_database_ok == 1){
-			switch ($engine){
-				case "mysql":
-					$q = "grant all privileges on $dbname.* to $dbuser@$dbhost identified by \"$dbpass\";";
-				break;
-				case "postgresql":
-					$q  = "create user $dbuser;";
-					$q .= "grant all on database $dbname to $dbuser;";
-					$q .= "grant all on schema $schema to $dbuser;";
-					$q .= "grant all on all tables in schema $schema to $dbuser;";
-					$q .= "grant all on all sequences in schema $schema to $dbuser;";
-					$q .= "alter user $dbuser with password \'$dbpass\';";
-				break;
-				default:
-					die("Error, please follow the wizard.");
-				break;
-			}
-			
-			$r = $dbclient->exeq($q);
-			$create_message = $dbclient->lq_error();
-			if($r){
+
+			if ($dbuser == $dbroot) {
+				// dbroot user also has grants ~ user password ignored.
 				$grant_user_ok = 1;
 			}
 			else {
-				$grant_message = $dbclient->lq_error();
+				switch ($engine){
+					case "mysql":
+						$q = "grant all privileges on $dbname.* to $dbuser@$myip identified by \"$dbpass\";";
+					break;
+					case "postgresql":
+						$q  = "create user $dbuser;";
+						$q .= "grant all on database $dbname to $dbuser;";
+						$q .= "grant all on schema $schema to $dbuser;";
+						$q .= "grant all on all tables in schema $schema to $dbuser;";
+						$q .= "grant all on all sequences in schema $schema to $dbuser;";
+						$q .= "alter user $dbuser with password \'$dbpass\';";
+					break;
+					default:
+						die("Error, please follow the wizard.");
+					break;
+				}
+				
+				$r = $dbclient->exeq($q);
+				$create_message = $dbclient->lq_error();
+				if($r){
+					$grant_user_ok = 1;
+				}
+				else {
+					$grant_message = $dbclient->lq_error();
+				}
 			}
 		}	
 
@@ -557,14 +607,12 @@ elseif ($phase == 3){
 	$str_config .= "\$config = array (\"domainname\" => \"" . $domain . "\",\n";
 	$str_config .= "		 \"html_root\"  => \"" . $html_root . "\");\n";
 	$str_config .= "\n";
-	$str_config .= "defined (\"MIN_USER_LENGTH\") or define (\"MIN_USER_LENGTH\", 4);\n";
-	$str_config .= "defined (\"MIN_PASS_LENGTH\") or define (\"MIN_PASS_LENGTH\", 4);\n";
 	$str_config .= "\$salt = \"" . $salt . "\";\n";
 	$str_config .= "\n";
-	$str_config .= "defined (\"LENGTH_USER_MIN\") or define (\"LENGTH_USER_MIN\", 2);\n";
-	$str_config .= "defined (\"LENGTH_PASS_MIN\") or define (\"LENGTH_PASS_MIN\", 2);\n";
-	$str_config .= "defined (\"LENGTH_HOST_MIN\") or define (\"LENGTH_HOST_MIN\", 1);\n";
-	$str_config .= "defined (\"LENGTH_HOST_MAX\") or define (\"LENGTH_HOST_MAX\", 200);\n";
+	$str_config .= "defined (\"MIN_USER_LENGTH\") or define (\"MIN_USER_LENGTH\", 4);\n";
+	$str_config .= "defined (\"MIN_PASS_LENGTH\") or define (\"MIN_PASS_LENGTH\", 4);\n";
+	$str_config .= "defined (\"MIN_HOST_LENGTH\") or define (\"MIN_HOST_LENGTH\", 1);\n";
+	$str_config .= "defined (\"MAX_HOST_LENGTH\") or define (\"MAX_HOST_LENGTH\", 200);\n";
 	$str_config .= "\n";
 	$str_config .= "?>\n";
 

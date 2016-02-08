@@ -3,18 +3,18 @@ require_once ("include/config.php");
 require_once ("lib/ipv4.php");
 require_once ("lib/db.php");
 
-defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
-defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);
-defined ("LENGTH_HOST_MIN") or define ("LENGTH_HOST_MIN", 1);
-defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
+defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
+defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
+defined ("MIN_HOST_LENGTH") or define ("MIN_HOST_LENGTH", 1);
+defined ("MAX_HOST_LENGTH") or define ("MAX_HOST_LENGTH", 200);
 
 if ((!isset($_POST["u"]))
     || (!isset($_POST["p"]))
     || (!isset($_POST["h"])))
     die ("ERR");
-if   ( ( strlen($_POST["u"]) < LENGTH_USER_MIN )
-    || ( strlen($_POST["p"]) < LENGTH_PASS_MIN )
-    || ( strlen($_POST["h"]) < LENGTH_HOST_MIN ))
+if   ( ( strlen($_POST["u"]) < MIN_USER_LENGTH )
+    || ( strlen($_POST["p"]) < MIN_PASS_LENGTH )
+    || ( strlen($_POST["h"]) < MIN_HOST_LENGTH ))
     die ("ERR");
 
 
@@ -36,8 +36,8 @@ $checkd = strtok (".");
 
 if(    ( $main != $checkm )
     || ( $dom  != $checkd )
-    || ( strlen($host) < LENGTH_HOST_MIN )
-    || ( strlen($host) > LENGTH_HOST_MAX ))
+    || ( strlen($host) < MIN_HOST_LENGTH )
+    || ( strlen($host) > MAX_HOST_LENGTH ))
     die ("ERR: nombre de host no valido");
 $host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
 

@@ -5,7 +5,7 @@
  */
 $db_config = array("engine"  =>"mysql", // Could be mysql or postgresql
                    "username"=>"coddns",
-                   "password"=>'coddns',
+                   "password"=>'c0DdnS',
                    "hostname"=>"localhost",
                    "port"    =>"3306",
                    "name"    =>"coddns",
@@ -17,13 +17,11 @@ $db_config = array("engine"  =>"mysql", // Could be mysql or postgresql
 $config = array ("domainname" => "coddns.test",
 		 "html_root"  => "");
 
+$salt = "MTQ1NDk1NzYyMA==";
+
 defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
 defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
-$salt = "MTQ1NDg5NDYyMA==";
-
-defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
-defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);
-defined ("LENGTH_HOST_MIN") or define ("LENGTH_HOST_MIN", 1);
-defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
+defined ("MIN_HOST_LENGTH") or define ("MIN_HOST_LENGTH", 1);
+defined ("MAX_HOST_LENGTH") or define ("MAX_HOST_LENGTH", 200);
 
 ?>
