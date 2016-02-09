@@ -39,26 +39,13 @@ function isOverHTTPS(){
     return false;
 }
 
-
-function check_user_auth(){
-    if (! get_user_auth() ) {
-        session_write_close();
-        header ("Location: " . $config["html_root"] . "/?lang=es&z=login");
-        exit (0);
-    }
+function redirect($url){
+    if (headers_sent()){
+      die('<script type="text/javascript">window.location.href="' . $url . '";</script>');
+    }else{
+      header('Location: ' . $url);
+      die();
+    }    
 }
-
-function get_user_auth(){
-    if (! isset ($_SESSION)) {
-        session_start();    
-    }
-    if (isset ($_SESSION["email"])) {
-        session_write_close();
-        return true;
-    }
-    session_write_close();
-    return false;
-}
-
 ?>
 

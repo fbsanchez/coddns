@@ -3,8 +3,10 @@
 require_once(dirname(__FILE__) . "/../include/config.php");
 require_once(dirname(__FILE__) . "/../lib/db.php");
 require_once(dirname(__FILE__) . "/../lib/util.php");
+require_once(dirname(__FILE__) . "/../lib/coduser.php");
 
-check_user_auth();
+$user = new CODUser();
+$user->check_auth_level(1);
 
 if (! defined("_VALID_ACCESS")) {
     header ("Location: " . $config["html_root"] . "/?lang=es");

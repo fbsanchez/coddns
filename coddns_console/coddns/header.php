@@ -1,12 +1,14 @@
 <?php
 
-include_once (dirname(__FILE__) . "/include/config.php");
+require_once (dirname(__FILE__) . "/include/config.php");
+require_once (dirname(__FILE__) . "/lib/coduser.php");
 
 if (!defined("_VALID_ACCESS")){
     header("Location: " . $config["html_root"] . "/");
     die ("Unauthorized");
 }
 
+$user = new CODUser();
 
 $start_menu_class    = "pl";
 $menu_item_downloads = "pl";
@@ -15,7 +17,7 @@ $menu_item_user      = "pl";
 $menu_item_priv_zone = "pl";
 $menu_item_logout    = "pl";
 $menu_item_pub       = "pl";
-
+$menu_item_manager   = "pl";
 
 session_start();
 if (!isset($_SESSION["lan"])){
@@ -49,6 +51,9 @@ else {
         case "pub":
             $menu_item_pub = "pl_select";
             break;
+        case "adm":
+            $menu_item_manager = "pl_select";
+            break;
         default:
             $start_menu_class = "pl_select";
             $menu_item_downloads = "pl";
@@ -69,9 +74,15 @@ function red(id,zone,page){
     menu_item_priv_zone.className="pl";
     menu_item_downloads.className="pl";
     menu_item_pub.className="pl";
-<?php if (get_user_auth()) {
+<?php
+    if ($user->get_auth_level()>0) {
 ?>
     menu_item_user.className="pl";
+<?php
+}
+    if ($user->get_auth_level()>=100) {
+?>
+    menu_item_manager.className="pl";
 <?php
 }
 ?>
@@ -94,11 +105,19 @@ if (file_exists('cms/')) {
         <li><a id="menu_item_pub" class="<?php echo $menu_item_pub;?>" href="<?php echo $config["html_root"];?>/?z=pub">Documentaci&oacute;n</a></li>
 <?php
 }
-if (get_user_auth()) {
+if ($user->get_auth_level() >= 1) { // operations granted for standar users
 ?>
 
         <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?z=hosts">&Aacute;rea personal</a></li>
         <li><a id="menu_item_user"      class="<?php echo $menu_item_user;?>"       href="<?php echo $config["html_root"];?>/?z=usermod">Mi cuenta</a></li>
+<?php
+if ($user->get_auth_level() >= 100) { // operations granted for administrator users
+?>
+        <li><a id="menu_item_manager"      class="<?php echo $menu_item_manager;?>"       href="<?php echo $config["html_root"];?>/?z=adm">Administraci&oacute;n</a></li>
+<?php
+}
+?>
+
         <li><a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/logout.php">Desconectarme</a></li>
 <?php
 }

@@ -109,3 +109,6 @@ li input[type="submit"]:hover {
 section.uarea input[type="text"]{
     float: none;
 }
+pre{
+    word-wrap: break-word;
+}

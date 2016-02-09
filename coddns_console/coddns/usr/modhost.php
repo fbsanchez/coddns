@@ -35,8 +35,8 @@ $checkd = strtok (".");
 
 if(    ( $main != $checkm )
     || ( $dom  != $checkd )
-    || ( strlen($host) < LENGTH_HOST_MIN )
-    || ( strlen($host) > LENGTH_HOST_MAX ))
+    || ( strlen($host) < MIN_HOST_LENGTH )
+    || ( strlen($host) > MAX_HOST_LENGTH ))
     die ("ERR: nombre de host no valido");
 $host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
 

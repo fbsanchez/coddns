@@ -98,8 +98,7 @@ if(    (!isset ($_POST["engine"]))
 	|| (!isset ($_POST["dbhost"]))
 	|| (!isset ($_POST["dbport"]))
 	|| (!isset ($_POST["dbname"]))
-	|| ( strlen($_POST["dbroot"]) < MIN_USER_LENGTH )
-	|| ( strlen($_POST["dbuser"]) < MIN_USER_LENGTH )
+	|| ( strlen($_POST["dbroot"]) < MIN_USER_LENGTH)
 	|| ( strlen($_POST["dbname"]) < MIN_DB_LENGTH )
 	) { // NO PHASE 2 expected values received, can be at 1 or 3
 	$phase = 3;
@@ -119,6 +118,12 @@ else { // PHASE 2 expected values received: I should be on 2
 
 if ($phase == 1) {
 // TESTS BEGIN
+
+// First of all unset all active sessions
+session_start();
+session_destroy();
+session_write_close();
+
 
 $named_ok  = 0;
 $dnsmgr_ok = 0;
@@ -367,7 +372,8 @@ elseif ($phase == 2) {
 		$schema  = $dbclient->prepare($_POST["schema"],"text");
 		$dbdrop  = $_POST["dbdrop"];
 
-		if (!isset ($myip)){
+		if (   (!isset ($myip))
+			|| ("$myip" == "")){
 			if (   ($dbhost == "127.0.0.1")
 				|| ($dbhost == "localhost")) {
 				$myip = $dbhost;
@@ -408,7 +414,7 @@ elseif ($phase == 2) {
 			else {
 				switch ($engine){
 					case "mysql":
-						$q = "grant all privileges on $dbname.* to $dbuser@$myip identified by \"$dbpass\";";
+						$q = "grant all privileges on $dbname.* to $dbuser@" . $myip . " identified by '$dbpass';";
 					break;
 					case "postgresql":
 						$q  = "create user $dbuser;";
@@ -422,7 +428,7 @@ elseif ($phase == 2) {
 						die("Error, please follow the wizard.");
 					break;
 				}
-				
+
 				$r = $dbclient->exeq($q);
 				$create_message = $dbclient->lq_error();
 				if($r){
@@ -442,7 +448,7 @@ elseif ($phase == 2) {
 					exec ($command . " 2>&1", $sql_file_exec, $return);
 					break;
 				case "postgresql":
-					$_ENV{"PGPASSWORD"} = "\'$dbpass\'";
+					$_ENV{"PGPASSWORD"} = "$dbpass";
 					$command = "pgsql -U $dbuser -w -h $dbhost -d $dbname -f $sql_file";
 					exec ($command . " 2>&1"	, $sql_file_exec, $return);
 					break;
@@ -455,7 +461,10 @@ elseif ($phase == 2) {
 				$sql_process_ok = 1;
 			}
 			else {
-				$sql_script_message = $sql_file_exec;
+				$sql_script_message = "";
+				foreach ($sql_file_exec as $line){
+					$sql_script_message .= $line;
+				}
 			}
 		}
 		$dbclient->disconnect();
@@ -581,7 +590,7 @@ elseif ($phase == 3){
 
 	$html_root = $_POST["html_root"];
 	$user      = $_POST["user"];
-	$pass      = $_POST["pass"];
+	$rq_pass   = base64_decode($_POST["pass"]);
 	$domain    = $_POST["domain"];
 	$salt      = $_POST["hash"];
 
@@ -605,9 +614,9 @@ elseif ($phase == 3){
 	$str_config .= "// html_root: if you want to access http://yousite.yourdomain/coddns\n";
 	$str_config .= "//            set it to /coddns, is the nav location\n";
 	$str_config .= "\$config = array (\"domainname\" => \"" . $domain . "\",\n";
-	$str_config .= "		 \"html_root\"  => \"" . $html_root . "\");\n";
-	$str_config .= "\n";
-	$str_config .= "\$salt = \"" . $salt . "\";\n";
+	$str_config .= "                  \"html_root\"  => \"" . $html_root . "\",\n";
+	$str_config .= "                  \"salt\"       => \"" . $salt . "\",\n";
+	$str_config .= "                  \"db_config\"  => \$db_config);\n";
 	$str_config .= "\n";
 	$str_config .= "defined (\"MIN_USER_LENGTH\") or define (\"MIN_USER_LENGTH\", 4);\n";
 	$str_config .= "defined (\"MIN_PASS_LENGTH\") or define (\"MIN_PASS_LENGTH\", 4);\n";
@@ -625,13 +634,13 @@ elseif ($phase == 3){
 
 
 	// FINAL STEP - create admin user using the configuration file
-	require_once (dirname(__FILE__) . "/include/config.php");
+	include_once (dirname(__FILE__) . "/include/config.php");
 	require_once (dirname(__FILE__) . "/lib/ipv4.php");
 
 	$dbclient = new DBClient($db_config);
 
 	$user = $dbclient->prepare($_POST["user"], "email");
-	$pass = hash ("sha512",$salt . base64_decode($pass));
+	$pass = hash ("sha512",$salt . $rq_pass);
 
 	$dbclient->connect() or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
 
@@ -667,15 +676,12 @@ elseif ($phase == 3){
 
 	$dbclient->disconnect();
 
-	session_start();
-
-	$_SESSION["email"]  = $user;
-	$_SESSION["uid"]    = $oid;
-	$_SESSION["time"]   = time();
-
-	session_write_close();
-
-
+	// process login with new user.
+	require_once (dirname(__FILE__) . "/lib/coduser.php");
+	$objUser = new CODUser();
+	if ($objUser->login($user, $rq_pass) == null ) {
+		die ("Problem loading user, please rerun the installation process.");
+	}
 	// CONFIG WRITTEN
 ?>
 	<article>

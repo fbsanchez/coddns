@@ -1,7 +1,6 @@
 <?php
 require_once (dirname(__FILE__) . "/../include/config.php");
-require_once (dirname(__FILE__) . "/../lib/ipv4.php");
-require_once (dirname(__FILE__) . "/../lib/db.php");
+require_once (dirname(__FILE__) . "/../lib/coduser.php");
 
 session_start();
 
@@ -41,27 +40,12 @@ if ( ( strlen($_POST["u"]) < MIN_USER_LENGTH) || ( strlen($rq_pass) < MIN_PASS_L
     exit(2);
 }
 
-$dbclient = new DBClient($db_config);
-$user = $dbclient->prepare($_POST["u"], "email");
-$pass = hash ("sha512",$salt . $rq_pass);
-
-$dbclient->connect() or die ($text[$lan]["dberror"]);
-
-$q = "Select * from users where lower(mail)=lower('" . $user . "') and pass='" . $pass . "';";
-$r = $dbclient->fetch_object ($dbclient->exeq($q));
-if ($dbclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
-    echo $text[$lan]["err3"];
-    exit (3);
+$objUser = new CODUser();
+if ($objUser->login($_POST["u"], $rq_pass) == null ) {
+	echo $text[$lan]["err3"];
+	exit (3);
 }
-$q = "update users set last_login=now(), ip_last_login='" . _ip() . "' where lower(mail)=lower('" . $user . "');";
-$dbclient->exeq($q) or die($text[$lan]["dberror"]);
-$dbclient->disconnect();
 
-session_start();
-$_SESSION["email"] = $user;
-$_SESSION["time"]  = time();
-
-session_write_close();
 echo $text[$lan]["welcome"];
 //header ("Location: /?lang=" . $lan . "&z=hosts");
 ?>

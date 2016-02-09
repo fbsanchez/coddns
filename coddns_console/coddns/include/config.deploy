@@ -3,27 +3,25 @@
 /*
  * Database configuration
  */
-$db_config = array("engine"  =>"postgresql", // Could be mysql or postgresql
-                   "username"=>"ddnsp",
+$db_config = array("engine"  =>"mysql", // Could be mysql or postgresql
+                   "username"=>"coddns",
                    "password"=>'p4ssw0rd',
                    "hostname"=>"localhost",
-                   "port"    =>"5432",
-                   "name"    =>"db_ddnsp",
-                   "schema"  =>"sch_ddnsp");
+                   "port"    =>"3306",
+                   "name"    =>"coddns",
+                   "schema"  =>"");
 
-// domain name: fqdn base for the system
+// domain name: FQDN base for the system
 // html_root: if you want to access http://yousite.yourdomain/coddns
 //            set it to /coddns, is the nav location
-$config = array ("domainname" => "example.lan",
-		 "html_root"  => "/coddns");
+$config = array ("domainname" => "coddns.test",
+                  "html_root"  => "",
+                  "salt"       => "Use a random salt to enforce passwords",
+                  "db_config"  => $db_config);
 
 defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
 defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
-$salt = "Set a custom salt to enforce the passwords";
-
-defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
-defined ("LENGTH_PASS_MIN") or define ("LENGTH_PASS_MIN", 2);
-defined ("LENGTH_HOST_MIN") or define ("LENGTH_HOST_MIN", 1);
-defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
+defined ("MIN_HOST_LENGTH") or define ("MIN_HOST_LENGTH", 1);
+defined ("MAX_HOST_LENGTH") or define ("MAX_HOST_LENGTH", 200);
 
 ?>

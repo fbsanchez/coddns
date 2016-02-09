@@ -8,11 +8,15 @@ if (!file_exists(dirname(__FILE__) . "/include/config.php")){
     exit(0);
 }
 
-include_once (dirname(__FILE__) . "/include/config.php");
-require_once (dirname(__FILE__) . "/lib/ipv4.php");
-require_once (dirname(__FILE__) . "/lib/util.php");
+include_once(dirname(__FILE__) . "/include/config.php");
+require_once(dirname(__FILE__) . "/lib/ipv4.php");
+require_once(dirname(__FILE__) . "/lib/util.php");
+require_once(dirname(__FILE__) . "/lib/coduser.php");
 
-if (get_user_auth() && (isset($_GET["z"])) && ($_GET["z"] == "login")){
+$user = new CODUser();
+$user->check_auth_level(0);
+
+if ($user->get_auth_level() && (isset($_GET["z"])) && ($_GET["z"] == "login")){
     $_GET["z"] = "hosts";
 }
 
@@ -46,6 +50,11 @@ else{
 $lan = $_SESSION["lan"];
 
 session_write_close();
+
+//disable some errors which aren't really errors:
+ini_set('session.use_cookies',false);
+session_cache_limiter(false);
+
 
 /* CASTELLANO */
 $text["es"]["welcome"]   ="Bienvenido";
@@ -162,6 +171,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
 <?php include_once("header.php");?>
 <div id="main">
+<?php 
+
+if (isset($_GET["debug_mode"]) && ($_GET["debug_mode"] == 1)) {
+    ?>
+<div style="width: 200px; height: 200px; position: fixed; top:0; right:0;border:1px solid red;">
+<?php
+echo "Auth_level: " . $user->get_auth_level();
+echo "</div>";
+}
+?>
+
 <section id="main_section">
 
 <?php
@@ -196,6 +216,9 @@ else {
             break;
         case "pub":
             include ("cms/index.php");
+            break;
+        case "adm":
+            include ("adm/manager.php");
             break;
         default:
             include ("main.php");

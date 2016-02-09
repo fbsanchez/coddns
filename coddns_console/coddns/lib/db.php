@@ -1,5 +1,4 @@
 <?php
-
 require_once (dirname(__FILE__) . "/myclient.php");
 require_once (dirname(__FILE__) . "/pgclient.php");
 
@@ -10,21 +9,20 @@ class DBClient {
   var $schema;
   var $port;
   var $db;
-  var $link = null;
+  var $link       = null;
   var $last_query = null;
-  var $nresutls = null;
-  var $error = null;
-
+  var $nresutls   = null;
+  var $error      = null;
   var $client;
 
-  function DBClient($db_config){
-    $this->engine = $db_config["engine"];
+  function DBClient($cfg){
+    $this->engine = $cfg["engine"];
 
     if ($this->engine == "postgresql") {
-      $this->client = new PgClient($db_config);
+      $this->client = new PgClient($cfg);
     }
     elseif ($this->engine == "mysql") {
-      $this->client = new MyClient($db_config);
+      $this->client = new MyClient($cfg);
     }
   }
 
@@ -51,6 +49,23 @@ class DBClient {
   }
   function last_id(){
     return $this->client->last_id();
+  }
+
+  function get_sql_object($query){
+    $this->connect() or die($this->lq_error());
+    $r   = $this->exeq($query) or die($this->lq_error());
+    $out = $this->fetch_object($r);
+    $this->disconnect();
+    return $out;
+  }
+
+  function get_sql_array($query){
+    $this->connect() or die($this->lq_error());
+    $r   = $this->exeq($query) or die($this->lq_error());
+    $out = $this->fetch_array($r);
+    $nitems = $this->lq_nresults();
+    $this->disconnect();
+    return array( "nitems" => $nitems, "data" => $out);
   }
 
   /**

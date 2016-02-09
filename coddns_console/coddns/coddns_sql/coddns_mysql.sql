@@ -8,6 +8,7 @@
 CREATE TABLE IF NOT EXISTS roles (
     id serial,
     tag varchar(200) NOT NULL,
+    auth_level int NOT NULL DEFAULT 1,
     description text,
     CONSTRAINT pkey_roles PRIMARY KEY (id)
 ) engine=InnoDB;
@@ -48,9 +49,9 @@ CREATE TABLE IF NOT EXISTS tusers_groups (
     id serial,
     gid bigint unsigned NOT NULL,
     oid bigint unsigned NOT NULL,
-    view  int(1) NOT NULL default 0,
-    edit  int(1) NOT NULL default 0,
-    admin int(1) NOT NULL default 0,
+    view  int(1) NOT NULL DEFAULT 0,
+    edit  int(1) NOT NULL DEFAULT 0,
+    admin int(1) NOT NULL DEFAULT 0,
     CONSTRAINT pkey_user_group PRIMARY KEY (id),
     CONSTRAINT fkey_user_group_users FOREIGN KEY (oid) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fkey_user_group_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
@@ -65,7 +66,7 @@ CREATE TABLE IF NOT EXISTS hosts (
     ip int,
     created timestamp DEFAULT CURRENT_TIMESTAMP,
     last_updated timestamp,
-    gid bigint unsigned NOT NULL default 1,
+    gid bigint unsigned NOT NULL DEFAULT 1,
     CONSTRAINT pkey_hosts PRIMARY KEY (id),
     CONSTRAINT const_hosts_unique_tag UNIQUE (tag),
     CONSTRAINT fkey_host_owner FOREIGN KEY (oid) REFERENCES users(id) ON DELETE CASCADE,
@@ -79,13 +80,13 @@ CREATE TABLE IF NOT EXISTS hosts (
 -- BEGIN DUMP DATA
 
 -- Roles
-INSERT INTO roles (tag,description)
+INSERT INTO roles (tag,auth_level,description)
  values 
-    ('admin', 'Administration rol'),
-    ('advanced','Advanced user'),
-    ('standar','Standard user');
+    ('admin', 100 , 'Administration rol'),
+    ('advanced', 50, 'Advanced user'),
+    ('standar', 1, 'Standard user');
 
 -- GROUPS
 INSERT INTO groups (tag,description)
  values
-    ('all', 'Default group');
+    ('all', 'DEFAULT group');

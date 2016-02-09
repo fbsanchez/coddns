@@ -10,6 +10,7 @@ if( !isset($_SESSION["lan"])){
     exit (1);
 }
 session_write_close();
+
 /* CASTELLANO */
 $text["es"]["main_welcome"]="
     <h2>&iexcl;Hola!</h2>

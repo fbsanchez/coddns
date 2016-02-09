@@ -2,7 +2,10 @@
 require_once (dirname(__FILE__) . "/../include/config.php");
 require_once (dirname(__FILE__) . "/../lib/db.php");
 require_once (dirname(__FILE__) . "/../lib/ipv4.php");
+require_once (dirname(__FILE__) . "/../lib/coduser.php");
 
+$user = new CODUser();
+$user->check_auth_level_msg(1);
 //check_user_auth();
 
 defined ("LENGTH_USER_MIN") or define ("LENGTH_USER_MIN", 2);
@@ -11,11 +14,6 @@ defined ("LENGTH_HOST_MIN") or define ("LENGTH_HOST_MIN", 1);
 defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
 
 session_start();
-
-if (! isset ($_SESSION["email"]) ){
-    header ("Location: " . $config["html_root"] . "/");
-    exit(1);
-}
 
 if( !isset($_SESSION["lan"]) ){
     session_write_close();
