@@ -374,8 +374,8 @@ elseif ($phase == 2) {
 
 		if (!isset ($dbport)) {
 			switch ($engine){
-				case: "mysql":$dbport=3306;break;
-				case: "postgresql":$dbport=5432;break;
+				case "mysql":$dbport=3306;break;
+				case "postgresql":$dbport=5432;break;
 				default:die("Please use the wizard.");break;
 			}
 		}
