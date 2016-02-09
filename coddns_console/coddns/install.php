@@ -372,6 +372,14 @@ elseif ($phase == 2) {
 		$schema  = $dbclient->prepare($_POST["schema"],"text");
 		$dbdrop  = $_POST["dbdrop"];
 
+		if (!isset $dbport) {
+			switch ($engine){
+				case: "mysql":$dbport=3306;break;
+				case: "postgresql":$dbport=5432;break;
+				default:die("Please use the wizard.");break;
+			}
+		}
+
 		if (   (!isset ($myip))
 			|| ("$myip" == "")){
 			if (   ($dbhost == "127.0.0.1")
@@ -444,12 +452,12 @@ elseif ($phase == 2) {
 		if ($grant_user_ok == 1){
 			switch ($engine){
 				case "mysql":
-					$command = "mysql -u $dbuser -p'$dbpass' -h $dbhost $dbname < $sql_file";
+					$command = "mysql -u $dbuser -p'$dbpass' -h $dbhost -P $dbport $dbname < $sql_file";
 					exec ($command . " 2>&1", $sql_file_exec, $return);
 					break;
 				case "postgresql":
 					$_ENV{"PGPASSWORD"} = "$dbpass";
-					$command = "pgsql -U $dbuser -w -h $dbhost -d $dbname -f $sql_file";
+					$command = "pgsql -U $dbuser -w -h $dbhost -p $dbport -d $dbname -f $sql_file";
 					exec ($command . " 2>&1"	, $sql_file_exec, $return);
 					break;
 				default:
