@@ -372,7 +372,7 @@ elseif ($phase == 2) {
 		$schema  = $dbclient->prepare($_POST["schema"],"text");
 		$dbdrop  = $_POST["dbdrop"];
 
-		if (!isset $dbport) {
+		if (!isset ($dbport)) {
 			switch ($engine){
 				case: "mysql":$dbport=3306;break;
 				case: "postgresql":$dbport=5432;break;
