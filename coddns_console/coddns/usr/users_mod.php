@@ -19,7 +19,7 @@ session_write_close();
 
 /* CASTELLANO */
 $text["es"]["ua_welcome"]    = "
-    <h1>Mi cuenta</h1>
+    <h2>Mi cuenta</h2>
     <p>Desde aqu&iacute; puedes administrar tus datos de acceso.</p>
 ";
 $text["es"]["ua_label_mail"] = "Direcci&oacute;n de correo:";
@@ -34,7 +34,7 @@ $text["es"]["send"] = "Cambiar";
 
 /* ENGLISH */
 $text["en"]["ua_welcome"] = "
-    <h1>My account</h1>
+    <h2>My account</h2>
     <p>You can manage your access data from here.</p>
 ";
 $text["en"]["ua_label_mail"] = "E-mail:";
@@ -49,7 +49,7 @@ $text["en"]["send"] = "Change it";
 
 /* DEUTSCH */
 $text["de"]["ua_welcome"] = "
-    <h1>My account</h1>
+    <h2>My account</h2>
     <p>You can manage your access data from here.</p>
 ";
 $text["de"]["ua_label_mail"] = "E-mail:";
