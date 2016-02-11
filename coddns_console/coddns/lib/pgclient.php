@@ -1,8 +1,7 @@
 <?php
-
-/********************************************************************
- * <copyright file="pgclient.php" company="ESProject">
- * Copyright (c) 2013 All Right Reserved, http://www.esproject.es/
+/**
+ * <copyright company="CODDNS">
+ * Copyright (c) 2013 All Right Reserved, http://coddns.es/
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
  * KIND, EITHER EXPRESSED OR IMPLIED, NO INCLUDING THE WARRANTIES OF
@@ -10,11 +9,12 @@
  *
  * </copyright>
  * <author>Fco de Borja Sanchez</author>
- * <email>dev.esproject@gmail.es</email>
- * <date>2013-11-04</date>
- * <update>2013-11-05</udate>
+ * <email>fborja.sanchezs@gmail.com</email>
+ * <date>2016-02-11</date>
+ * <update>2016-02-11</udate>
  * <summary> </summary>
-/********************************************************************/
+ */
+
 class PgClient{
   var $username;
   var $password;

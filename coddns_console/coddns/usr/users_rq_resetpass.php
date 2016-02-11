@@ -1,9 +1,28 @@
 <?php
-require_once (dirname(__FILE__) . "/../include/config.php");
-require_once (dirname(__FILE__) . "/../lib/ipv4.php");
-require_once (dirname(__FILE__) . "/../lib/db.php");
+/**
+ * <copyright company="CODDNS">
+ * Copyright (c) 2013 All Right Reserved, http://coddns.es/
+ *
+ * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+ * KIND, EITHER EXPRESSED OR IMPLIED, NO INCLUDING THE WARRANTIES OF
+ * MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * </copyright>
+ * <author>Fco de Borja Sanchez</author>
+ * <email>fborja.sanchezs@gmail.com</email>
+ * <date>2016-02-11</date>
+ * <update>2016-02-11</udate>
+ * <summary> </summary>
+ */
 
-//check_user_auth();
+require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
+require_once (dirname(__FILE__) . "/../lib/util.php");
+require_once (dirname(__FILE__) . "/../lib/coduser.php");
+
+$auth_level_required = get_required_auth_level('usr','users','rq_resetpass');
+$user = new CODUser();
+$user->check_auth_level($auth_level_required);
 
 session_start();
 if (!isset($_SESSION["lan"])){
@@ -11,7 +30,6 @@ if (!isset($_SESSION["lan"])){
 }
 $lan = $_SESSION["lan"];
 session_write_close();
-
 
 /* CASTELLANO */
 $text["es"]["err1"] = "<div class='err'>Es necesario que facilite todos los datos</div>";

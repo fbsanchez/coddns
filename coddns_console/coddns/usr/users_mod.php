@@ -1,13 +1,33 @@
 <?php
+/**
+ * <copyright company="CODDNS">
+ * Copyright (c) 2013 All Right Reserved, http://coddns.es/
+ *
+ * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
+ * KIND, EITHER EXPRESSED OR IMPLIED, NO INCLUDING THE WARRANTIES OF
+ * MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+ *
+ * </copyright>
+ * <author>Fco de Borja Sanchez</author>
+ * <email>fborja.sanchezs@gmail.com</email>
+ * <date>2016-02-11</date>
+ * <update>2016-02-11</udate>
+ * <summary> </summary>
+ */
 
 require_once (dirname(__FILE__) . "/../include/config.php");
+require_once (dirname(__FILE__) . "/../lib/db.php");
+require_once (dirname(__FILE__) . "/../lib/util.php");
+require_once (dirname(__FILE__) . "/../lib/coduser.php");
 
-if (! defined("_VALID_ACCESS")) {
+if (! defined("_VALID_ACCESS")) { // Avoid direct access
     header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
 
-//check_user_auth();
+$auth_level_required = get_required_auth_level('usr','users','mod');
+$user = new CODUser();
+$user->check_auth_level($auth_level_required);
 
 session_start();
 if (!isset($_SESSION["lan"])){
@@ -77,7 +97,7 @@ $text["de"]["send"] = "Change it";
 <?php echo $text[$lan]["ua_welcome"];?>
     <p><?php echo $text[$lan]["ua_label_mail"];?> <span style="font-style:italic;"><?php echo $_SESSION["email"];?></span>
     </p>
-    <form name="npass" method="POST" onsubmit="fsgo('npass','response','usr/rq_ua.php');return false">
+    <form name="npass" method="POST" onsubmit="fsgo('npass','response','usr/users_rq_mod.php');return false">
     <ul>
         <li>
             <label><?php echo $text[$lan]["ua_label_pass_old"];?></label><input type="password" id="op" name="op" placeholder="<?php echo $text[$lan]["ua_place_pass_old"];?>" autofocus required />

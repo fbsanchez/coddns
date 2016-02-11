@@ -113,6 +113,7 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('','ip','',0),
     ('','logout','',0),
     ('','main','',0),
+    ('','rest_host','',0),
     ('usr','','',1),
     ('usr','hosts','',1),
     ('usr','hosts','del',1),
@@ -130,5 +131,7 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('usr','users','sendtoken',0),
     ('adm','','',100),
     ('adm','site','',100),
+    ('adm','site','manager',100),
     ('adm','service','',100),
+    ('adm','service','manager',100),
     ('cms','','',0);
