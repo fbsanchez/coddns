@@ -104,7 +104,7 @@ echo $text[$lan]["hosts_welcome"];
 ?>
 </section>
 <section class="uarea">
-    <form id="newhost" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/rq_nhost.php', true,raise_ajax_message);return false;">
+    <form id="newhost" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
     <ul>
         <li>
             <label><?php echo $text[$lan]["label_tag"];?></label>
@@ -169,7 +169,7 @@ $q = "select tag, INET_NTOA(ip) ip from hosts where oid=(select id from users wh
 $r = $dbclient->exeq($q);
 
 
-$del_submit= "fsgo('del', 'ajax_message','usr/delhost.php', true,raise_ajax_message);return false;";
+$del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax_message);return false;";
 ?>
 <h3><?php echo $text[$lan]["ht_htitle"];?></h3>
 <form id="change" action="<?php echo $config["html_root"];?>/?z=mod" method="POST">

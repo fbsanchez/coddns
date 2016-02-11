@@ -16,6 +16,9 @@ class DBClient {
   var $client;
 
   function DBClient($cfg){
+    if ($cfg === null){
+      return null; // Use as static library
+    }
     $this->engine = $cfg["engine"];
 
     if ($this->engine == "postgresql") {
@@ -61,7 +64,7 @@ class DBClient {
 
   function get_sql_array($query){
     $this->connect() or die($this->lq_error());
-    $r   = $this->exeq($query) or die($this->lq_error());
+    $r   = $this->exeq($query) or error_log($this->lq_error());
     $out = $this->fetch_array($r);
     $nitems = $this->lq_nresults();
     $this->disconnect();
@@ -111,9 +114,10 @@ class DBClient {
    */
   function prepare($clsqlarg, $type){
     switch($type){
-      case "email":     return strip_tags (preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg), "<b><u><p>");
+      case "email":     return preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg);
       case "number":    return floatval($clsqlarg);
-      case "letters":   return strip_tags (preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg), "<b><u><p>");
+      case "url_get":   return preg_replace("/[^a-zA-Z0-9_]/", "", $clsqlarg);
+      case "letters":   return preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg);
       case "insecure_text":{
         $search  = array("<script", "</script>", "%0A");
         return str_replace("%", "$",(

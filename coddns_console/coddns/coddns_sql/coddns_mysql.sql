@@ -74,6 +74,16 @@ CREATE TABLE IF NOT EXISTS hosts (
 ) engine=InnoDB;
 
 
+-- Table site ACL
+CREATE TABLE IF NOT EXISTS site_acl(
+    m varchar(200),
+    z varchar(200),
+    op varchar(200),
+    auth_level int NOT NULL DEFAULT 100,
+    CONSTRAINT pkey_site_acl PRIMARY KEY(m,z,op)
+) engine=InnoDB;
+
+
 -- EO Table definitions
 
 
@@ -90,3 +100,35 @@ INSERT INTO roles (tag,auth_level,description)
 INSERT INTO groups (tag,description)
  values
     ('all', 'DEFAULT group');
+
+
+-- DEFAULT SITE_ACL
+INSERT INTO site_acl (m,z,op,auth_level)
+ values
+    ('','','',0),
+    ('','api','',0),
+    ('','cliupdate','',0),
+    ('','downloads','',0),
+    ('','header','',0),
+    ('','ip','',0),
+    ('','logout','',0),
+    ('','main','',0),
+    ('usr','','',1),
+    ('usr','hosts','',1),
+    ('usr','hosts','del',1),
+    ('usr','hosts','mod',1),
+    ('usr','hosts','rq_mod',1),
+    ('usr','hosts','rq_new',1),
+    ('usr','users','login',0),
+    ('usr','users','mod',1),
+    ('usr','users','remember',0),
+    ('usr','users','resetpass',0),
+    ('usr','users','rq_login',0),
+    ('usr','users','rq_mod',1),
+    ('usr','users','rq_resetpass',0),
+    ('usr','users','rq_signin',0),
+    ('usr','users','sendtoken',0),
+    ('adm','','',100),
+    ('adm','site','',100),
+    ('adm','service','',100),
+    ('cms','','',0);

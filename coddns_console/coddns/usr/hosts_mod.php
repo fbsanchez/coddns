@@ -65,7 +65,7 @@ function select_my_ip(){
 <body>
 <section>
 <a href="<?php echo $config["html_root"] . "/?z=hosts&lang=" . $lan;?>"><?php echo $text[$lan]["back"];?></a>
-<form id="modhost" onsubmit="return false;" method="POST" action="?z=hosts" onsubmit="return false;">
+<form id="modhost" onsubmit="return false;" method="POST" action="?m=usr&z=hosts" onsubmit="return false;">
     <ul>
         <li>
             <label>Host:</label><input style="border: none; font-size: 1em;text-align: right;" type="text" readonly name="edith" value="<?php echo $host; ?>"></input>
@@ -80,7 +80,7 @@ function select_my_ip(){
             <a style="padding: 5px; font-size: 0.8em;" href="#" onclick="select_my_ip();return false;">Coger mi IP actual</a>
         </li>
         <li>
-            <input type="submit" value="Actualizar" onclick="fsgo('modhost', 'ajax_message','usr/rq_modhost.php', true,raise_ajax_message);return false;"/>
+            <input type="submit" value="Actualizar" onclick="fsgo('modhost', 'ajax_message','usr/hosts_rq_mod.php', true,raise_ajax_message);return false;"/>
         </li>
     </ul>
 </form>

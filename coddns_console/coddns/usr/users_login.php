@@ -41,7 +41,7 @@ $text["en"]["remember"]    = "Did you forgot your password?";
 
 <section id="login">
     <h2><?php echo $text[$lan]["main_acc"];?></h2>
-    <form id="loginf" method="POST" action="usr/rq_login.php" onsubmit="fsgo('loginf', 'login_response','usr/rq_login.php', true);return false;">
+    <form id="loginf" method="POST" action="usr/rq_login.php" onsubmit="fsgo('loginf', 'login_response','usr/users_rq_login.php', true);return false;">
     <ul>
         <li>
             <label>E-mail: </label>
@@ -66,7 +66,7 @@ $text["en"]["remember"]    = "Did you forgot your password?";
 
 <section id="signin">
     <h2><?php echo $text[$lan]["main_reg"];?></h2>
-    <form id="signinf" method="POST" action="usr/rq_signin.php" onsubmit="fsgo('signinf', 'signin_response','usr/rq_signin.php', true);return false;">
+    <form id="signinf" method="POST" action="usr/rq_signin.php" onsubmit="fsgo('signinf', 'signin_response','usr/users_rq_signin.php', true);return false;">
     <ul>
         <li>
             <label>E-mail: </label>

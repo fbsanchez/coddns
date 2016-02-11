@@ -8,16 +8,18 @@ if (!defined("_VALID_ACCESS")){
     die ("Unauthorized");
 }
 
-$user = new CODUser();
+function check_show($user, $mode, $zone, $operation){
+    $auth_level_required = get_required_auth_level($mode,$zone,$operation);
 
-$start_menu_class    = "pl";
-$menu_item_downloads = "pl";
-$menu_item_usermod   = "pl";
-$menu_item_user      = "pl";
-$menu_item_priv_zone = "pl";
-$menu_item_logout    = "pl";
-$menu_item_pub       = "pl";
-$menu_item_manager   = "pl";
+    if($user->get_auth_level() >= $auth_level_required) {
+        return true;
+    }
+    return false;
+}
+
+
+$user = new CODUser();
+$user->check_auth_level(get_required_auth_level(null,"header",null));
 
 session_start();
 if (!isset($_SESSION["lan"])){
@@ -27,107 +29,191 @@ $lan = $_SESSION["lan"];
 session_write_close();
 
 
-if (! isset ($_GET["z"])){
-    $start_menu_class = "pl_select";
+// initialize menu_item_class
+$menu_item_main      = "pl";
+$menu_item_downloads = "pl";
+$menu_item_usermod   = "pl";
+$menu_item_user      = "pl";
+$menu_item_priv_zone = "pl";
+$menu_item_logout    = "pl";
+$menu_item_pub       = "pl";
+$menu_item_adm       = "pl";
+
+// initialize printer id flags
+$enable_main        = 0;
+$enable_downloads   = 0;
+$enable_cms         = 0;
+$enable_hosts       = 0;
+$enable_users_mod   = 0;
+$enable_adm         = 0;
+$enable_logout      = 0;
+$enable_users_login = 0;
+
+
+if ( $url == "index.php" ) {
+    $menu_item_main = "pl_select";
 }
 else {
-    switch ($_GET["z"]) {
-        case "remember":
-            $start_menu_class = "pl_select";
+
+    switch ($mode) {
+        case "adm":
+            $menu_item_adm = "pl_select";
             break;
-        case "downloads":
-            $menu_item_downloads = "pl_select";
+        case "usr":
+            switch($zone){
+                case "users":
+                    switch($operation){
+                        case "login":
+                        case "signin":
+                            $menu_item_priv_zone = "pl_select";
+                            break;
+                        case "mod":
+                            $menu_item_usermod = "pl_select";
+                            break;
+                        case "remember":
+                            $menu_item_user = "pl_select";
+                            break;
+                        case "resetpass":
+                            break;
+                        case "sendtoken":
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case "hosts":
+                    switch($operation){
+                        case "mod":
+                        case "new":
+                        case "del":
+                        default:
+                            $menu_item_priv_zone = "pl_select";
+                        break;
+                    }
+                    break;
+            }
             break;
-        case "usermod":
-            $menu_item_user = "pl_select";
-            break;
-        case "hosts":
-        case "del":
-        case "mod":
-        case "login":
-            $menu_item_priv_zone = "pl_select";
-            $menu_item_usermod = "pl_select";
-            break;
-        case "pub":
+        case "cms":{
             $menu_item_pub = "pl_select";
             break;
-        case "adm":
-            $menu_item_manager = "pl_select";
+        }
+        case null:
+            switch($zone){
+                case "downloads":
+                    $menu_item_downloads = "pl_select";
+                    break;
+                case "cliupdate":
+                    $menu_item_policy = "pl_select";
+                    break;
+                case "cookie_policy":
+                    $menu_item_cookies = "pl_select";
+                    break;
+                default:
+                    $menu_item_main = "pl_select";
+                    break;
+            }
             break;
         default:
-            $start_menu_class = "pl_select";
-            $menu_item_downloads = "pl";
-            $menu_item_usermod = "pl";
-            $menu_item_user = "pl";
-            $menu_item_priv_zone = "pl";
+            $menu_item_main = "pl_select";
             break;
     }
 }
 
 
 ?>
-<script type="text/javascript">
-function red(id,zone,page){
-    menu_item_main.className="pl";
-    menu_item_policy.className="pl";
-    menu_item_cookies.className="pl";
-    menu_item_priv_zone.className="pl";
-    menu_item_downloads.className="pl";
-    menu_item_pub.className="pl";
-<?php
-    if ($user->get_auth_level()>0) {
-?>
-    menu_item_user.className="pl";
-<?php
-}
-    if ($user->get_auth_level()>=100) {
-?>
-    menu_item_manager.className="pl";
-<?php
-}
-?>
-	id.className="pl_select";
-	updateContent(zone,page);
-}
-</script>
 <header id="header">
 <div id="launcher" class="box-shadow-menu" onclick="minimize_menu();return false;">
 </div>
 <a href="<?php echo $config["html_root"];?>/"><img src="<?php echo $config["html_root"];?>/rs/img/coddns_225.png" alt="logo"></a>
 <div id="menu">
     <ul>
-        <li><a id="menu_item_main"      class="<?php echo $start_menu_class;?>"     href="<?php echo $config["html_root"];?>/">Inicio</a></li>
+
+<?php
+
+if (check_show($user,null,"main",null)) {
+    $enable_main = 1;
+?>
+        <li><a id="menu_item_main"      class="<?php echo $menu_item_main;?>"     href="<?php echo $config["html_root"];?>/">Inicio</a></li>
+<?php } ?>
+
+<?php
+if (check_show($user,null,"downloads",null)) {
+    $enable_downloads = 1;?>
         <li><a id="menu_item_downloads" class="<?php echo $menu_item_downloads;?>" href="<?php echo $config["html_root"];?>/?z=downloads">Descargas</a></li>
-        
-<?php
-if (file_exists('cms/')) {
-?>
-        <li><a id="menu_item_pub" class="<?php echo $menu_item_pub;?>" href="<?php echo $config["html_root"];?>/?z=pub">Documentaci&oacute;n</a></li>
-<?php
-}
-if ($user->get_auth_level() >= 1) { // operations granted for standar users
-?>
+<?php } ?>
 
-        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?z=hosts">&Aacute;rea personal</a></li>
-        <li><a id="menu_item_user"      class="<?php echo $menu_item_user;?>"       href="<?php echo $config["html_root"];?>/?z=usermod">Mi cuenta</a></li>
 <?php
-if ($user->get_auth_level() >= 100) { // operations granted for administrator users
+if ((file_exists('cms/')) && (check_show($user,"cms",null,null))) {
+    $enable_cms = 1;
 ?>
-        <li><a id="menu_item_manager"      class="<?php echo $menu_item_manager;?>"       href="<?php echo $config["html_root"];?>/?z=adm">Administraci&oacute;n</a></li>
+        <li><a id="menu_item_pub" class="<?php echo $menu_item_pub;?>" href="<?php echo $config["html_root"];?>/?m=cms">Documentaci&oacute;n</a></li>
+<?php } ?>
 <?php
-}
+if (check_show($user,"usr","hosts",null)) {
+    $enable_hosts = 1;
 ?>
-
+        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=hosts">&Aacute;rea personal</a></li>
+<?php } ?>
+<?php
+if (check_show($user,"usr","users","mod")) {
+    $enable_users_mod = 1;
+?>
+        <li><a id="menu_item_user"      class="<?php echo $menu_item_user;?>"       href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=mod">Mi cuenta</a></li>
+<?php } ?>
+<?php
+if (check_show($user,"adm",null,null)) {
+    $enable_adm = 1;
+?>
+        <li><a id="menu_item_adm"      class="<?php echo $menu_item_adm;?>"       href="<?php echo $config["html_root"];?>/?m=adm">Administraci&oacute;n</a></li>
+<?php } ?>
+<?php
+if (($user->get_is_logged()) && (check_show($user,null,"logout",null))) {
+    $enable_logout = 1;
+?>
         <li><a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/logout.php">Desconectarme</a></li>
+<?php } ?>
 <?php
-}
-else {
+if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"))) {
+    $enable_users_login = 1;
 ?>
-        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?z=login">&Aacute;rea personal</a></li>
+        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=login">&Aacute;rea personal</a></li>
 <?php
 }
 ?>
     </ul>
+    <script type="text/javascript">
+    function red(id,zone,page){
+        <?php
+
+        if ($enable_main) {
+            echo "menu_item_main.className='pl';\n";
+        }
+        if ($enable_downloads) {
+            echo "menu_item_downloads.className='pl';\n";
+        }
+        if ($enable_cms) {
+            echo "menu_item_pub.className='pl';\n";
+        }
+        if ($enable_hosts) {
+            echo "menu_item_priv_zone.className='pl';\n";
+        }
+        if ($enable_users_mod) {
+            echo "menu_item_user.className='pl';\n";
+        }
+        if ($enable_adm) {
+            echo "menu_item_adm.className='pl';\n";
+        }
+        if ($enable_users_login) {
+            echo "menu_item_priv_zone.className='pl';\n";
+        }
+    ?>
+        menu_item_policy.className='pl';
+        menu_item_cookies.className='pl';
+
+        id.className="pl_select";
+        updateContent(zone,page);
+    }
+    </script>
 </div>
 <div id="contact">
     <ul>

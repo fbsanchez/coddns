@@ -8,17 +8,10 @@ if (!file_exists(dirname(__FILE__) . "/include/config.php")){
     exit(0);
 }
 
-include_once(dirname(__FILE__) . "/include/config.php");
+require_once(dirname(__FILE__) . "/include/config.php");
 require_once(dirname(__FILE__) . "/lib/ipv4.php");
 require_once(dirname(__FILE__) . "/lib/util.php");
 require_once(dirname(__FILE__) . "/lib/coduser.php");
-
-$user = new CODUser();
-$user->check_auth_level(0);
-
-if ($user->get_auth_level() && (isset($_GET["z"])) && ($_GET["z"] == "login")){
-    $_GET["z"] = "hosts";
-}
 
 /**
  * Language selector
@@ -169,7 +162,60 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 })(window,document,'script','dataLayer','GTM-M83DNM');</script>
 <!-- End Google Tag Manager -->
 
-<?php include_once("header.php");?>
+<?php
+
+/**
+ * How to access resources:
+ *
+ * m  = folder
+ * z  = file
+ * op = file tail
+ *
+ * In example: coddns.org/index.php?m=usr&z=hosts&op=mod
+ * Results in file include: usr/hosts_mod.php
+ *
+ */
+
+
+
+// Restrict acces:
+//   adm: default auth_level: 100
+//   usr: default auth_level: 1
+
+
+$mode = secure_get("m");
+$zone = secure_get("z");
+$operation = secure_get("op");
+$url  = "";
+
+if (isset ($mode)){
+    $url = $mode . DIRECTORY_SEPARATOR;
+}
+if (! isset ($zone)){
+    if (!isset ($mode)){ // avoid recursive inclusion on clean call
+        $url .= "main.php";
+    }
+    else {
+        $url .= "index.php";
+    }
+}
+elseif (! isset($operation)){
+    $url .= $zone . ".php";
+}
+else {
+    $url .= $zone . "_" . $operation . ".php";
+}
+
+$auth_level_required = get_required_auth_level($mode,$zone,$operation);
+
+$user = new CODUser();
+$user->check_auth_level($auth_level_required);
+
+
+include_once("header.php");
+
+
+?>
 <div id="main">
 <?php 
 
@@ -182,52 +228,15 @@ echo "</div>";
 }
 ?>
 
-<section id="main_section">
-
 <?php
-
-if (! isset ($_GET["z"]))
-    include ("main.php");
+if ($auth_level_required === null){
+    include (dirname(__FILE__) . DIRECTORY_SEPARATOR . "err404.html");
+}
 else {
-    switch ($_GET["z"]){
-        case "login":
-            include ("usr/login.php");
-            break;
-        case "hosts":
-            include ("usr/hosts.php");
-            break;
-        case "mod":
-            include ("usr/modhost.php");
-            break;
-        case "del":
-            include ("usr/delhost.php");
-            break;
-        case "remember":
-            include ("usr/remember.php");
-            break;
-        case "newpassword":
-            include ("usr/newpass.php");
-            break;
-        case "downloads":
-            include ("downloads.php");
-            break;
-        case "usermod":
-            include ("usr/user_actions.php");
-            break;
-        case "pub":
-            include ("cms/index.php");
-            break;
-        case "adm":
-            include ("adm/manager.php");
-            break;
-        default:
-            include ("main.php");
-            break;
-    }
+    include (dirname(__FILE__) . DIRECTORY_SEPARATOR . $url);
 }
 ?>
 
-</section>
 <div id ="ajax_message_wrapper">
 <script type="text/javascript">
     function ajax_message_tweak(val){

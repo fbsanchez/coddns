@@ -62,4 +62,4 @@ $header = "From: " . $text_sender . " <" . $email_sender . ">\r\n"; //optional h
 mail($recipient, $subject, $mail_body, $header); //mail command :)
 
 ?>
-<div class='ok'>Bienvenido <?php echo $user; ?></div><script>location.reload();</script></div>
+<div class='ok'>Bienvenido <?php echo $user; ?></div><script>location="?m=usr&z=hosts";</script></div>

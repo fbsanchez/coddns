@@ -31,8 +31,6 @@ function check_user_agent ( $type = NULL ) {
         }
         return false;
 }
-
-
 function isOverHTTPS(){
     if (isset($_SERVER["HTTPS"]) && $_SERVER['SERVER_PORT'] == '443')
         return true;
@@ -47,5 +45,38 @@ function redirect($url){
       die();
     }    
 }
-?>
 
+
+
+function secure_get($argument, $mode = "url_get"){
+    require_once(dirname(__FILE__) . "/db.php");
+
+    $securizer = new DBClient(null);
+
+    if (isset ($_GET["$argument"])){
+        $token = $securizer->prepare($_GET["$argument"], $mode);
+        return $token;
+    }
+    return null;
+}
+
+function get_required_auth_level($mode,$zone,$operation){
+    require_once(dirname(__FILE__) . "/db.php");
+    include(dirname(__FILE__) . "/../include/config.php");
+
+    $dbclient = new DBClient($db_config);
+    $sm = $dbclient->prepare($mode, "url_get");
+    $sz = $dbclient->prepare($zone, "url_get");
+    $so = $dbclient->prepare($operation, "url_get");
+
+    $obj = $dbclient->get_sql_object("SELECT auth_level FROM site_acl WHERE m='$sm' and z='$sz' and op='$so'");
+
+    if (isset($obj->auth_level)){
+        return $obj->auth_level;
+    }
+    return null;
+
+}
+
+
+?>

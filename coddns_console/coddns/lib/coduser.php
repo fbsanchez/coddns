@@ -55,6 +55,9 @@ class CODUser {
 		$this->config = $config;
 	}
 
+	function get_is_logged(){
+		return $this->logged;
+	}
 	/**
 	 * Process login for a given user/pass
 	 *
@@ -165,6 +168,9 @@ class CODUser {
 		$dbclient = new DBClient($this->config["db_config"]) or die($dbclient->lq_error());
 		$q = "SELECT u.rol,r.auth_level FROM users u, roles r WHERE u.id=" . $this->oid . " and r.id=u.rol;";
 		$result = $dbclient->get_sql_object($q);
+		if (!isset($result->auth_level)){
+			return 0;
+		}
 		$this->rol        = $result->rol;
 		$this->auth_level = $result->auth_level;
 

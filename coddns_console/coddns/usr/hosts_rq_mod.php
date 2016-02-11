@@ -79,7 +79,7 @@ if( $dbclient->lq_nresults() == 1 ){
 }
 else{
     echo "ERR";
-    header ("Location: " . $config["html_root"] . "/err403.html");
+    redirect ("Location: " . $config["html_root"] . "/?z=err40X.html");
     exit (3);
 }
 

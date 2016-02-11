@@ -16,7 +16,8 @@ body{
 div#main{
     width: 80%;
     margin-left: 200px;
-    padding: 10px;
+    padding-top: 50px;
+    background: #fff;
 }
 b{
     color: #222;
@@ -60,14 +61,6 @@ div#ajax_message_wrapper a#ajax_message_close{
 }
 div#ajax_message_wrapper a#ajax_message_close:hover{
     font-weight: bold;
-}
-section#main_section{
-    width: 100%;
-	background: #fff;
-	margin: 0px auto;
-	padding-top: 50px;
-	padding-bottom: 50px;
-
 }
 section{
     width: 60%;
@@ -139,3 +132,11 @@ div.r{
 }
 div.err{color: red;}
 div.ok{color: green;}
+
+section a{
+    color: #EC8606;
+    text-decoration: none;
+}
+section a:hover{
+    border-bottom: 1px solid #EC8606;
+}
