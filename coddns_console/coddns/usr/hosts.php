@@ -188,7 +188,7 @@ $r = $dbclient->exeq($q);
 $del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax_message);return false;";
 ?>
 <h3><?php echo $text[$lan]["ht_htitle"];?></h3>
-<form id="change" action="<?php echo $config["html_root"];?>/?z=mod" method="POST">
+<form id="change" action="<?php echo $config["html_root"];?>/?m=usr&z=hosts&op=mod" method="POST">
     <input type="hidden" id="edith" name="edith" required/>
     <input type="hidden" id="editip" name="editip" required/>
 </form>

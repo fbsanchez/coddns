@@ -1,0 +1,10 @@
+pre {
+	font-family: Courier;
+    font-size: 0.7em;
+    margin: 15px 0;
+}
+
+nav {
+	height: 50px;
+	width: 100%;
+}

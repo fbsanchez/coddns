@@ -37,14 +37,21 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="rs/css/pc/adm.css">
 </head>
 
 <body>
 	<section>
 		<h2>Panel de administraci&oacute;n</h2>
 		<nav>
-		<a href="#">Configurar el sitio</a>
-		<a href="#">Administrar el servicio</a>
+		<ul>
+			<li>
+				<a href="<?php echo $config["html_root"] . "/?m=adm&z=site"?>">Configurar el sitio</a>
+			</li>
+			<li>
+				<a href="<?php echo $config["html_root"] . "/?m=adm&z=service"?>">Administrar el servicio</a>
+			</li>
+		</ul>
 		</nav>
 	</section>
 </body>

@@ -185,7 +185,7 @@ if (check_show($user,"adm",null,null)) {
 if (($user->get_is_logged()) && (check_show($user,null,"logout",null))) {
     $enable_logout = 1;
 ?>
-        <li><a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/logout.php">Desconectarme</a></li>
+        <li><a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/?z=logout">Desconectarme</a></li>
 <?php } ?>
 <?php
 if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"))) {

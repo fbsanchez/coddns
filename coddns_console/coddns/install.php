@@ -150,7 +150,7 @@ $global_ok = 0;
 $writable_config_ok = 0;
 
 // check named service:
-exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
+exec ("/etc/init.d/named status | wc -l", $out, $return);
 if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
 
 // check ddns_manager is present

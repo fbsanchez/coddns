@@ -29,15 +29,9 @@ $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
 session_start();
-if (!isset($_SESSION["lan"])){
-    $_SESSION["lan"] = "es";
-}
-$lan = $_SESSION["lan"];
-session_write_close();
-
 session_destroy();
 session_write_close();
 
-header ('Location: ' . $config["html_root"] . '/?lang=' . $lan );
+redirect ($config["html_root"] . '/?lang=' . $lan );
 
 ?>
