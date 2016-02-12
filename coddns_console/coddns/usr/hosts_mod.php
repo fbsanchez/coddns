@@ -86,7 +86,7 @@ function select_my_ip(){
 
 <body>
 <section>
-<a href="<?php echo $config["html_root"] . "/?z=hosts&lang=" . $lan;?>"><?php echo $text[$lan]["back"];?></a>
+<a href="<?php echo $config["html_root"] . "/?m=usr&z=hosts&lang=" . $lan;?>"><?php echo $text[$lan]["back"];?></a>
 <form id="modhost" onsubmit="return false;" method="POST" action="?m=usr&z=hosts" onsubmit="return false;">
     <ul>
         <li>
