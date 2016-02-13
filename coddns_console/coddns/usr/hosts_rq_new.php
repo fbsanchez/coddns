@@ -105,7 +105,7 @@ if( $dbclient->lq_nresults() > 0 )
 $out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip);
 
 $q = "insert into hosts (oid, tag, ip) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip);";
-$dbclient->exeq($q);
+$dbclient->exeq($q) or die($dbclient->lq_error());
 
 $dbclient->disconnect();
 session_write_close();
