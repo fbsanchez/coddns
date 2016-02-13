@@ -592,10 +592,10 @@ elseif ($phase == 2) {
 						<label>Directorio HTML principal</label><input name="html_root" type="text" value="<?php echo preg_replace("/\/install\.php$/","",$_SERVER['REQUEST_URI']);?>"/>
 					</li>
 					<li>
-						<label>Cuenta de administraci&oacute;n:</label><input name="user" type="email"/>
+						<label>Cuenta de administraci&oacute;n:</label><input name="user" type="email" required="yes" />
 					</li>
 					<li>
-						<label>Contrase&ntilde;a:</label><input id="pass" name="pass" type="password"/>
+						<label>Contrase&ntilde;a:</label><input id="pass" name="pass" type="password" required="yes"/>
 					</li>
 					<li>
 						<label>Semilla hash:</label><input name="hash" type="text" value="<?php echo base64_encode(time());?>"/>
