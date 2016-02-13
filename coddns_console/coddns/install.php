@@ -584,6 +584,7 @@ elseif ($phase == 2) {
 		</div>
 		<div class="tab" style="max-height: 1000px" id="data">
 			<form id="mysql" name="finalcfg" method="POST" onsubmit="pass.value=btoa(pass.value);">
+				<input type="hidden" name="myip" value="<?php echo $myip;?>"/>
 				<ul>
 					<li>
 						<label>Dominio principal:</label><input name="domain" type="text" value="coddns.lan"/>
@@ -621,13 +622,27 @@ elseif ($phase == 3){
 
 	print_header(3);
 
+
+	$dbclient  = new DBClient($config);
+	$dbclient->connect() or die ($dbclient->lq_error());
+
 	$html_root = $_POST["html_root"];
 	$user      = $_POST["user"];
 	$rq_pass   = base64_decode($_POST["pass"]);
-	$domain    = $_POST["domain"];
+	$domain    = $dbclient->prepare($_POST["domain"],"url_get");
 	$salt      = $_POST["hash"];
+	$myip      = $dbclient->prepare($_POST["myip"], "ip");
 
+	// Add current server to database
+	$q = "insert into servers (ip) values ('" . $myip . "')";
+	$dbclient->exeq($q) or die ($dbclient->lq_error());
+	$server_id = $dbclient->last_id();
 
+	// Add current domain, to the zones table
+	$q = "insert into zones (domain,server_id,master_id) values ('" . $domain . "', $server_id, $server_id)";
+	$dbclient->exeq($q) or die ($dbclient->lq_error());
+	
+	$dbclient->disconnect();
 
 	// BUILD FINAL CONFIGURATION FILE
 	$str_config  = "<?php\n";

@@ -62,17 +62,18 @@ CREATE TABLE IF NOT EXISTS tusers_groups (
 CREATE TABLE IF NOT EXISTS record_types (
     id serial,
     tag varchar(200) NOT NULL,
-    description text
+    description text,
+	auth_level int NOT NULL DEFAULT 100
 ) engine=InnoDB;
 
 
 -- Table Servers
 CREATE TABLE IF NOT EXISTS servers (
     id serial,
-    tag varchar(200) NOT NULL,
+    tag varchar(200) NOT NULL default "default" UNIQUE,
     ip int,
-    gid bigint unsigned NOT NULL,
-    user varchar(200) NOT NULL,
+    gid bigint unsigned NOT NULL default 1,
+    user varchar(200),
     password text,
     config text,
     config_md5 varchar(200),
@@ -91,7 +92,7 @@ CREATE TABLE IF NOT EXISTS zones (
     status int,
     server_id bigint unsigned NOT NULL, 
     master_id bigint unsigned NOT NULL,
-    CONSTRAINT pkey_zones PRIMARY KEY (id),
+    CONSTRAINT pkey_zones PRIMARY KEY (id,domain,server_id),
     CONSTRAINT fkey_zones_server FOREIGN KEY (server_id) REFERENCES servers(id) ON DELETE CASCADE,
     CONSTRAINT fkey_zones_master FOREIGN KEY (master_id) REFERENCES servers(id) ON DELETE CASCADE
 ) engine=InnoDB;
@@ -101,7 +102,7 @@ CREATE TABLE IF NOT EXISTS zones (
 CREATE TABLE IF NOT EXISTS hosts (
     id serial,
     oid bigint unsigned NOT NULL,
-    tag varchar(200) NOT NULL,
+    tag varchar(200) NOT NULL UNIQUE,
     ip varchar(250) NOT NULL,
     created timestamp DEFAULT CURRENT_TIMESTAMP,
     last_updated timestamp,
@@ -179,3 +180,11 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('adm','service','',100),
     ('adm','service','manager',100),
     ('cms','','',0);
+
+-- RECORD_TYPES
+INSERT INTO record_types(tag,description,auth_level)
+ values
+	('A','A register type',0),
+	('NS','NS register type',0),
+	('CNAME','CNAME register type',0),
+	('MX','MX register type',0);

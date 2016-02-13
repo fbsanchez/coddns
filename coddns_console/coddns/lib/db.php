@@ -132,7 +132,7 @@ class DBClient {
     switch($type){
       case "email":     return preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg);
       case "number":    return floatval($clsqlarg);
-      case "url_get":   return preg_replace("/[^a-zA-Z0-9_]/", "", $clsqlarg);
+      case "url_get":   return preg_replace("/[^a-zA-Z0-9_.]/", "", $clsqlarg);
       case "letters":   return preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg);
       case "insecure_text":{
         $search  = array("<script", "</script>", "%0A");
