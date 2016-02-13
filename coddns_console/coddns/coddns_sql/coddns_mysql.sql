@@ -58,19 +58,63 @@ CREATE TABLE IF NOT EXISTS tusers_groups (
 ) engine=InnoDB;
 
 
+-- Table Record types
+CREATE TABLE IF NOT EXISTS record_types (
+    id serial,
+    tag varchar(200) NOT NULL,
+    description text
+) engine=InnoDB;
+
+
+-- Table Servers
+CREATE TABLE IF NOT EXISTS servers (
+    id serial,
+    tag varchar(200) NOT NULL,
+    ip int,
+    gid bigint unsigned NOT NULL,
+    user varchar(200) NOT NULL,
+    password text,
+    config text,
+    config_md5 varchar(200),
+    status int DEFAULT 0,
+    CONSTRAINT pkey_servers PRIMARY KEY (id),
+    CONSTRAINT fkey_servers_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
+) engine=InnoDB;
+
+
+-- Table Zones
+CREATE TABLE IF NOT EXISTS zones (
+    id serial,
+    domain varchar(255) NOT NULL,
+    config text,
+    gid bigint unsigned NOT NULL,
+    status int,
+    server_id bigint unsigned NOT NULL, 
+    master_id bigint unsigned NOT NULL,
+    CONSTRAINT pkey_zones PRIMARY KEY (id),
+    CONSTRAINT fkey_zones_server FOREIGN KEY (server_id) REFERENCES servers(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_zones_master FOREIGN KEY (master_id) REFERENCES servers(id) ON DELETE CASCADE
+) engine=InnoDB;
+
+
 -- Table hosts
 CREATE TABLE IF NOT EXISTS hosts (
     id serial,
     oid bigint unsigned NOT NULL,
     tag varchar(200) NOT NULL,
-    ip int,
+    value varchar(250) NOT NULL,
     created timestamp DEFAULT CURRENT_TIMESTAMP,
     last_updated timestamp,
     gid bigint unsigned NOT NULL DEFAULT 1,
+    rtype bigint unsigned NOT NULL DEFAULT 1,
+    zone_id bigint unsigned NOT NULL DEFAULT 1,
+    ttl int default 12,
     CONSTRAINT pkey_hosts PRIMARY KEY (id),
     CONSTRAINT const_hosts_unique_tag UNIQUE (tag),
     CONSTRAINT fkey_host_owner FOREIGN KEY (oid) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fkey_host_gid FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fkey_host_gid   FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fkey_host_rtype FOREIGN KEY (rtype) REFERENCES record_types(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fkey_host_zone  FOREIGN KEY (zone_id) REFERENCES zones(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) engine=InnoDB;
 
 
