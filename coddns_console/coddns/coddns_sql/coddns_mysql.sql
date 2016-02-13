@@ -102,7 +102,7 @@ CREATE TABLE IF NOT EXISTS hosts (
     id serial,
     oid bigint unsigned NOT NULL,
     tag varchar(200) NOT NULL,
-    value varchar(250) NOT NULL,
+    ip varchar(250) NOT NULL,
     created timestamp DEFAULT CURRENT_TIMESTAMP,
     last_updated timestamp,
     gid bigint unsigned NOT NULL DEFAULT 1,
