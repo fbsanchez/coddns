@@ -714,7 +714,7 @@ elseif ($phase == 3){
 ?>
 	<article>
 	<div style="width: 100px; height: 100px; margin: 15px auto;">
-		<img src="<?php echo $html_root . "rs/img/ok.png"?>" alt="END" />
+		<img src="<?php echo $html_root . "/rs/img/ok.png"?>" alt="END" />
 	</div>
 	<p>El proceso de instalaci&oacute;n ha finalizado correctamente.</p>
 	<br>
