@@ -210,8 +210,11 @@ class CODUser {
 
 
 	function check_auth_level($level=0){
-		if ($this->load_auth_level() < $level) {
-			redirect ($this->config["html_root"] . "/");
+		$auth_level = $this->load_auth_level();
+
+		if ((! isset ($auth_level)) || (! isset($level)) || ( $auth_level < $level) ) {
+			die ("Unauthorized to access this content");
+			/// redirect ($this->config["html_root"] . "/");
 			exit(0);
 		}
 	}
