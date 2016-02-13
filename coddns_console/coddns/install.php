@@ -150,20 +150,20 @@ $global_ok = 0;
 $writable_config_ok = 0;
 
 // check named service:
-exec ("/etc/init.d/named status 2>/dev/null | wc -l", $out, $return);
-if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
+exec ("/etc/init.d/named status 2>/dev/null | wc -l", $service_output, $return);
+if (($return == 0) && ($service_output[0] >= 1)) { $named_ok  = 1; }
 
 if ($named_ok == 0) { // try with bind9 service
-	exec ("/etc/init.d/bind9 status 2>/dev/null | wc -l", $out, $return);
-	if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
+	exec ("/etc/init.d/bind9 status 2>/dev/null | wc -l", $service_output_2, $return);
+	if (($return == 0) && ($service_output_2[0] >= 1)) { $named_ok  = 1; }
 }
 // check ddns_manager is present
-exec ("which dnsmgr | wc -l", $out, $return);
-if (($return == 0) && ($out[1] >= 1)) { $dnsmgr_ok  = 1; }
+exec ("which dnsmgr | wc -l", $dnsmgr_output, $return);
+if (($return == 0) && ($dnsmgr_output[0] >= 1)) { $dnsmgr_ok  = 1; }
 
 // check nmap is present
-exec ("which nmap | wc -l", $out, $return);
-if (($return == 0) && ($out[2] >= 1)) { $nmap_ok  = 1; }
+exec ("which nmap | wc -l", $nmap_output, $return);
+if (($return == 0) && ($nmap_output[0] >= 1)) { $nmap_ok  = 1; }
 
 // Check if configuration directory is writable
 if (is_writable(dirname(__FILE__) . "/include")){
