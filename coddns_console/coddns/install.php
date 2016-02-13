@@ -472,7 +472,12 @@ elseif ($phase == 2) {
 		if ($grant_user_ok == 1){
 			switch ($engine){
 				case "mysql":
-					$command = "mysql -u $dbuser -p'$dbpass' -h $dbhost -P $dbport $dbname < $sql_file";
+					if ("$dbpass" == ""){
+						$command = "mysql -u $dbuser -h $dbhost -P $dbport $dbname < $sql_file";
+					}
+					else {
+						$command = "mysql -u $dbuser -p'$dbpass' -h $dbhost -P $dbport $dbname < $sql_file";
+					}
 					exec ($command . " 2>&1", $sql_file_exec, $return);
 					break;
 				case "postgresql":
