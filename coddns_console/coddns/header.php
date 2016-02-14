@@ -144,7 +144,7 @@ else {
     <ul>
 
 <?php
-
+    
 if (check_show($user,null,"main",null)) {
     $enable_main = 1;
 ?>
