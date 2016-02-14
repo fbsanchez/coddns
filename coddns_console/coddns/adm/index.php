@@ -43,7 +43,8 @@ $user->check_auth_level($auth_level_required);
 <body>
 	<section>
 		<h2>Panel de administraci&oacute;n</h2>
-
+	</section>
+	<nav>
 		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=site"?>">
 			<div class="menu_button" style="background: #FCFEFF;">
 			
@@ -58,7 +59,7 @@ $user->check_auth_level($auth_level_required);
 				<p>Administrar el servicio</p>
 			</div>
 		</a>
-	</section>
+	</nav>
 </body>
 
 </html>

@@ -5,8 +5,10 @@ pre {
 }
 
 nav {
-	height: 50px;
-	width: 100%;
+	width: 85%;
+    min-width: 450px;
+    margin: 15px auto;
+    font-size: 1em;
 }
 
 div.server{

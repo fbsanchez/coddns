@@ -103,9 +103,27 @@ $text["de"]["remember"]    = "Did you forgot your password?";
 
 ?>
 
+<!DOCTYPE html>
+
+<html>
+
+<head>
+<style type="text/css">
+    section img{
+        width: 70%;
+        margin: 0 auto 15px;
+        display: block;
+    }
+
+</style>
+</head>
+
+<body>
+
 <section style="margin-bottom: 20px; text-align: justify;">
 <article>
     <?php echo $text[$lan]["main_welcome"];?>
 </article>
 </section>
-
+</body>
+</html>
