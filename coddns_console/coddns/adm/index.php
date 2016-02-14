@@ -48,14 +48,14 @@ $user->check_auth_level($auth_level_required);
 		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=site"?>">
 			<div class="menu_button" style="background: #FCFEFF;">
 			
-				<img src="<?php echo $config["html_root"] . "/rs/img/site_options2.png"; ?>" alt="Site Settings"/>
+				<img src="<?php echo $config["html_root"] . "/rs/img/site_options2_gray.png"; ?>" alt="Site Settings"/>
 				<p>Configurar el sitio</p>
 			</div>
 		</a>
 
 		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=service"?>">
 			<div class="menu_button" style="background: #FEFCFF;">
-				<img src="<?php echo $config["html_root"] . "/rs/img/service.png"; ?>" alt="Service Settings"/>
+				<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Service Settings"/>
 				<p>Administrar el servicio</p>
 			</div>
 		</a>
