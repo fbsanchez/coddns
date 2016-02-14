@@ -189,11 +189,10 @@ echo $text[$lan]["hosts_welcome"];
 
 <?php
 $dbclient = new DBClient($db_config);
-
-$dbclient->connect() or die($text[$lan]["dberror"]);
+$dbclient->connect() or die($dbclient->lq_error());
 
 $q = "select h.tag, INET_NTOA(h.ip) ip, r.tag record, h.ttl from hosts h, record_types r where oid=(select id from users where mail='" . $_SESSION["email"] . "') and r.id=h.rtype;";
-$r = $dbclient->exeq($q);
+$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 
 $del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax_message);return false;";
@@ -211,7 +210,7 @@ $del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax
     <thead>
         <tr>
             <td><?php echo $text[$lan]["ht_hname"];?></td>
-            <td>Record Types</td>
+            <td title="record type">R.T.</td>
             <td>IP</td>
             <td>TTL</td>
             <td colspan="2">Ops.</td>

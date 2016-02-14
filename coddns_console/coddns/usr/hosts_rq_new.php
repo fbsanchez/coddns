@@ -81,9 +81,6 @@ if ( $check < 0 || $check == FALSE ){
 }
 
 $dbclient= new DBClient($db_config);
-$dbclient->connect() or die ("ERR");
-
-
 
 $host     = $dbclient->prepare($_POST["h"], "letters") . "." . $config["domainname"];
 $ip       = filter_var($_POST["ip"], FILTER_VALIDATE_IP);
@@ -91,7 +88,7 @@ $iip      = $dbclient->prepare($ip, "ip");
 $ttl      = $dbclient->prepare($_POST["ttl"], "number");
 $rtype_p  = $dbclient->prepare($_POST["rtype"], "letters");
 
-$dbclient->connect() or die ("ERR");
+$dbclient->connect() or die ($dbclient->lq_error());
 if ($ip === FALSE){
     echo $text["en"]["ip_f"];
     exit (1);
