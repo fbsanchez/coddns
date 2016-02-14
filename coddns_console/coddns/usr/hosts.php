@@ -129,14 +129,25 @@ echo $text[$lan]["hosts_welcome"];
             <div style="float:left;"><input type="text" id="h" name="h" onchange="checkHostName(this);return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/><i class="extension">.<?php echo $config["domainname"]?></i></div>
 			<div style="float:right;">
 				<label><?php echo $text[$lan]["reg_type"];?>:</label> 
-				<select style="margin-left: 15px; width: 90px;" name="rtype">
-<?php
-// Retrieve all DNS Record types available from de DB
-?>
-					<option value="A">A</option>
-					<option value="MX">MX</option>
-					<option value="CNAME">CNAME</option>
-					<option value="NS">NS</option>
+
+                <select style="margin-left: 15px; width: 90px;" name="rtype">
+				
+                <?php
+                    // Retrieve all DNS Record types available from de DB
+
+                $dbclient = new DBClient($db_config) or die ($dbclient->lq_error());
+                $dbclient->connect() or die ($dbclient->lq_error());
+                $results  = $dbclient->exeq("select tag from record_types;");
+
+                while ($r = $dbclient->fetch_object($results)) {
+                ?>
+					<option value="<?php echo $r->tag;?>"><?php echo $r->tag;?></option>
+                <?php
+                }
+
+                $dbclient->disconnect();
+                
+                ?>
 				</select>
 				<div id="launch_help_dns_type" onclick="toggle_help_ns();">&nbsp;</div>
 				<div id="help_dns_type">
