@@ -44,6 +44,15 @@ CREATE TABLE IF NOT EXISTS groups (
 ) engine=InnoDB;
 
 
+-- Table object_types
+CREATE TABLE IF NOT EXISTS object_types (
+    id serial,
+    tag varchar(200) NOT NULL,
+    description text,
+    CONSTRAINT pkey_object_types PRIMARY KEY (id)
+) engine=InnoDB;
+
+
 -- Table tusers_groups
 CREATE TABLE IF NOT EXISTS tusers_groups (
     id serial,
@@ -52,6 +61,7 @@ CREATE TABLE IF NOT EXISTS tusers_groups (
     view  int(1) NOT NULL DEFAULT 0,
     edit  int(1) NOT NULL DEFAULT 0,
     admin int(1) NOT NULL DEFAULT 0,
+    obj_type int DEFAULT null,
     CONSTRAINT pkey_user_group PRIMARY KEY (id),
     CONSTRAINT fkey_user_group_users FOREIGN KEY (oid) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fkey_user_group_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
