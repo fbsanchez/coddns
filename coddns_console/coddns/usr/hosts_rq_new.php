@@ -85,10 +85,15 @@ $dbclient->connect() or die ("ERR");
 
 
 
-$host = $dbclient->prepare($_POST["h"], "letters") . "." . $config["domainname"];
-$ip   = filter_var($_POST["ip"], FILTER_VALIDATE_IP);
-$iip  = $dbclient->prepare($ip, "ip");
+$host     = $dbclient->prepare($_POST["h"], "letters") . "." . $config["domainname"];
+$ip       = filter_var($_POST["ip"], FILTER_VALIDATE_IP);
+$iip      = $dbclient->prepare($ip, "ip");
+$ttl      = $dbclient->prepare($_POST["ttl"], "number");
+$rtype_p  = $dbclient->prepare($_POST["rtype"], "letters");
+$q_rtype  = "select id from record_types where tag ='". $rtype_p ."';";
+$rtype    = $dbclient->get_sql_object($q_rtype);
 
+$dbclient->connect() or die ("ERR");
 if ($ip === FALSE){
     echo $text["en"]["ip_f"];
     exit (1);
@@ -104,7 +109,7 @@ if( $dbclient->lq_nresults() > 0 )
 // LAUNCH DNS UPDATER
 $out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip);
 
-$q = "insert into hosts (oid, tag, ip) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip);";
+$q = "insert into hosts (oid, tag, ip, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, $rtype->id);";
 $dbclient->exeq($q) or die($dbclient->lq_error());
 
 $dbclient->disconnect();

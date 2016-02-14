@@ -192,7 +192,7 @@ $dbclient = new DBClient($db_config);
 
 $dbclient->connect() or die($text[$lan]["dberror"]);
 
-$q = "select tag, INET_NTOA(ip) ip from hosts where oid=(select id from users where mail='" . $_SESSION["email"] . "');";
+$q = "select tag, INET_NTOA(ip) ip, rtype, ttl from hosts where oid=(select id from users where mail='" . $_SESSION["email"] . "');";
 $r = $dbclient->exeq($q);
 
 
@@ -211,17 +211,23 @@ $del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax
     <thead>
         <tr>
             <td><?php echo $text[$lan]["ht_hname"];?></td>
+            <td>Record Types</td>
             <td>IP</td>
+            <td>TTL</td>
             <td colspan="2">Ops.</td>
         </tr>
     </thead>
     <tbody>
 <?php
 while ($row = $dbclient->fetch_array ($r)) {
+    $q_rtype = "select tag from record_types where id =" . $row["rtype"] .";";
+    $rtype = $dbclient->get_sql_object($q_rtype);
 ?>
     <tr>
         <td><?php echo $row["tag"]?></td>
+        <td><?php echo $rtype->tag?></td>
         <td><?php echo $row["ip"]?></td>
+        <td><?php echo $row["ttl"]?></td>
         <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["ip"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
         <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {<?php echo $del_submit;?>}"></td>
     </tr>
