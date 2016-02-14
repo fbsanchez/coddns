@@ -102,7 +102,7 @@ if( $dbclient->lq_nresults() > 0 )
     die ("Ese nombre de host no est&aacute; disponible<br><a href='/'>Volver</a>");
 
 // LAUNCH DNS UPDATER
-$out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip);
+$out = shell_exec("/opt/ddns/dnsmgr.sh a " . $host . " A " . $ip . " " . $ttl);
 
 $q = "insert into hosts (oid, tag, ip, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'));";
 $dbclient->exeq($q) or die($dbclient->lq_error());
