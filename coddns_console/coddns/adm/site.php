@@ -40,13 +40,88 @@ $user->check_auth_level($auth_level_required);
 </head>
 
 <body>
+	<?php  
+		$dbclient= new DBClient($db_config);
+		$dbclient->connect() or die ($dbclient->lq_error());
+		
+		$q = "select mail, last_login, ip_last_login from users where rol = 1;";
+		$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+		$q = "select op, auth_level from site_acl;";
+		$m = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+		$dbclient->disconnect();
+	?>
 	<section>
 		<h2>Panel de administraci&oacute;n del sitio</h2>
 		<nav>
 		<ul>
 			<li>
-				<a href="#">Usuarios y roles</a>
+				<a href="#">Usuarios</a>
+				<!--	
+					<a href="<?php echo $config["html_root"] . "/?z=adm&u=service&op=add_server";?>">
+						<img class="add" src="<?php echo $config["html_root"] . "/rs/img/add.png";?>" alt="add" />
+						<span>Agregar un nuevo servidor</span>
+					</a>
+				-->
 			</li>
+			<li>
+				<ul>
+					<li><a href="#">Usuarios y Roles</a></li>
+					<li>	
+						<li>Rol: Admin</li>
+							<table>
+								<thead>
+									<tr>
+										<td>Email</td>
+										<td>Login</td>
+										<td>Ip Login</td>
+									</tr>
+								</thead>
+								<?php
+									while ($row = $dbclient->fetch_array ($r)) {
+								?>
+									<tbody>
+										<tr>
+											<td><?php echo $row['mail'] ?></td>
+											<td><?php echo $row['last_login'] ?></td>
+											<td><?php echo $row['ip_last_login'] ?></td>
+										</tr>
+									</tbody>
+								<?php  
+								}
+								?>
+							</table>
+						<li>Rol: Manager</li>
+						<li>Rol: Usuario</li>
+					</li>
+					<li><a href="#">Acls</a></li>
+						<li>
+							<table>
+								<thead>
+									<tr>
+										<td>P&aacutegina</td>
+										<td>Nivel de Aturizaci&oacuten	</td>
+									</tr>
+								</thead>
+								<?php
+									while ($row = $dbclient->fetch_array ($m)) {
+								?>	
+									<tbody>
+										<tr>
+											<td><?php echo $row['op'] ?></td>
+											<td><?php echo $row['auth_level'] ?></td>
+										</tr>
+									</tbody>
+								<?php  
+								}
+								?>
+							</table>
+						</li>
+					<li><a href="#">Grupos</a></li>
+				</ul>
+			</li>
+
 			<li>
 				<a href="#">M&aacute;s cosas</a>
 			</li>
