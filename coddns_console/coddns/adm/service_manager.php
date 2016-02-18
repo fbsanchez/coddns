@@ -36,6 +36,7 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_manager.css";?>" />
 </head>
 
 <body>
@@ -80,13 +81,14 @@ $user->check_auth_level($auth_level_required);
 					echo "<p>El estado de Bind es correcto con " . $out[0] . " instancia(s) activa(s)</p>";
 					echo sprintf("<p>Uso de CPU: %.02f %%</p>", $cpu_usage[0]);
 					echo sprintf("<p>Uso de RAM: %.02f %%</p>", $ram_usage[0]);
+					echo "<br><br>";
 
+					echo "<p>Hay un total de " . $log_size[0] . "B en logs</p>";
 					echo "<p>Informaci&oacute;n del log:</p><pre>";
 					foreach ($log_output as $line){
-						echo $line . "\n";
+						echo "<p>" . $line . "</p>";
 					}
 					echo "</pre>";
-					echo "<p>Hay un total de " . $log_size[0] . "B en logs</p>";
 				}
 				else {
 					echo "<p>Bind est&aacute; detenido. No hay ninguna instancia activa</p>";
