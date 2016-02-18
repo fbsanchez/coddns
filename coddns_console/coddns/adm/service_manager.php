@@ -86,7 +86,7 @@ $user->check_auth_level($auth_level_required);
 					echo "<p>Hay un total de " . $log_size[0] . "B en logs</p>";
 					echo "<p>Informaci&oacute;n del log:</p><pre>";
 					foreach ($log_output as $line){
-						echo "<p>" . $line . "</p>";
+						echo  $line . "\n";
 					}
 					echo "</pre>";
 				}

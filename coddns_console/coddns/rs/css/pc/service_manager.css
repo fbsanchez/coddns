@@ -6,4 +6,5 @@ pre{
 	word-break: break-word;
 	margin: 15px auto;
 	padding: 15px;
+	border: 2px dashed #365156;	
 }
