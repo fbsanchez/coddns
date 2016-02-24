@@ -11,6 +11,41 @@ nav {
     font-size: 1em;
 }
 
+table {
+	width: 70%;
+    padding: 5px;
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+thead{
+    text-align: center;
+    background: #1F282B;
+    color: white;
+}
+
+thead td {
+    padding: 5px;
+}
+
+tbody *{
+    padding: 5px;
+}
+
+td {
+    border: 1px solid #ddd;
+}
+
+tbody tr:hover{
+    background: #E8F1F9;
+}
+
+ul.list_first li{
+	list-style-type: none;
+	display: inline;
+	text-decoration: none;
+}
+
 div.server{
 	width: 500px;
 	height: 100px;

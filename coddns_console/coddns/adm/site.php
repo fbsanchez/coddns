@@ -36,7 +36,12 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="rs/css/pc/adm.css">
+	<link rel="stylesheet" type="text/css" href="rs/css/pc/adm.css">
+	<!--
+		<?php
+			//include_once (dirname(__FILE__) . "/../rs/css/pc/adm.css");
+		?>
+	-->
 </head>
 
 <body>
@@ -47,6 +52,12 @@ $user->check_auth_level($auth_level_required);
 		$q = "select mail, last_login, ip_last_login from users where rol = 1;";
 		$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
+		$q = "select mail, last_login, ip_last_login from users where rol = 2;";
+		$l = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+		$q = "select mail, last_login, ip_last_login from users where rol = 3;";
+		$n = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
 		$q = "select op, auth_level from site_acl;";
 		$m = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
@@ -55,7 +66,7 @@ $user->check_auth_level($auth_level_required);
 	<section>
 		<h2>Panel de administraci&oacute;n del sitio</h2>
 		<nav>
-		<ul>
+		<ul class="list_first">
 			<li>
 				<a href="#">Usuarios</a>
 				<!--	
@@ -64,64 +75,115 @@ $user->check_auth_level($auth_level_required);
 						<span>Agregar un nuevo servidor</span>
 					</a>
 				-->
-			</li>
+			</li>	
 			<li>
 				<ul>
-					<li><a href="#">Usuarios y Roles</a></li>
-					<li>	
-						<li>Rol: Admin</li>
-							<table>
-								<thead>
-									<tr>
-										<td>Email</td>
-										<td>Login</td>
-										<td>Ip Login</td>
-									</tr>
-								</thead>
-								<?php
-									while ($row = $dbclient->fetch_array ($r)) {
-								?>
-									<tbody>
+					<li>
+						<a href="#">Usuarios y Roles</a>
+						<ul>	
+							<li>Rol: Admin
+								<table>
+									<thead>
 										<tr>
-											<td><?php echo $row['mail'] ?></td>
-											<td><?php echo $row['last_login'] ?></td>
-											<td><?php echo $row['ip_last_login'] ?></td>
+											<td>Email</td>
+											<td>Login</td>
+											<td>Ip Login</td>
 										</tr>
-									</tbody>
-								<?php  
-								}
-								?>
-							</table>
-						<li>Rol: Manager</li>
-						<li>Rol: Usuario</li>
+									</thead>
+									<?php
+										while ($row = $dbclient->fetch_array ($r)) {
+									?>
+										<tbody>
+											<tr>
+												<td><?php echo $row['mail'] ?></td>
+												<td><?php echo $row['last_login'] ?></td>
+												<td><?php echo $row['ip_last_login'] ?></td>
+											</tr>
+										</tbody>
+									<?php  
+									}
+									?>
+								</table>
+							</li>
+							<li>Rol: Manager
+								<table>
+									<thead>
+										<tr>
+											<td>Email</td>
+											<td>Login</td>
+											<td>Ip Login</td>
+										</tr>
+									</thead>
+									<?php
+										while ($row = $dbclient->fetch_array ($l)) {
+									?>
+										<tbody>
+											<tr>
+												<td><?php echo $row['mail'] ?></td>
+												<td><?php echo $row['last_login'] ?></td>
+												<td><?php echo $row['ip_last_login'] ?></td>
+											</tr>
+										</tbody>
+									<?php  
+									}
+									?>
+								</table>
+							</li>
+							<li>Rol: Usuario
+								<table>
+									<thead>
+										<tr>
+											<td>Email</td>
+											<td>Login</td>
+											<td>Ip Login</td>
+										</tr>
+									</thead>
+									<?php
+										while ($row = $dbclient->fetch_array ($n)) {
+									?>
+										<tbody>
+											<tr>
+												<td><?php echo $row['mail'] ?></td>
+												<td><?php echo $row['last_login'] ?></td>
+												<td><?php echo $row['ip_last_login'] ?></td>
+											</tr>
+										</tbody>
+									<?php  
+									}
+									?>
+								</table>
+							</li>
+						</ul>
 					</li>
-					<li><a href="#">Acls</a></li>
-						<li>
-							<table>
-								<thead>
+					<li>
+						<a href="#">Acls</a>
+						<table>
+							<thead>
+								<tr>
+									<td>P&aacutegina</td>
+									<td>Nivel de Aturizaci&oacuten	</td>
+								</tr>
+							</thead>
+							<?php
+								while ($row = $dbclient->fetch_array ($m)) {
+							?>	
+								<tbody>
 									<tr>
-										<td>P&aacutegina</td>
-										<td>Nivel de Aturizaci&oacuten	</td>
+										<td><?php echo $row['op'] ?></td>
+										<td><?php echo $row['auth_level'] ?></td>
 									</tr>
-								</thead>
-								<?php
-									while ($row = $dbclient->fetch_array ($m)) {
-								?>	
-									<tbody>
-										<tr>
-											<td><?php echo $row['op'] ?></td>
-											<td><?php echo $row['auth_level'] ?></td>
-										</tr>
-									</tbody>
-								<?php  
-								}
-								?>
-							</table>
-						</li>
-					<li><a href="#">Grupos</a></li>
+								</tbody>
+							<?php  
+							}
+							?>
+						</table>
+					</li>
+					<li>
+						<a href="#">Grupos</a>
+						
+					</li>
 				</ul>
 			</li>
-
 			<li>
 				<a href="#">M&aacute;s cosas</a>
 			</li>
