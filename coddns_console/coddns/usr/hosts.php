@@ -129,14 +129,33 @@ echo $text[$lan]["hosts_welcome"];
             <div style="float:left;"><input type="text" id="h" name="h" onchange="checkHostName(this);return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/><i class="extension">.<?php echo $config["domainname"]?></i></div>
 			<div style="float:right;">
 				<label><?php echo $text[$lan]["reg_type"];?>:</label> 
+                <script type="text/javascript">
+                    function showItem(item){
+                        // hide all RR sections
+                        rr_A.style["max-height"] = "0";
+                        rr_NS.style["max-height"] = "0";
+                        rr_CNAME.style["max-height"] = "0";
+                        rr_MX.style["max-height"] = "0";
 
-                <select style="margin-left: 15px; width: 90px;" name="rtype">
+                        document.getElementById("rr_"+item).style["max-height"] = "1000px";
+                    }
+                </script>
+                <select style="margin-left: 15px; width: 90px;" onchange="showItem(this.value)" name="rtype">
 				
                 <?php
                     // Retrieve all DNS Record types available from de DB
 
                 $dbclient = new DBClient($db_config) or die ($dbclient->lq_error());
                 $dbclient->connect() or die ($dbclient->lq_error());
+
+
+                $q = "select h.tag from hosts h, record_types r where oid=(select id from users where mail='" . $_SESSION["email"] . "') and r.id=h.rtype and r.tag='A';";
+                $r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+                $tag_options = "";
+                while ($row = $dbclient->fetch_array ($r)) {
+                    $tag_options .= "<option value='" . $row["tag"] . "'>" . $row["tag"] . "</option>";
+                }
+
                 $results  = $dbclient->exeq("select tag from record_types;");
 
                 while ($r = $dbclient->fetch_object($results)) {
@@ -144,15 +163,13 @@ echo $text[$lan]["hosts_welcome"];
 					<option value="<?php echo $r->tag;?>"><?php echo $r->tag;?></option>
                 <?php
                 }
-
-                $dbclient->disconnect();
                 
                 ?>
 				</select>
 				<div id="launch_help_dns_type" onclick="toggle_help_ns();">&nbsp;</div>
 				<div id="help_dns_type">
 					<div>
-					<p>Los registros de DNS aceptados son:<p>
+					<p>Los registros de DNS aceptados son:</p>
 					<ol>
 						<li><b>A</b> Registro por defecto, representa un host</li>
 						<li><b>MX</b> Registro de correo, indica que el registro corresponde a un servidor de correo electr&oacute;nico</li>
@@ -164,18 +181,56 @@ echo $text[$lan]["hosts_welcome"];
 			</div>
             <div id="rec_info" style="clear:both;"></div>
         </li>
+    <div style="float:right;">
+        <span>TTL:</span> <input style="margin: 0 35px 0 15px; width: 90px;" type="numeric" id="ttl" name="ttl" value="12" />
+    </div>
+    </ul>
+    <?php
+        // the custom query depends on RR active - ask via AJAX
+    ?>
+    <div id="rr_A" class="hidden" style="max-height: 1000px;">
+        <ul>
             <li>
-            <label><?php echo $text[$lan]["label_ip"];?></label>
-        </li>
-        <li>
-            <div style="float:left;">
-                <input type="text" id="ip" name="ip" value="<?php echo _ip();?>" required/> <button onclick="select_my_ip(); return false;"><?php echo $text[$lan]["label_getip"];?></button>
-            </div>
-            <div style="float:right;">
-                <span>TTL:<span> <input style="margin: 0 35px 0 15px; width: 90px;" type="numeric" id="ttl" name="ttl" value="12"/>
-            </div>
-            <div style="clear:both;">&nbsp;</div>
-        </li>
+                <label><?php echo $text[$lan]["label_ip"];?></label>
+            </li>
+            <li>
+                <div style="float:left;">
+                    <input type="text" id="ip" name="ip" value="<?php echo _ip();?>" required/> <button onclick="select_my_ip(); return false;"><?php echo $text[$lan]["label_getip"];?></button>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="rr_NS" class="hidden">
+        <ul>
+            <li>
+                <label>NS:</label>
+                <select style="margin-left: 15px; width: 150px;" name="rtag_NS">
+                <?php echo $tag_options; ?>
+                </select>
+            </li>
+        </ul>
+    </div>
+    <div id="rr_CNAME" class="hidden">
+        <ul>
+            <li>
+                <label>CNAME:</label>
+                <select style="margin-left: 15px; width: 150px;" name="rtag_CNAME">
+                <?php echo $tag_options; ?>
+                </select>
+            </li>
+        </ul>
+    </div>
+    <div id="rr_MX" class="hidden">
+        <ul>
+            <li>
+                <label>MX:</label>
+                <select style="margin-left: 15px; width: 150px;" name="rtag_MX">
+                <?php echo $tag_options; ?>
+                </select>
+            </li>
+        </ul>
+    </div>
+    <ul>
         <li>
             <label></label>
             <input type="submit" value="<?php echo $text[$lan]["f_add"]; ?>"/>
@@ -184,16 +239,15 @@ echo $text[$lan]["hosts_welcome"];
     </form>
 </section>
 
+
+
 <div id="myhosts">
 
 
 <?php
-$dbclient = new DBClient($db_config);
-$dbclient->connect() or die($dbclient->lq_error());
 
-$q = "select h.tag, INET_NTOA(h.ip) ip, r.tag record, h.ttl from hosts h, record_types r where oid=(select id from users where mail='" . $_SESSION["email"] . "') and r.id=h.rtype;";
+$q = "select h.tag, INET_NTOA(h.ip) as value, r.tag record, h.ttl from hosts h, record_types r where h.oid=(select id from users where mail='" . $_SESSION["email"] . "')  and r.id=h.rtype and h.ip is not null union select h.tag, hh.tag as value, r.tag record, h.ttl from hosts h, hosts hh, record_types r where h.oid=(select id from users where mail='elb0rx@gmail.com')  and r.id=h.rtype and hh.id=h.rid;";
 $r = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
 
 $del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax_message);return false;";
 ?>
@@ -210,8 +264,8 @@ $del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax
     <thead>
         <tr>
             <td><?php echo $text[$lan]["ht_hname"];?></td>
-            <td title="record type">R.T.</td>
-            <td>IP</td>
+            <td title="record type">RR</td>
+            <td>IP/ VALUE</td>
             <td>TTL</td>
             <td colspan="2">Ops.</td>
         </tr>
@@ -223,9 +277,9 @@ while ($row = $dbclient->fetch_array ($r)) {
     <tr>
         <td><?php echo $row["tag"];?></td>
         <td><?php echo $row["record"];?></td>
-        <td><?php echo $row["ip"];?></td>
+        <td><?php echo $row["value"];?></td>
         <td><?php echo $row["ttl"];?></td>
-        <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["ip"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
+        <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["value"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
         <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {<?php echo $del_submit;?>}"></td>
     </tr>
 <?php

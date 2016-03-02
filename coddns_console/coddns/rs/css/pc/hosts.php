@@ -21,7 +21,7 @@
 section.uarea ul{
     list-style-type: none;
     width: 100%;
-    margin: 20px auto;
+    margin: 0px auto;
 }
 div#launch_help_dns_type{
 	cursor: pointer;
@@ -72,6 +72,10 @@ td {
 }
 tbody tr:hover{
     background: #E8F1F9;
+}
+div.hidden{
+    max-height: 0;
+    overflow: hidden;
 }
 button, input[type="submit"]{
     padding-left: 5px;

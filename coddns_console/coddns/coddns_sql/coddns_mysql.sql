@@ -113,11 +113,12 @@ CREATE TABLE IF NOT EXISTS hosts (
     id serial,
     oid bigint unsigned NOT NULL,
     tag varchar(200) NOT NULL UNIQUE,
-    ip varchar(250) NOT NULL,
+    ip varchar(250),
     created timestamp DEFAULT CURRENT_TIMESTAMP,
     last_updated timestamp,
     gid bigint unsigned NOT NULL DEFAULT 1,
     rtype bigint unsigned NOT NULL DEFAULT 1,
+    rid bigint unsigned default null,
     zone_id bigint unsigned NOT NULL DEFAULT 1,
     ttl int default 12,
     CONSTRAINT pkey_hosts PRIMARY KEY (id),
@@ -125,7 +126,8 @@ CREATE TABLE IF NOT EXISTS hosts (
     CONSTRAINT fkey_host_owner FOREIGN KEY (oid) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fkey_host_gid   FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fkey_host_rtype FOREIGN KEY (rtype) REFERENCES record_types(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fkey_host_zone  FOREIGN KEY (zone_id) REFERENCES zones(id) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT fkey_host_zone  FOREIGN KEY (zone_id) REFERENCES zones(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fkey_host_rid   FOREIGN KEY (rid) REFERENCES hosts(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) engine=InnoDB;
 
 
@@ -189,7 +191,8 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('adm','site','manager',100),
     ('adm','service','',100),
     ('adm','service','manager',100),
-    ('cms','','',0);
+    ('cms','','',0),
+    ('ajax','','',0);
 
 -- RECORD_TYPES
 INSERT INTO record_types(tag,description,auth_level)

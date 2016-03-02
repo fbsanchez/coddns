@@ -62,63 +62,146 @@ $text["en"]["ok"]    = "Succesfully added<script>r();</script>";
 <body>
 <?php
 
+$error = 0;
 if (   (! isset ($_POST["h"])  )
     || (! isset ($_POST["ip"]) )
-    || ( strlen ($_POST["h"])  < MIN_HOST_LENGTH)
-    || ( strlen ($_POST["h"])  > MAX_HOST_LENGTH)
-    || ( strlen ($_POST["ip"]) < 7)
-    || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/',$_POST["h"])) ) {
+    || (! isset ($_POST["rtype"]) )) {
+    $error = 1;
+}
+if (   ( $_POST["rtype"] == "A")
+    &&(
+         ( strlen ($_POST["h"])  < MIN_HOST_LENGTH)
+      || ( strlen ($_POST["h"])  > MAX_HOST_LENGTH)
+      || ( strlen ($_POST["ip"]) < 7)
+      || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/',$_POST["h"])) )
+    ) {
+    $error = 1;
+}
+
+elseif (   ( ( $_POST["rtype"] == "CNAME")
+          || ( $_POST["rtype"] == "NS")
+          || ( $_POST["rtype"] == "MX") )
+        &&(
+             ( strlen ($_POST["h"])  < MIN_HOST_LENGTH)
+          || ( strlen ($_POST["h"])  > MAX_HOST_LENGTH)
+          || ( strlen ($_POST["rtag_" . $_POST["rtype"]]) < 7)
+          || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/',$_POST["h"])) )
+        ) {
+    $error = 1;
+}
+
+if ($error === 1) {
 ?>
     <p><?php echo $text[$lan]["err_f"]; ?></p>
     <a href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
 <?php
     exit (1);
 }
-$check = ip2long($_POST["ip"]);
-if ( $check < 0 || $check == FALSE ){
-    echo $text["en"]["ip_f"];
-    exit (2);
-}
 
-$dbclient= new DBClient($db_config);
-
+$dbclient = new DBClient($db_config);
 $host     = $dbclient->prepare($_POST["h"], "letters") . "." . $config["domainname"];
-$ip       = filter_var($_POST["ip"], FILTER_VALIDATE_IP);
-$iip      = $dbclient->prepare($ip, "ip");
-$ttl      = $dbclient->prepare($_POST["ttl"], "number");
 $rtype_p  = $dbclient->prepare($_POST["rtype"], "letters");
-
-$dbclient->connect() or die ($dbclient->lq_error());
-if ($ip === FALSE){
-    echo $text["en"]["ip_f"];
-    exit (1);
+$ttl      = $dbclient->prepare($_POST["ttl"], "number");
+if ($rtype_p != "A"){
+    $rtag     = $dbclient->prepare($_POST["rtag_" . $rtype_p], "url_get");
 }
 
-// INSERT NEW HOST IF NO ONE EXISTS
-$q = "select * from hosts where lower(tag)=lower('" . $host . "');";
-$dbclient->exeq($q);
+// INSERT THE REGISTER IN THE DB AND IN THE SELECTED ZONE
+switch ($rtype_p){
+    case "A": {
+        $check = ip2long($_POST["ip"]);
+        if ( $check < 0 || $check == FALSE ){
+            echo $text["en"]["ip_f"];
+            exit (2);
+        }
+        $ip       = filter_var($_POST["ip"], FILTER_VALIDATE_IP);
+        $iip      = $dbclient->prepare($ip, "ip");
+        
+        if ($ip === FALSE){
+            echo $text["en"]["ip_f"];
+            exit (1);
+        }
 
-if( $dbclient->lq_nresults() > 0 )
-    die ("Ese nombre de host no est&aacute; disponible<br><a href='/'>Volver</a>");
+        $dbclient->connect() or die ($dbclient->lq_error());
+        // INSERT NEW HOST IF NO ONE EXISTS
+        $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
+        $dbclient->exeq($q);
 
-// LAUNCH DNS UPDATER
-$out = shell_exec("dnsmgr a " . $host . " A " . $ip . " " . $ttl);
+        if( $dbclient->lq_nresults() > 0 )
+            die ("Ese nombre de host no est&aacute; disponible");
 
-$q = "insert into hosts (oid, tag, ip, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'));";
-$dbclient->exeq($q) or die($dbclient->lq_error());
+        // LAUNCH DNS UPDATER
+        $out = shell_exec("dnsmgr a " . $host . " A " . $ip . " " . $ttl);
 
-$dbclient->disconnect();
-session_write_close();
+        if (preg_match("/ERR/", $out)) {
+            echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
+        }
+        else {
+            $q = "insert into hosts (oid, tag, ip, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'));";
+            $dbclient->exeq($q) or die($dbclient->lq_error());
+            echo $text[$lan]["ok"];
+        ?>
+            <script type="text/javascript">location.reload();</script>
+            <?php
+        }
+        $dbclient->disconnect();
+        session_write_close();
 
-if (preg_match("/ERR/", $out)) {
-    echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
+        break;
+    }
+    case "CNAME":{
+        echo "Inserting $host as CNAME of $rtag";
+
+        $dbclient->connect() or die ($dbclient->lq_error());
+        // INSERT NEW HOST IF NO ONE EXISTS
+        $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
+        $dbclient->exeq($q);
+
+        if( $dbclient->lq_nresults() > 0 )
+            die ("Ese nombre de host no est&aacute; disponible");
+
+        // Confirm rtag previously exists
+        $q = "select * from hosts where lower(tag)=lower('" . $rtag . "');";
+        $dbclient->exeq($q);
+
+        if( $dbclient->lq_nresults()  == 0 )
+            die ("No existen hosts sobre los que hacer la operaci&oacute;n<br>$q");
+
+        // LAUNCH DNS UPDATER
+        $out = shell_exec("dnsmgr a " . $host . " " . $rtype_p . " " . $rtag . " " . $ttl);
+
+        if (preg_match("/ERR/", $out)) {
+            echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
+        }
+        else {
+            $q = "insert into hosts (oid, tag, rid, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), (select id from hosts h where lower(tag)=lower('" . $rtag . "')), $ttl, (select id from record_types where tag ='". $rtype_p ."'));";
+            $dbclient->exeq($q) or die($dbclient->lq_error());
+            echo $text[$lan]["ok"];
+        ?>
+            <script type="text/javascript">location.reload();</script>
+            <?php
+        }
+        $dbclient->disconnect();
+        session_write_close();
+
+        break;
+    }
+    case "NS":{
+        echo "inserting NS";
+        break;
+    }
+    case "MX":{
+        echo "inserting MX";
+        break;
+    }
+    default:{
+        echo "Unknown RR";
+        break;
+    }
 }
-else {
-    echo $text[$lan]["ok"];
-?>
-    <script type="text/javascript">location.reload();</script>
-    <?php
-}
+
+
+
 
 ?>
 </body>
