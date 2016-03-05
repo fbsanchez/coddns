@@ -67,6 +67,7 @@ if ($objUser->login($_POST["u"], $rq_pass) == null ) {
 }
 
 echo $text[$lan]["welcome"];
-redirect($config["html_root"] . "/?z=usr&m=hosts");
+
+redirect($_SERVER[HTTP_HOST] . $config["html_root"] . "/?z=usr&m=hosts");
 ?>
 
