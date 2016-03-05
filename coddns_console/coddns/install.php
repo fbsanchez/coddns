@@ -663,6 +663,7 @@ elseif ($phase == 3){
 	$str_config .= "//            set it to /coddns, is the nav location\n";
 	$str_config .= "\$config = array (\"domainname\" => \"" . $domain . "\",\n";
 	$str_config .= "                  \"html_root\"  => \"" . $html_root . "\",\n";
+	$str_config .= "                  \"rndc_key\"   => \"/share/ddns/rndc.key\",\n";
 	$str_config .= "                  \"salt\"       => \"" . $salt . "\",\n";
 	$str_config .= "                  \"db_config\"  => \$db_config);\n";
 	$str_config .= "\n";

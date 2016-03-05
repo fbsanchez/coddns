@@ -7,6 +7,10 @@ TTL="600"
 #8640
 KEY="/share/ddns/rndc.key"
 
+if [CODDNS_RNDC_KEY]; then
+    KEY=$CODDNS_RNDC_KEY
+fi
+
 launch(){
     nsupdate -k $KEY < /tmp/$tmp_file 2>&1
 }
