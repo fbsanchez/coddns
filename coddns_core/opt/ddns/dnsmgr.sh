@@ -7,7 +7,7 @@ TTL="600"
 #8640
 KEY="/share/ddns/rndc.key"
 
-if [CODDNS_RNDC_KEY]; then
+if [ "$CODDNS_RNDC_KEY" != "" ]; then
     KEY=$CODDNS_RNDC_KEY
 fi
 
