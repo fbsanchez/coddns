@@ -33,6 +33,8 @@ $lan = $_SESSION["lan"];
 session_write_close();
 
 
+putenv("CODDNS_RNDC_KEY=" . $config["rndc_key"]);
+
 
 /* CASTELLANO */
 $text["es"]["title"] = "Agregar un nuevo host";
