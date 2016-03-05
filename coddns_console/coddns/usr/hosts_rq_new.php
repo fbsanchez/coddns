@@ -50,6 +50,48 @@ $text["en"]["ip_f"]  = "The IP address is not valid";
 $text["en"]["err_i"] = "Internal error, please check the messages and the configuration<br>";
 $text["en"]["ok"]    = "Succesfully added<script>r();</script>";
 
+
+function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $priority = 10){
+    global $text,$lan;
+
+    $dbclient->connect() or die ($dbclient->lq_error());
+    // INSERT NEW HOST IF NO ONE EXISTS
+    $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
+    $dbclient->exeq($q);
+
+    if( $dbclient->lq_nresults() > 0 )
+        die ("Ese nombre de host no est&aacute; disponible");
+
+    // Confirm rtag previously exists
+    $q = "select * from hosts where lower(tag)=lower('" . $rtag . "');";
+    $dbclient->exeq($q);
+
+    if( $dbclient->lq_nresults()  == 0 )
+        die ("No existen hosts sobre los que hacer la operaci&oacute;n<br>$q");
+
+    // LAUNCH DNS UPDATER
+    switch ($rtype_p) {
+        case "MX":
+            $out = shell_exec("dnsmgr a " . $host . " " . $rtype_p . " " . $rtag . " " . $ttl . " " . $priority);
+            break;
+        default:
+            $out = shell_exec("dnsmgr a " . $host . " " . $rtype_p . " " . $rtag . " " . $ttl);
+    }
+
+    if (preg_match("/ERR/", $out)) {
+        echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
+    }
+    else {
+        $q = "insert into hosts (oid, tag, rid, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), (select id from hosts h where lower(tag)=lower('" . $rtag . "')), $ttl, (select id from record_types where tag ='". $rtype_p ."'));";
+        $dbclient->exeq($q) or die($dbclient->lq_error());
+        echo $text[$lan]["ok"];
+    ?>
+        <script type="text/javascript">location.reload();</script>
+        <?php
+    }
+    $dbclient->disconnect();
+    session_write_close();
+}
 ?>
 
 <!DOCTYPE html>
@@ -151,47 +193,18 @@ switch ($rtype_p){
     }
     case "CNAME":{
         echo "Inserting $host as CNAME of $rtag";
-
-        $dbclient->connect() or die ($dbclient->lq_error());
-        // INSERT NEW HOST IF NO ONE EXISTS
-        $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
-        $dbclient->exeq($q);
-
-        if( $dbclient->lq_nresults() > 0 )
-            die ("Ese nombre de host no est&aacute; disponible");
-
-        // Confirm rtag previously exists
-        $q = "select * from hosts where lower(tag)=lower('" . $rtag . "');";
-        $dbclient->exeq($q);
-
-        if( $dbclient->lq_nresults()  == 0 )
-            die ("No existen hosts sobre los que hacer la operaci&oacute;n<br>$q");
-
-        // LAUNCH DNS UPDATER
-        $out = shell_exec("dnsmgr a " . $host . " " . $rtype_p . " " . $rtag . " " . $ttl);
-
-        if (preg_match("/ERR/", $out)) {
-            echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
-        }
-        else {
-            $q = "insert into hosts (oid, tag, rid, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), (select id from hosts h where lower(tag)=lower('" . $rtag . "')), $ttl, (select id from record_types where tag ='". $rtype_p ."'));";
-            $dbclient->exeq($q) or die($dbclient->lq_error());
-            echo $text[$lan]["ok"];
-        ?>
-            <script type="text/javascript">location.reload();</script>
-            <?php
-        }
-        $dbclient->disconnect();
-        session_write_close();
+        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl);
 
         break;
     }
     case "NS":{
         echo "inserting NS";
+        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl);
         break;
     }
     case "MX":{
         echo "inserting MX";
+        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl);
         break;
     }
     default:{

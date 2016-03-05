@@ -188,6 +188,9 @@ class DBClient {
       case "ip":{
         return ip2long($clsqlarg);
       }
+      case "json":{
+        return json_decode($clsqlarg);
+      }
       default: return null;
     }
   }

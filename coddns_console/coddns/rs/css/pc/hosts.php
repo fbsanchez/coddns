@@ -70,6 +70,13 @@ tbody *{
 td {
     border: 1px solid #ddd;
 }
+td.filter {
+    cursor: pointer;
+}
+td.selected {
+    font-weight: bolder;
+    background: #EC8606;
+}
 tbody tr:hover{
     background: #E8F1F9;
 }

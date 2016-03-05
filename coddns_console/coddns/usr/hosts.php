@@ -88,28 +88,63 @@ $text["de"]["reg_type"]      = "DNS record type";
 		?>
         
     </style>
-<script>
-var t="";
-function checkHostName(obj){
-    if(/^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)/.test(obj.value))
-        updateContent("rec_info", "rest_host.php", "h="+obj.value);
-    return false;
-}
-function select_my_ip(){
-    ip.value="<?php echo _ip();?>";
-    return false;
-}
+<script type="text/javascript">
+    var t="";
+    var sort_field="rr";
+    var sort_mode=0;
+    var page=0;
 
-function toggle_help_ns(){
-	if(help_dns_type.style["max-width"] == ""){
-		help_dns_type.style["max-width"]  = "450px";
-		help_dns_type.style["max-height"] = "230px";
-		help_dns_type.style["padding"]    = "5px 0 0 15px";
-	}
-	else
-		help_dns_type.removeAttribute("style");
-}
+    function checkHostName(obj){
+        if(/^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)/.test(obj.value))
+            updateContent("rec_info", "rest_host.php", "h="+obj.value);
+        return false;
+    }
+    function select_my_ip(){
+        ip.value="<?php echo _ip();?>";
+        return false;
+    }
 
+    function toggle_help_ns(){
+    	if(help_dns_type.style["max-width"] == ""){
+    		help_dns_type.style["max-width"]  = "450px";
+    		help_dns_type.style["max-height"] = "230px";
+    		help_dns_type.style["padding"]    = "5px 0 0 15px";
+    	}
+    	else
+    		help_dns_type.removeAttribute("style");
+    }
+
+    function adjustClass(field){
+        if (field != null) {
+            document.getElementById("td_tag").className="filter";
+            document.getElementById("td_rr").className="filter";
+            document.getElementById("td_value").className="filter";
+            document.getElementById("td_ttl").className="filter";
+            document.getElementById("td_" + field).className += " selected";
+        }
+    }
+
+    function sortHostsBy(field){
+        var data=[];
+        if (field == null) {
+            data[0] = sort_field;
+        }
+        else {
+            adjustClass(field);         
+            data[0] = field;
+            if ( (field == sort_field) && (sort_mode=="std")){
+                sort_mode = "invert";
+            }
+            else {
+                sort_mode = "std";
+                sort_field = field;
+            }
+        }
+        data[1] = sort_mode;
+        data[2] = page;
+        updateContent("hosts_list", "ajax.php", "action=list_hosts&args="+JSON.stringify(data),true);
+    }
+    document.onload = sortHostsBy();
 </script>
 </head>
 
@@ -182,7 +217,7 @@ echo $text[$lan]["hosts_welcome"];
             <div id="rec_info" style="clear:both;"></div>
         </li>
     <div style="float:right;">
-        <span>TTL:</span> <input style="margin: 0 35px 0 15px; width: 90px;" type="numeric" id="ttl" name="ttl" value="12" />
+        <span>TTL:</span> <input style="margin: 0 35px 0 15px; width: 90px;" type="number" id="ttl" name="ttl" value="12" />
     </div>
     </ul>
     <?php
@@ -201,32 +236,36 @@ echo $text[$lan]["hosts_welcome"];
         </ul>
     </div>
     <div id="rr_NS" class="hidden">
-        <ul>
+        <ul style="width: 300px; margin: 0;">
             <li>
                 <label>NS:</label>
-                <select style="margin-left: 15px; width: 150px;" name="rtag_NS">
+                <select style="float:right; min-width: 150px;" name="rtag_NS">
                 <?php echo $tag_options; ?>
                 </select>
             </li>
         </ul>
     </div>
     <div id="rr_CNAME" class="hidden">
-        <ul>
+        <ul style="width: 300px; margin: 0;">
             <li>
                 <label>CNAME:</label>
-                <select style="margin-left: 15px; width: 150px;" name="rtag_CNAME">
+                <select style="float:right; min-width: 150px;" name="rtag_CNAME">
                 <?php echo $tag_options; ?>
                 </select>
             </li>
         </ul>
     </div>
     <div id="rr_MX" class="hidden">
-        <ul>
+        <ul style="width: 300px; margin: 0;">
             <li>
                 <label>MX:</label>
-                <select style="margin-left: 15px; width: 150px;" name="rtag_MX">
+                <select style="float:right; min-width: 150px;" name="rtag_MX">
                 <?php echo $tag_options; ?>
                 </select>
+            </li>
+            <li>
+                <label>Prioridad:</label>
+                <input style="width: 150px;" type="number" name="mx_priority" value="10"/>
             </li>
         </ul>
     </div>
@@ -243,48 +282,27 @@ echo $text[$lan]["hosts_welcome"];
 
 <div id="myhosts">
 
-
-<?php
-
-$q = "select h.tag, INET_NTOA(h.ip) as value, r.tag record, h.ttl from hosts h, record_types r where h.oid=(select id from users where mail='" . $_SESSION["email"] . "')  and r.id=h.rtype and h.ip is not null union select h.tag, hh.tag as value, r.tag record, h.ttl from hosts h, hosts hh, record_types r where h.oid=(select id from users where mail='elb0rx@gmail.com')  and r.id=h.rtype and hh.id=h.rid;";
-$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
-$del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax_message);return false;";
-?>
 <h3><?php echo $text[$lan]["ht_htitle"];?></h3>
 <form id="change" action="<?php echo $config["html_root"];?>/?m=usr&z=hosts&op=mod" method="POST">
     <input type="hidden" id="edith" name="edith" required/>
     <input type="hidden" id="editip" name="editip" required/>
 </form>
-<form id="del" action="#" onsubmit="<?php echo $del_submit;?>" method="POST">
+<form id="del" action="#" onsubmit="return false;" method="POST">
     <input type="hidden" id="delh" name="delh" required/>
 </form>
 
 <table>
     <thead>
         <tr>
-            <td><?php echo $text[$lan]["ht_hname"];?></td>
-            <td title="record type">RR</td>
-            <td>IP/ VALUE</td>
-            <td>TTL</td>
+            <td id="td_tag" class="filter" onclick="sortHostsBy('tag');"><?php echo $text[$lan]["ht_hname"];?></td>
+            <td id="td_rr" class="filter" onclick="sortHostsBy('rr');" title="record type">RR</td>
+            <td id="td_value" class="filter" onclick="sortHostsBy('value');">IP/ VALUE</td>
+            <td id="td_ttl" class="filter" onclick="sortHostsBy('ttl');">TTL</td>
             <td colspan="2">Ops.</td>
         </tr>
     </thead>
-    <tbody>
-<?php
-while ($row = $dbclient->fetch_array ($r)) {
-?>
-    <tr>
-        <td><?php echo $row["tag"];?></td>
-        <td><?php echo $row["record"];?></td>
-        <td><?php echo $row["value"];?></td>
-        <td><?php echo $row["ttl"];?></td>
-        <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["value"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
-        <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {<?php echo $del_submit;?>}"></td>
-    </tr>
-<?php
-}
-?>
+    <tbody id="hosts_list">
+    <!-- Filled by AJAX ~ onload sortHostsBy() -->
     </tbody>
 </table>
 </div>

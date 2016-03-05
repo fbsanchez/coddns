@@ -7,4 +7,5 @@ pre{
 	margin: 15px auto;
 	padding: 15px;
 	border: 2px dashed #365156;	
+	white-space: pre-line;
 }

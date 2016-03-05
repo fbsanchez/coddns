@@ -68,8 +68,8 @@ function secure_get($argument, $mode = "url_get"){
 
     $securizer = new DBClient(null);
 
-    if (isset ($_GET["$argument"])){
-        $token = $securizer->prepare($_GET["$argument"], $mode);
+    if (isset ($_REQUEST["$argument"])){
+        $token = $securizer->prepare($_REQUEST["$argument"], $mode);
         return $token;
     }
     return null;
