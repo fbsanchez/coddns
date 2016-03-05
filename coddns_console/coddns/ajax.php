@@ -101,6 +101,7 @@ function list_hosts($data){
 
 	    <script type="text/javascript">
 	    	item_count=<?php echo $nrows; ?>;
+	    	nrows.innerHTML=" (" + item_count + ")";
 	    </script>
 	<?php
 	}
@@ -115,7 +116,6 @@ switch ($action) {
 	case 'list_hosts':
 		list_hosts($arguments);
 		break;
-	
 	default:
 		print "Unknown action";
 		break;

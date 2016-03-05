@@ -282,7 +282,7 @@ echo $text[$lan]["hosts_welcome"];
 
 <div id="myhosts">
 
-<h3><?php echo $text[$lan]["ht_htitle"];?></h3>
+<h3><?php echo $text[$lan]["ht_htitle"];?><span id="nrows"></span></h3>
 <form id="change" action="<?php echo $config["html_root"];?>/?m=usr&z=hosts&op=mod" method="POST">
     <input type="hidden" id="edith" name="edith" required/>
     <input type="hidden" id="editip" name="editip" required/>
