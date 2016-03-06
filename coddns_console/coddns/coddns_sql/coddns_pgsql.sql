@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS site_acl(
     op character varying(200),
     auth_level int NOT NULL DEFAULT 100,
     CONSTRAINT pkey_site_acl PRIMARY KEY(m,z,op)
-)
+);
 
 
 -- EO Table definitions
