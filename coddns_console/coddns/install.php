@@ -191,7 +191,7 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 			<h1>Bienvenido a CODDNS</h1>
 			<p>Gracias por elegir CODDNS como su sistema de gesti&oacute;n integral de servicios de resoluci&oacute;n de nombres de dominio.</p>
 			<br />
-			<p>Por favor, antes de continuar, verifique que se cumplen todos los requisitos en negrita, son <b>imprescindibles</b>.</p>
+			<p>Por favor, antes de continuar, verifique que se cumplen todos los requisitos, aquellos que est&eacute;n en negrita son <b>imprescindibles</b>.</p>
 		</div>
 		<div class="t_label" onclick="toggle(requeriments);">
 			<div class="status <?php echo check_item($global_ok);?>">&nbsp;</div>Requisitos
@@ -224,7 +224,7 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 					<div class="status <?php check_item($mysqli_ok);?>">&nbsp;</div> PHP MySQLi
 				</li>
 				<li>
-					<div class="status <?php check_item($pgsql_ok);?>">&nbsp;</div> PHP PostgreSQL
+					<div class="status <?php check_item($pgsql_ok);?>">&nbsp;</div> PHP PostgreSQL (&gt; 9.X)
 				</li>
 			</ul>
 			<i>Herramientas</i> <span style="font-size:0.65em;">(opcional)</span>
@@ -286,7 +286,7 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 						<label>Base de datos:</label><input name="dbname" type="text" value="coddns"/>
 					</li>
 					<li id="schema" style="padding:0;max-height:0;overflow:hidden;">
-						<label>Esquema:</label><input name="schema" type="text" value="ddnsp"/>
+						<label>Esquema:</label><input name="schema" type="text" value="ddnsp" required/>
 					</li>
 					<li>
 						<label>Usuario:</label><input name="dbroot" type="text" value="root"/>
@@ -328,6 +328,11 @@ elseif ($phase == 2) {
 	$dbport  = DBClient::prepare($_POST["dbport"],"number");
 	$schema  = DBClient::prepare($_POST["schema"],"insecure_text");
 	$dbdrop  = $_POST["dbdrop"];
+
+	if ($engine == "mysql"){
+		// Ignore schema in MySQL installation
+		unset ($schema);
+	}
 
 	// remove spaces from dbname
 	$dbname = preg_replace('/\s+/', '', $dbname);
@@ -430,7 +435,7 @@ elseif ($phase == 2) {
 			}
 		}
 
-		// CREATE NEW DATABASE ~ Expected to non exist
+		// CREATE NEW DATABASE ~ Expected it doesn't exist
 		$q = "create database $dbname;";
 		$r = $dbclient->exeq($q);
 		if($r){
@@ -707,17 +712,17 @@ elseif ($phase == 3){
 
 	$dbclient->connect() or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
 
-	$q = "Select * from " . $db_config["schema"] . ".users where lower(mail)=lower('" . $user . "');";
+	$q = "Select * from users where lower(mail)=lower('" . $user . "');";
 	$dbclient->exeq($q) or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
 	if ($dbclient->lq_nresults() == 0){ // ADD NEW USER
 	    
 	    // Create administrator user
-	    $q = "insert into " . $db_config["schema"] . ".users (mail, pass, ip_last_login, first_login, rol) values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now(), (select id from roles where tag='admin'));";
+	    $q = "insert into users (mail, pass, ip_last_login, first_login, rol) values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now(), (select id from roles where tag='admin'));";
 	    $dbclient->exeq($q) or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
 	    $oid = $dbclient->last_id();
 
 	    // Add user to global group
-	    $q = "insert into " . $db_config["schema"] . ".tusers_groups (oid,gid,admin) values ($oid,(select id from groups where tag='all'),1);";
+	    $q = "insert into tusers_groups (oid,gid,admin) values ($oid,(select id from groups where tag='all'),1);";
 	    $dbclient->exeq($q) or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
 
 	    // Welcome mail to user
