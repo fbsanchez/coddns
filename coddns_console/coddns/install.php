@@ -286,7 +286,7 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 						<label>Base de datos:</label><input name="dbname" type="text" value="coddns"/>
 					</li>
 					<li id="schema" style="padding:0;max-height:0;overflow:hidden;">
-						<label>Esquema:</label><input name="schema" type="text"/>
+						<label>Esquema:</label><input name="schema" type="text" value="ddnsp"/>
 					</li>
 					<li>
 						<label>Usuario:</label><input name="dbroot" type="text" value="root"/>
@@ -331,6 +331,8 @@ elseif ($phase == 2) {
 
 	// remove spaces from dbname
 	$dbname = preg_replace('/\s+/', '', $dbname);
+	// and from schema
+	$schema = preg_replace('/\s+/', '', $schema);
 
 	// if no dbuser is provided, use dbroot as well
 	if ("$dbuser" == ""){
@@ -348,7 +350,7 @@ elseif ($phase == 2) {
 	                   "hostname"=>"$dbhost",
 	                   "port"    =>"$dbport",
 	                   "name"    =>"",
-	                   "schema"  =>"");
+	                   "schema"  =>"$schema");
 
 	switch ($engine) {
 		case "mysql":
@@ -380,13 +382,13 @@ elseif ($phase == 2) {
 		$sql_connection_ok = 1;
 	}
 	if ($sql_connection_ok == 1){
-		$engine  = $dbclient->prepare($_POST["engine"],"text");
-		$dbroot  = $dbclient->prepare($_POST["dbroot"],"text");
+		$engine  = $dbclient->prepare($_POST["engine"],"letters");
+		$dbroot  = $dbclient->prepare($_POST["dbroot"],"letters");
 		$dbrpass = base64_decode($_POST["dbrpass"]);
 		$dbuser  = $dbclient->prepare($_POST["dbuser"],"text");
 		$dbpass  = base64_decode($_POST["dbpass"]);
 		$dbname  = $dbclient->prepare($_POST["dbname"],"text");
-		$dbhost  = strtolower($dbclient->prepare($_POST["dbhost"],"text"));
+		$dbhost  = strtolower($dbclient->prepare($_POST["dbhost"],"url_get"));
 		$myip    = strtolower($dbclient->prepare($_POST["myip"],"text"));
 		$dbport  = $dbclient->prepare($_POST["dbport"],"number");
 		$schema  = $dbclient->prepare($_POST["schema"],"text");
@@ -415,21 +417,33 @@ elseif ($phase == 2) {
 		if ("$dbdrop" == "on"){
 			$q = "drop database if exists $dbname;";
 			$r = $dbclient->exeq($q);
-			$drop_message = $dbclient->lq_error();
-
 			if($r) {
 				$drop_database_ok = 1;
+				if ($engine == "postgresql"){
+					$q = "DROP SCHEMA if exists $schema CASCADE;";
+					$r = $dbclient->exeq($q);
+					$drop_message = $dbclient->lq_error();
+				}
+			}
+			else {
+				$drop_message = $dbclient->lq_error();
 			}
 		}
 
-		// CREATE NEW DATABASE
-		$q = "create database if not exists $dbname;";
+		// CREATE NEW DATABASE ~ Expected to non exist
+		$q = "create database $dbname;";
 		$r = $dbclient->exeq($q);
 		if($r){
 			$create_database_ok = 1;
+
+			if (($engine == "postgresql") && ($schema != "")){
+				$q = "CREATE SCHEMA $schema;";
+				$r = $dbclient->exeq($q);
+				$create_message .= "\n" . $dbclient->lq_error();
+			}
 		}
 		else {
-			$grant_message = $dbclient->lq_error();
+			$create_message = $dbclient->lq_error();
 		}
 
 		// GRANT PRIVILEGES
@@ -445,12 +459,12 @@ elseif ($phase == 2) {
 						$q = "grant all privileges on $dbname.* to $dbuser@" . $myip . " identified by '$dbpass';";
 					break;
 					case "postgresql":
-						$q  = "create user $dbuser;";
-						$q .= "grant all on database $dbname to $dbuser;";
-						$q .= "grant all on schema $schema to $dbuser;";
-						$q .= "grant all on all tables in schema $schema to $dbuser;";
-						$q .= "grant all on all sequences in schema $schema to $dbuser;";
-						$q .= "alter user $dbuser with password \'$dbpass\';";
+						$q  = "create user $dbuser;\n";
+						$q .= "grant all on database $dbname to $dbuser;\n";
+						$q .= "grant all on schema $schema to $dbuser;\n";
+						$q .= "grant all on all tables in schema $schema to $dbuser;\n";
+						$q .= "grant all on all sequences in schema $schema to $dbuser;\n";
+						$q .= "alter user $dbuser with password \'$dbpass\';\n";
 					break;
 					default:
 						die("Error, please follow the wizard.");
@@ -458,7 +472,6 @@ elseif ($phase == 2) {
 				}
 
 				$r = $dbclient->exeq($q);
-				$create_message = $dbclient->lq_error();
 				if($r){
 					$grant_user_ok = 1;
 				}
@@ -528,7 +541,7 @@ elseif ($phase == 2) {
 					<div class="status <?php check_item($sql_connection_ok);?>">&nbsp;</div> Conexi&oacute;n con el servidor
 			<?php
 				if(isset($connection_message)) {
-					echo "<div onclick='toggle(this);' class='err'>Error: $drop_message</div>";
+					echo "<div onclick='toggle(this);' class='err'>Error: $connection_message</div>";
 				}
 			?>
 				</li>

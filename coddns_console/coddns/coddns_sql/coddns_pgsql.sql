@@ -9,8 +9,6 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 
 
-
-
 -- Table roles
 CREATE TABLE IF NOT EXISTS roles (
     id int NOT NULL,
