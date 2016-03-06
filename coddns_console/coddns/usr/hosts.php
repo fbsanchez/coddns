@@ -93,6 +93,7 @@ $text["de"]["reg_type"]      = "DNS record type";
     var sort_field="rr";
     var sort_mode=0;
     var page=0;
+    var item_count=0;
 
     function checkHostName(obj){
         if(/^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)/.test(obj.value))
@@ -124,12 +125,30 @@ $text["de"]["reg_type"]      = "DNS record type";
         }
     }
 
+    function reloadPaginator(){
+        var paginator = document.getElementById("paginator");
+        var str = "";
+        var base = document.location;
+
+        if (item_count > <?php echo ITEMS_PER_PAGE; ?>){
+            for (var i = 0; i < (item_count <?php echo "/" . ITEMS_PER_PAGE;?>); i++) {
+                str += "<a onclick='page="+i+";sortHostsBy();' class='pager";
+                if (page == i){
+                    str += " selected";
+                }
+                str += "'>[" + i + "]</a> ";
+            }
+        }
+        paginator.innerHTML = str;
+    }
+
     function sortHostsBy(field){
         var data=[];
         if (field == null) {
             data[0] = sort_field;
         }
         else {
+            page=0;
             adjustClass(field);         
             data[0] = field;
             if ( (field == sort_field) && (sort_mode=="std")){
@@ -142,7 +161,7 @@ $text["de"]["reg_type"]      = "DNS record type";
         }
         data[1] = sort_mode;
         data[2] = page;
-        updateContent("hosts_list", "ajax.php", "action=list_hosts&args="+JSON.stringify(data),true);
+        updateContent("hosts_list", "ajax.php", "action=list_hosts&args="+JSON.stringify(data),true,reloadPaginator);
     }
     document.onload = sortHostsBy();
 </script>
@@ -290,7 +309,7 @@ echo $text[$lan]["hosts_welcome"];
 <form id="del" action="#" onsubmit="return false;" method="POST">
     <input type="hidden" id="delh" name="delh" required/>
 </form>
-
+<div id="paginator"></div>
 <table>
     <thead>
         <tr>

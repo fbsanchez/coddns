@@ -49,13 +49,13 @@ function list_hosts($data){
 		$limit  = $dbclient->prepare($data[3],"number");
 	}
 
-	if ($page < 1) {
-		$page = 1;
+	if ($page < 0) {
+		$page = 0;
 	}
 	if ($limit <= 0){
 		$limit = ITEMS_PER_PAGE;
 	}
-	$offset = ($page-1) * $limit;
+	$offset = $page * $limit;
 
 	switch ($sortby){
 		case "tag":   $sort_index = 1;break;
@@ -72,12 +72,13 @@ function list_hosts($data){
 
 	$dbclient->connect() or die ($dbclient->lq_error());
 
-	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) value, r.tag record, h.ttl from hosts h, record_types r, users u where h.rtype=r.id and h.oid=u.id and u.mail='" . $_SESSION["email"] . "' ORDER BY $sort_index LIMIT $limit OFFSET $offset";
-
+	// Get total host counter - unlimited
+	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) value, r.tag record, h.ttl from hosts h, record_types r, users u where h.rtype=r.id and h.oid=u.id and u.mail='" . $_SESSION["email"] . "'";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
 	$nrows = $dbclient->lq_nresults();
 
+	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) value, r.tag record, h.ttl from hosts h, record_types r, users u where h.rtype=r.id and h.oid=u.id and u.mail='" . $_SESSION["email"] . "' ORDER BY $sort_index LIMIT $limit OFFSET $offset";
+	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 	$del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax_message);return false;";
 
@@ -106,7 +107,6 @@ function list_hosts($data){
 	<?php
 	}
 }
-
 
 
 $action    = secure_get("action");

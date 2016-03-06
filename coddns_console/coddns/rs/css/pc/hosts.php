@@ -51,6 +51,14 @@ div#help_dns_type > div {
     height: 200px;
     margin-left: 10px;
 }
+a.pager {
+    text-decoration: none;
+    font-size: 0.8em;
+    cursor: pointer;
+}
+a.selected {
+    font-weight: bolder;
+}
 table {
     padding: 5px;
     margin: 0 auto;
