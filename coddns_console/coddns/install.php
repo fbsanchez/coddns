@@ -329,15 +329,16 @@ elseif ($phase == 2) {
 	$schema  = DBClient::prepare($_POST["schema"],"insecure_text");
 	$dbdrop  = $_POST["dbdrop"];
 
+	// remove spaces from dbname
+	$dbname = preg_replace('/\s+/', '', $dbname);
+	// and from schema
+	$schema = preg_replace('/\s+/', '', $schema);
+
 	if ($engine == "mysql"){
 		// Ignore schema in MySQL installation
 		unset ($schema);
 	}
 
-	// remove spaces from dbname
-	$dbname = preg_replace('/\s+/', '', $dbname);
-	// and from schema
-	$schema = preg_replace('/\s+/', '', $schema);
 
 	// if no dbuser is provided, use dbroot as well
 	if ("$dbuser" == ""){
