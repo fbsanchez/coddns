@@ -356,7 +356,7 @@ elseif ($phase == 2) {
 	                   "hostname"=>"$dbhost",
 	                   "port"    =>"$dbport",
 	                   "name"    =>"",
-	                   "schema"  =>"$schema");
+	                   "schema"  =>"");
 
 	switch ($engine) {
 		case "mysql":
