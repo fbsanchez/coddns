@@ -493,7 +493,7 @@ elseif ($phase == 2) {
 						$command = "mysql -u $dbroot -h $dbhost -P $dbport $dbname < $sql_file";
 					}
 					else {
-						$command = "mysql -u $dbname -p'$dbrpass' -h $dbhost -P $dbport $dbname < $sql_file";
+						$command = "mysql -u $dbroot -p'$dbrpass' -h $dbhost -P $dbport $dbname < $sql_file";
 					}
 					exec ($command . " 2>&1", $sql_file_exec, $return);
 					break;
