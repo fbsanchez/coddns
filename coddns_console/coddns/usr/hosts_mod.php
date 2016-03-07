@@ -71,6 +71,17 @@ if(!isset($obj)){
 }
 
 $ip = long2ip($obj->ip);
+if ($ip == 0){
+    $q   = "select hh.tag from hosts h, hosts hh where h.tag='$host' and hh.id=h.rid;";
+    $r   = $dbclient->exeq($q);
+    $obj = $dbclient->fetch_object($r);
+    $ip = $obj->tag;
+}
+
+$current_value = long2ip ($_POST["editip"]);
+if ($current_value == 0){
+    $current_value = $_POST["editip"];
+}
 
 ?>
 <!DOCTYPE html>
@@ -96,7 +107,7 @@ function select_my_ip(){
             <label>IP actual: </label><span style="float: right;"><?php echo $ip?></span>
         </li>
         <li>
-            <label>Nueva IP: </label><input style="text-align: right;" type="text" name="nip" id="nip" value="<?php echo $_POST["editip"];?>"></input>
+            <label>Nueva IP: </label><input style="text-align: right;" type="text" name="nip" id="nip" value="<?php echo $current_value?>"></input>
         </li>
         </li>
             <a style="padding: 5px; font-size: 0.8em;" href="#" onclick="select_my_ip();return false;">Coger mi IP actual</a>
