@@ -86,7 +86,7 @@ case $1 in
     ;;
 esac
 
-clean $tmp_file
+clean /tmp/$tmp_file
 if [ "$r" != "0" ]; then
 	echo "ERR $r"
 	exit 3

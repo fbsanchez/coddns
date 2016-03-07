@@ -73,7 +73,8 @@ CREATE TABLE IF NOT EXISTS record_types (
     id serial,
     tag varchar(200) NOT NULL,
     description text,
-	auth_level int NOT NULL DEFAULT 100
+	auth_level int NOT NULL DEFAULT 100,
+    CONSTRAINT pkey_record_types PRIMARY KEY (id)
 ) engine=InnoDB;
 
 
@@ -81,10 +82,10 @@ CREATE TABLE IF NOT EXISTS record_types (
 CREATE TABLE IF NOT EXISTS servers (
     id serial,
     tag varchar(200) NOT NULL default "default" UNIQUE,
-    ip int,
+    ip bigint,
     gid bigint unsigned NOT NULL default 1,
-    user varchar(200),
-    password text,
+    srv_user varchar(200),
+    srv_password text,
     config text,
     config_md5 varchar(200),
     status int DEFAULT 0,
@@ -98,7 +99,7 @@ CREATE TABLE IF NOT EXISTS zones (
     id serial,
     domain varchar(255) NOT NULL,
     config text,
-    gid bigint unsigned NOT NULL,
+    gid bigint unsigned NOT NULL default 1,
     status int,
     server_id bigint unsigned NOT NULL, 
     master_id bigint unsigned NOT NULL,

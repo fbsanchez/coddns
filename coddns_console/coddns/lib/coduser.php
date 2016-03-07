@@ -98,7 +98,7 @@ class CODUser {
 		if ($dbclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
 		    return null;
 		}
-		$q = "update users set last_login=now(), ip_last_login='" . _ip() . "' where lower(mail)=lower('" . $user . "');";
+		$q = "update users set last_login=now(), ip_last_login='" . $dbclient->prepare(_ip(), "ip") . "' where lower(mail)=lower('" . $user . "');";
 		$dbclient->exeq($q) or die($dbclient->lq_error());
 
 		$dbclient->disconnect();
@@ -144,7 +144,7 @@ class CODUser {
 		$dbclient->exeq($q) or die ($dbclient->lq_error());
 		if ($dbclient->lq_nresults() == 0){ // ADD NEW USER
 		    $q = "insert into users (mail,pass, ip_last_login, first_login,rol) "
-		    	 . " values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now(),(select id from roles where tag='standar'));";
+		    	 . " values (lower('" . $user . "'),'" . $pass . "', '" . $dbclient->prepare(_ip(),"ip") . "', now(),(select id from roles where tag='standar'));";
 		    $dbclient->exeq($q) or die ($dbclient->lq_error());
 		    $dbclient->disconnect();
 

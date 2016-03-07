@@ -427,6 +427,7 @@ elseif ($phase == 2) {
 				$drop_database_ok = 1;
 				if ($engine == "postgresql"){
 					$q = "DROP SCHEMA if exists $schema CASCADE;";
+					$q .= "drop role if exists $dbuser;\n";
 					$r = $dbclient->exeq($q);
 					$drop_message = $dbclient->lq_error();
 				}
@@ -441,19 +442,87 @@ elseif ($phase == 2) {
 		$r = $dbclient->exeq($q);
 		if($r){
 			$create_database_ok = 1;
-
-			if (($engine == "postgresql") && ($schema != "")){
-				$q = "CREATE SCHEMA $schema;";
-				$r = $dbclient->exeq($q);
-				$create_message .= "\n" . $dbclient->lq_error();
-			}
 		}
 		else {
 			$create_message = $dbclient->lq_error();
 		}
 
-		// GRANT PRIVILEGES
 		if ($create_database_ok == 1){
+			if ($engine == "postgresql") {
+				// Grant all privileges on just created database
+				$q  = "create user $dbuser;\n";
+				$q .= "grant all on database $dbname to $dbuser;\n";
+				$q .= "alter user $dbuser with password '$dbpass';\n";
+				if ($schema != ""){
+					$q .= "alter user $dbuser set search_path to $schema;\n";
+				}
+				$r = $dbclient->exeq($q);
+				if($r){
+					$grant_user_ok = 1;
+				}
+				else {
+					$grant_message = $dbclient->lq_error();
+				}
+
+				if ($schema != ""){
+					$db_config = array("engine"  =>"$engine", // Could be mysql or postgresql
+	                   "username"=>"$dbuser",
+	                   "password"=>"$dbpass",
+	                   "hostname"=>"$dbhost",
+	                   "port"    =>"$dbport",
+	                   "name"    =>"$dbname",
+	                   "schema"  =>"$schema");
+					$dbclient->disconnect();
+					$dbclient = new DBClient($db_config);
+					$dbclient->connect();
+					$q = "CREATE SCHEMA $schema;";
+					$r = $dbclient->exeq($q);
+					if (!isset($r)) {
+						$create_database_ok = 0;
+						$create_message .= "\n" . $dbclient->lq_error();
+					}
+				}
+			}
+		}
+
+		// PROCESS SQL SCRIPT
+		if ($create_database_ok == 1){
+			switch ($engine){
+				case "mysql":
+					if ("$dbpass" == ""){
+						$command = "mysql -u $dbroot -h $dbhost -P $dbport $dbname < $sql_file";
+					}
+					else {
+						$command = "mysql -u $dbname -p'$dbrpass' -h $dbhost -P $dbport $dbname < $sql_file";
+					}
+					exec ($command . " 2>&1", $sql_file_exec, $return);
+					break;
+				case "postgresql":
+					putenv("PGPASSWORD=$dbpass");
+
+					$command = "psql -U $dbuser -w -h $dbhost -p $dbport -d $dbname -f $sql_file";
+					exec ($command . " 2>&1"	, $sql_file_exec, $return);
+	
+					break;
+				default:
+					die("Error, please follow the wizard.");
+				break;
+			}
+
+			if($return == 0){
+				$sql_process_ok = 1;
+			}
+			else {
+				if (!isset ($sql_script_message)){
+					$sql_script_message = "";
+				}
+				foreach ($sql_file_exec as $line){
+					$sql_script_message .= $line;
+				}
+			}
+		}
+		// GRANT PRIVILEGES MySQL and others but no postgresql
+		if (($sql_process_ok == 1) && ($engine != "postgresql")){
 
 			if ($dbuser == $dbroot) {
 				// dbroot user also has grants ~ user password ignored.
@@ -463,14 +532,6 @@ elseif ($phase == 2) {
 				switch ($engine){
 					case "mysql":
 						$q = "grant all privileges on $dbname.* to $dbuser@" . $myip . " identified by '$dbpass';";
-					break;
-					case "postgresql":
-						$q  = "create user $dbuser;\n";
-						$q .= "grant all on database $dbname to $dbuser;\n";
-						$q .= "grant all on schema $schema to $dbuser;\n";
-						$q .= "grant all on all tables in schema $schema to $dbuser;\n";
-						$q .= "grant all on all sequences in schema $schema to $dbuser;\n";
-						$q .= "alter user $dbuser with password \'$dbpass\';\n";
 					break;
 					default:
 						die("Error, please follow the wizard.");
@@ -485,43 +546,10 @@ elseif ($phase == 2) {
 					$grant_message = $dbclient->lq_error();
 				}
 			}
-		}	
-
-		// PROCESS SQL SCRIPT
-		if ($grant_user_ok == 1){
-			switch ($engine){
-				case "mysql":
-					if ("$dbpass" == ""){
-						$command = "mysql -u $dbuser -h $dbhost -P $dbport $dbname < $sql_file";
-					}
-					else {
-						$command = "mysql -u $dbuser -p'$dbpass' -h $dbhost -P $dbport $dbname < $sql_file";
-					}
-					exec ($command . " 2>&1", $sql_file_exec, $return);
-					break;
-				case "postgresql":
-					$_ENV{"PGPASSWORD"} = "$dbpass";
-					$command = "pgsql -U $dbuser -w -h $dbhost -p $dbport -d $dbname -f $sql_file";
-					exec ($command . " 2>&1"	, $sql_file_exec, $return);
-					break;
-				default:
-					die("Error, please follow the wizard.");
-				break;
-			}
-
-			if($return == 0){
-				$sql_process_ok = 1;
-			}
-			else {
-				$sql_script_message = "";
-				foreach ($sql_file_exec as $line){
-					$sql_script_message .= $line;
-				}
-			}
 		}
 		$dbclient->disconnect();
 
-		if ($sql_process_ok == 1) {
+		if ($grant_user_ok == 1) {
 			// Succesfully installed, store config to SESSION
 			$db_config = array("engine"  =>"$engine", // Could be mysql or postgresql
                    "username"=>"$dbuser",
@@ -574,14 +602,6 @@ elseif ($phase == 2) {
 			?>
 				</li>
 				<li>
-					<div class="status <?php check_item($grant_user_ok);?>">&nbsp;</div> Asignaci&oacute;n de permisos a <?php echo $dbuser; ?>
-			<?php
-				if(isset($grant_message)) {
-					echo "<div onclick='toggle(this);' class='err'>Error: $grant_message</div>";
-				}
-			?>
-				</li>
-				<li>
 					<div class="status <?php check_item($sql_process_ok);?>">&nbsp;</div> Procesado de scripts de despliegue
 			<?php
 				if(isset($sql_script_message)) {
@@ -590,6 +610,14 @@ elseif ($phase == 2) {
 					var_dump($sql_script_message);
 					echo "</pre>";
 					echo "</div>";
+				}
+			?>
+				</li>
+				<li>
+					<div class="status <?php check_item($grant_user_ok);?>">&nbsp;</div> Asignaci&oacute;n de permisos a <?php echo $dbuser; ?>
+			<?php
+				if(isset($grant_message)) {
+					echo "<div onclick='toggle(this);' class='err'>Error: $grant_message</div>";
 				}
 			?>
 				</li>
@@ -652,13 +680,17 @@ elseif ($phase == 3){
 	$salt      = $_POST["hash"];
 	$myip      = $dbclient->prepare($_POST["myip"], "ip");
 
+	if (!isset($myip) || ($myip == "")){
+		$myip = $dbclient->prepare("127.0.0.1", "ip");
+	}
+
 	// Add current server to database
-	$q = "insert into servers (ip) values ('" . $myip . "')";
+	$q = "insert into servers (ip) values (" . $myip . ")";
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	$server_id = $dbclient->last_id();
 
 	// Add current domain, to the zones table
-	$q = "insert into zones (domain,server_id,master_id) values ('" . $domain . "', $server_id, $server_id)";
+	$q = "insert into zones (domain,server_id,master_id,gid) values ('" . $domain . "', $server_id, $server_id,default)";
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	
 	$dbclient->disconnect();
@@ -718,7 +750,7 @@ elseif ($phase == 3){
 	if ($dbclient->lq_nresults() == 0){ // ADD NEW USER
 	    
 	    // Create administrator user
-	    $q = "insert into users (mail, pass, ip_last_login, first_login, rol) values (lower('" . $user . "'),'" . $pass . "', '" . _ip() . "', now(), (select id from roles where tag='admin'));";
+	    $q = "insert into users (mail, pass, ip_last_login, first_login, rol) values (lower('" . $user . "'),'" . $pass . "', " . $dbclient->prepare(_ip(), "ip") . ", now(), (select id from roles where tag='admin'));";
 	    $dbclient->exeq($q) or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
 	    $oid = $dbclient->last_id();
 
