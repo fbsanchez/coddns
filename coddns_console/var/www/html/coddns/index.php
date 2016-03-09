@@ -141,7 +141,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <header>
 <div class="img" onclick="window.location='/?lang=<?php echo $lan;?>';">&nbsp;</div>
 <div class="text">
-	<h1>Custom Open Dynamic DNS <span style="font-size:0.5em;font-style:italic;">[rc1]</span></h1>
+	<h1>Custom Open Dynamic DNS <span style="font-size:0.5em;font-style:italic;">[v1]</span></h1>
     <h2><?php echo $text[$lan]["welcome"]; ?></h2>
     <p><?php echo $text[$lan]["yourip"] . " " . _ip(); ?> </p>
 </div>
