@@ -40,12 +40,6 @@ tbody tr:hover{
     background: #E8F1F9;
 }
 
-ul.list_first li{
-	list-style-type: none;
-	display: inline;
-	text-decoration: none;
-}
-
 div.server{
 	width: 500px;
 	height: 100px;
@@ -66,7 +60,7 @@ div.server div{
 }
 div.menu_button{
     float: left;
-    width: 250px;
+    width: 120px;
     padding: 15px;
     text-align: center;
     margin: 15px;
@@ -81,4 +75,7 @@ div.menu_button img{
 img.add {
 	float: left;
     margin: 3px 5px 0px;
+}
+#hidden_div_1, #hidden_div_2, #hidden_div_3 {
+	display: none;
 }

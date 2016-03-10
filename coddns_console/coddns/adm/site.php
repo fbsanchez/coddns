@@ -66,129 +66,134 @@ $user->check_auth_level($auth_level_required);
 	<section>
 		<h2>Panel de administraci&oacute;n del sitio</h2>
 		<nav>
-		<ul class="list_first">
-			<li>
-				<a href="#">Usuarios</a>
-				<!--	
-					<a href="<?php echo $config["html_root"] . "/?z=adm&u=service&op=add_server";?>">
-						<img class="add" src="<?php echo $config["html_root"] . "/rs/img/add.png";?>" alt="add" />
-						<span>Agregar un nuevo servidor</span>
-					</a>
-				-->
-			</li>	
-			<li>
+			<a href="#" onclick = "updateContent('main_section','../adm/site.php',null,true);" title="Usuarios">
+			<div class="menu_button" style="background: #FEFCFF;">
+			<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Service Settings"/><p>Usuarios</p></div></a>
+
+			<a href="#" onclick = "updateContent('main_section','../',null,true);" title="Acls">
+			<div class="menu_button" style="background: #FEFCFF;">
+			<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Service Settings"/><p>Acls</p></div></a>
+
+			<a href="#" onclick = "updateContent('main_section','../',null,true);" title="Grupos">
+			<div class="menu_button" style="background: #FEFCFF;">
+			<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Service Settings"/><p>Grupos</p></div></a>
+		</nav>
+			<div id="hidden_div1">
 				<ul>
-					<li>
-						<a href="#">Usuarios y Roles</a>
-						<ul>	
-							<li>Rol: Admin
-								<table>
-									<thead>
-										<tr>
-											<td>Email</td>
-											<td>Login</td>
-											<td>Ip Login</td>
-										</tr>
-									</thead>
-									<?php
-										while ($row = $dbclient->fetch_array ($r)) {
-									?>
-										<tbody>
-											<tr>
-												<td><?php echo $row['mail'] ?></td>
-												<td><?php echo $row['last_login'] ?></td>
-												<td><?php echo $row['ip_last_login'] ?></td>
-											</tr>
-										</tbody>
-									<?php  
-									}
-									?>
-								</table>
-							</li>
-							<li>Rol: Manager
-								<table>
-									<thead>
-										<tr>
-											<td>Email</td>
-											<td>Login</td>
-											<td>Ip Login</td>
-										</tr>
-									</thead>
-									<?php
-										while ($row = $dbclient->fetch_array ($l)) {
-									?>
-										<tbody>
-											<tr>
-												<td><?php echo $row['mail'] ?></td>
-												<td><?php echo $row['last_login'] ?></td>
-												<td><?php echo $row['ip_last_login'] ?></td>
-											</tr>
-										</tbody>
-									<?php  
-									}
-									?>
-								</table>
-							</li>
-							<li>Rol: Usuario
-								<table>
-									<thead>
-										<tr>
-											<td>Email</td>
-											<td>Login</td>
-											<td>Ip Login</td>
-										</tr>
-									</thead>
-									<?php
-										while ($row = $dbclient->fetch_array ($n)) {
-									?>
-										<tbody>
-											<tr>
-												<td><?php echo $row['mail'] ?></td>
-												<td><?php echo $row['last_login'] ?></td>
-												<td><?php echo $row['ip_last_login'] ?></td>
-											</tr>
-										</tbody>
-									<?php  
-									}
-									?>
-								</table>
-							</li>
-						</ul>
+					<li>Rol: Admin
+					<!--
+					<table>
+						<thead>
+							<tr>
+								<td>Email</td>
+								<td>Login</td>
+								<td>Ip Login</td>
+							</tr>
+						</thead>
+						<?php
+							while ($row = $dbclient->fetch_array ($r)) {
+						?>
+							<tbody>
+								<tr>
+									<td><?php echo $row['mail'] ?></td>
+									<td><?php echo $row['last_login'] ?></td>
+									<td><?php echo $row['ip_last_login'] ?></td>
+								</tr>
+							</tbody>
+						<?php  
+						}
+						?>
+					</table>
+					-->
 					</li>
-					<li>
-						<a href="#">Acls</a>
+					<li>Rol: Manager
+						<!--
 						<table>
 							<thead>
 								<tr>
-									<td>P&aacutegina</td>
-									<td>Nivel de Aturizaci&oacuten	</td>
+									<td>Email</td>
+									<td>Login</td>
+									<td>Ip Login</td>
 								</tr>
 							</thead>
 							<?php
-								while ($row = $dbclient->fetch_array ($m)) {
-							?>	
+								while ($row = $dbclient->fetch_array ($l)) {
+							?>
 								<tbody>
 									<tr>
-										<td><?php echo $row['op'] ?></td>
-										<td><?php echo $row['auth_level'] ?></td>
+										<td><?php echo $row['mail'] ?></td>
+										<td><?php echo $row['last_login'] ?></td>
+										<td><?php echo $row['ip_last_login'] ?></td>
 									</tr>
 								</tbody>
 							<?php  
 							}
 							?>
 						</table>
+						-->
 					</li>
-					<li>
-						<a href="#">Grupos</a>
-						
+					<li>Rol: Usuario
+						<!--
+						<table>
+							<thead>
+								<tr>
+									<td>Email</td>
+									<td>Login</td>
+									<td>Ip Login</td>
+								</tr>
+							</thead>
+							<?php
+								while ($row = $dbclient->fetch_array ($n)) {
+							?>
+								<tbody>
+									<tr>
+										<td><?php echo $row['mail'] ?></td>
+										<td><?php echo $row['last_login'] ?></td>
+										<td><?php echo $row['ip_last_login'] ?></td>
+									</tr>
+								</tbody>
+							<?php  
+							}
+							?>
+						</table>
+						-->
 					</li>
 				</ul>
-			</li>
-			<li>
-				<a href="#">M&aacute;s cosas</a>
-			</li>
-		</ul>
-		</nav>
+			</div>
+
+			<div id="hidden_div2">
+				<table>
+					<thead>
+						<tr>
+							<td>P&aacutegina</td>
+							<td>Nivel de Aturizaci&oacuten	</td>
+						</tr>
+					</thead>
+					<?php
+						while ($row = $dbclient->fetch_array ($m)) {
+					?>	
+						<tbody>
+							<tr>
+								<td><?php echo $row['op'] ?></td>
+								<td><?php echo $row['auth_level'] ?></td>
+							</tr>
+						</tbody>
+					<?php  
+					}
+					?>
+				</table>
+			</div>
+
+			<div id="hidden_div3">
+				<p>caca</p>
+			</div>
+		<section id="main_section">
+			
+		</section>
+		<!--			
+		<a href="#">M&aacute;s cosas</a>
+		-->
+		
 		<a href="<?php echo $config["html_root"] . "/?m=adm" ?>">Volver</a>
 	</section>
 </body>
