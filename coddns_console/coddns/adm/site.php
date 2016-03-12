@@ -36,14 +36,28 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="rs/css/pc/adm.css">
-	<!--
-		<?php
-			//include_once (dirname(__FILE__) . "/../rs/css/pc/adm.css");
-		?>
-	-->
+	<link rel="stylesheet" type="text/css" href="rs/css/pc/adm_site.css">
 </head>
-
+<script languague="javascript">
+        function show(id) {
+        	if (id == 'hidden_div1'){
+        		document.getElementById('hidden_div2').style.display = '';
+        		document.getElementById('hidden_div3').style.display = '';
+        	} else if (id == 'hidden_div2'){
+        		document.getElementById('hidden_div1').style.display = '';
+        		document.getElementById('hidden_div3').style.display = '';
+        	} else {
+        		document.getElementById('hidden_div1').style.display = '';
+        		document.getElementById('hidden_div2').style.display = '';
+        	}
+            div = document.getElementById(id);
+            if (div.style.display == ''){
+            	div.style.display = 'block';
+        	} else {
+        		div.style.display = '';
+        	}
+        }
+</script>
 <body>
 	<?php  
 		$dbclient= new DBClient($db_config);
@@ -66,116 +80,41 @@ $user->check_auth_level($auth_level_required);
 	<section>
 		<h2>Panel de administraci&oacute;n del sitio</h2>
 		<nav>
-			<a href="#" onclick = "updateContent('main_section','../adm/site.php',null,true);" title="Usuarios">
+			<a href="javascript:show('hidden_div1');" title="Usuarios">
 			<div class="menu_button" style="background: #FEFCFF;">
-			<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Service Settings"/><p>Usuarios</p></div></a>
+			<img src="<?php echo $config["html_root"] . "/rs/img/teamwork-in-the-office.png"; ?>" alt="Service Settings"/><p>Usuarios</p></div></a>
 
-			<a href="#" onclick = "updateContent('main_section','../',null,true);" title="Acls">
+			<a href="javascript:show('hidden_div2');" title="Acls">
 			<div class="menu_button" style="background: #FEFCFF;">
-			<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Service Settings"/><p>Acls</p></div></a>
+			<img src="<?php echo $config["html_root"] . "/rs/img/key-to-success.png"; ?>" alt="Service Settings"/><p>Acls</p></div></a>
 
-			<a href="#" onclick = "updateContent('main_section','../',null,true);" title="Grupos">
+			<a href="javascript:show('hidden_div3');" title="Grupos">
 			<div class="menu_button" style="background: #FEFCFF;">
-			<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Service Settings"/><p>Grupos</p></div></a>
+			<img src="<?php echo $config["html_root"] . "/rs/img/group-of-businessmen.png"; ?>" alt="Service Settings"/><p>Grupos</p></div></a>
 		</nav>
-			<div id="hidden_div1">
-				<ul>
-					<li>Rol: Admin
-					<!--
-					<table>
-						<thead>
-							<tr>
-								<td>Email</td>
-								<td>Login</td>
-								<td>Ip Login</td>
-							</tr>
-						</thead>
-						<?php
-							while ($row = $dbclient->fetch_array ($r)) {
-						?>
-							<tbody>
-								<tr>
-									<td><?php echo $row['mail'] ?></td>
-									<td><?php echo $row['last_login'] ?></td>
-									<td><?php echo $row['ip_last_login'] ?></td>
-								</tr>
-							</tbody>
-						<?php  
-						}
-						?>
-					</table>
-					-->
-					</li>
-					<li>Rol: Manager
-						<!--
-						<table>
-							<thead>
-								<tr>
-									<td>Email</td>
-									<td>Login</td>
-									<td>Ip Login</td>
-								</tr>
-							</thead>
-							<?php
-								while ($row = $dbclient->fetch_array ($l)) {
-							?>
-								<tbody>
-									<tr>
-										<td><?php echo $row['mail'] ?></td>
-										<td><?php echo $row['last_login'] ?></td>
-										<td><?php echo $row['ip_last_login'] ?></td>
-									</tr>
-								</tbody>
-							<?php  
-							}
-							?>
-						</table>
-						-->
-					</li>
-					<li>Rol: Usuario
-						<!--
-						<table>
-							<thead>
-								<tr>
-									<td>Email</td>
-									<td>Login</td>
-									<td>Ip Login</td>
-								</tr>
-							</thead>
-							<?php
-								while ($row = $dbclient->fetch_array ($n)) {
-							?>
-								<tbody>
-									<tr>
-										<td><?php echo $row['mail'] ?></td>
-										<td><?php echo $row['last_login'] ?></td>
-										<td><?php echo $row['ip_last_login'] ?></td>
-									</tr>
-								</tbody>
-							<?php  
-							}
-							?>
-						</table>
-						-->
-					</li>
-				</ul>
-			</div>
-
-			<div id="hidden_div2">
+	</section>
+	<section id="adm_site_section">
+		<div id="hidden_div1">
+			<a href="javascript:show('hidden_rol1');" title="Rol: Admin">
+			<div class="menu_button" style="background: #FEFCFF;">
+			<img src="<?php echo $config["html_root"] . "/rs/img/web.png"; ?>" alt="Service Settings"/><p>Rol: Admin</p></div></a>
+			<div id="hidden_rol1">
 				<table>
 					<thead>
 						<tr>
-							<td>P&aacutegina</td>
-							<td>Nivel de Aturizaci&oacuten	</td>
+							<td>Email</td>
+							<td>Login</td>
+							<td>Ip Login</td>
 						</tr>
 					</thead>
 					<?php
-						while ($row = $dbclient->fetch_array ($m)) {
-					?>	
+						while ($row = $dbclient->fetch_array ($r)) {
+					?>
 						<tbody>
 							<tr>
-								<td><?php echo $row['op'] ?></td>
-								<td><?php echo $row['auth_level'] ?></td>
+								<td><?php echo $row['mail'] ?></td>
+								<td><?php echo $row['last_login'] ?></td>
+								<td><?php echo $row['ip_last_login'] ?></td>
 							</tr>
 						</tbody>
 					<?php  
@@ -183,19 +122,96 @@ $user->check_auth_level($auth_level_required);
 					?>
 				</table>
 			</div>
-
-			<div id="hidden_div3">
-				<p>caca</p>
+			<a href="javascript:show('hidden_rol2');" title="Rol: Manager">
+			<div class="menu_button" style="background: #FEFCFF;">
+			<img src="<?php echo $config["html_root"] . "/rs/img/computer.png"; ?>" alt="Service Settings"/><p>Rol: Manager</p></div></a>
+			<div id="hidden_rol2">	
+				<table>
+					<thead>
+						<tr>
+							<td>Email</td>
+							<td>Login</td>
+							<td>Ip Login</td>
+						</tr>
+					</thead>
+					<?php
+						while ($row = $dbclient->fetch_array ($l)) {
+					?>
+						<tbody>
+							<tr>
+								<td><?php echo $row['mail'] ?></td>
+								<td><?php echo $row['last_login'] ?></td>
+								<td><?php echo $row['ip_last_login'] ?></td>
+							</tr>
+						</tbody>
+					<?php  
+					}
+					?>
+				</table>
 			</div>
-		<section id="main_section">
-			
-		</section>
+			<a href="javascript:show('hidden_rol3');" title="Rol: Usuario">
+			<div class="menu_button" style="background: #FEFCFF;">
+			<img src="<?php echo $config["html_root"] . "/rs/img/call.png"; ?>" alt="Service Settings"/><p>Rol: Usuario</p></div></a>
+			<div id="hidden_rol3">	
+				<table>
+					<thead>
+						<tr>
+							<td>Email</td>
+							<td>Login</td>
+							<td>Ip Login</td>
+						</tr>
+					</thead>
+					<?php
+						while ($row = $dbclient->fetch_array ($n)) {
+					?>
+						<tbody>
+							<tr>
+								<td><?php echo $row['mail'] ?></td>
+								<td><?php echo $row['last_login'] ?></td>
+								<td><?php echo $row['ip_last_login'] ?></td>
+							</tr>
+						</tbody>
+					<?php  
+					}
+					?>
+				</table>
+			</div>
+		</div>
+
+		<div id="hidden_div2">
+			<table>
+				<thead>
+					<tr>
+						<td>P&aacutegina</td>
+						<td>Nivel de Aturizaci&oacuten	</td>
+					</tr>
+				</thead>
+				<?php
+					while ($row = $dbclient->fetch_array ($m)) {
+				?>	
+					<tbody>
+						<tr>
+							<td><?php echo $row['op'] ?></td>
+							<td><?php echo $row['auth_level'] ?></td>
+						</tr>
+					</tbody>
+				<?php  
+				}
+				?>
+			</table>
+		</div>
+
+		<div id="hidden_div3">
+			<p>caca</p>
+		</div>
+	</section>
 		<!--			
 		<a href="#">M&aacute;s cosas</a>
 		-->
-		
-		<a href="<?php echo $config["html_root"] . "/?m=adm" ?>">Volver</a>
-	</section>
+	<div class="button_return">	
+		<a href="<?php echo $config["html_root"] . "/?m=adm" ?>" title="Return">
+		<img src="<?php echo $config["html_root"] . "/rs/img/web-7.png"; ?>" alt="Service Settings"/></a>
+	</div>
 </body>
 
 </html>
