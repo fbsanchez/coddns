@@ -53,6 +53,7 @@ $menu_item_priv_zone = "pl";
 $menu_item_logout    = "pl";
 $menu_item_pub       = "pl";
 $menu_item_adm       = "pl";
+$menu_item_contact   = "pl";
 
 // initialize printer id flags
 $enable_main        = 0;
@@ -63,7 +64,7 @@ $enable_users_mod   = 0;
 $enable_adm         = 0;
 $enable_logout      = 0;
 $enable_users_login = 0;
-
+$enable_contact     = 1;
 
 if ( $url == "index.php" ) {
     $menu_item_main = "pl_select";
@@ -123,6 +124,10 @@ else {
                 case "cookie_policy":
                     $menu_item_cookies = "pl_select";
                     break;
+                case "contact":
+                    $menu_item_contact = "pl_select";
+                    break;
+                    
                 default:
                     $menu_item_main = "pl_select";
                     break;
@@ -232,6 +237,13 @@ if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"
 </div>
 <div id="contact">
     <ul>
+
+    <?php
+if (check_show($user,null,"logout",null)) {
+?>
+        <li><a id="menu_item_contact"    class="<?php echo $menu_item_contact;?>"     href="<?php echo $config["html_root"];?>/?z=contact">Contactar</a></li>
+<?php } ?>
+
         <li>
             <a id="menu_item_policy"  href="#" class="pl" onclick="red(this,'main_section','cpolicy.html');"><?php echo $text[$lan]["cookie_policy"];?></a>
         </li>

@@ -172,6 +172,7 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('','logout','',0),
     ('','main','',0),
     ('','rest_host','',0),
+    ('','contact','',0),
     ('usr','','',1),
     ('usr','hosts','',1),
     ('usr','hosts','mod',1),

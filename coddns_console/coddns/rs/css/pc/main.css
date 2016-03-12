@@ -102,7 +102,7 @@ li label{
 li input{
     float: right;
 }
-li input[type="email"],li input[type="text"], li input[type="password"]{
+li input[type="email"],li input[type="text"], li input[type="password"] {
     width: 150px;
     border: none;
     border-bottom: 1px solid #ccc;
