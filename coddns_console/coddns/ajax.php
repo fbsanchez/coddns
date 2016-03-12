@@ -106,8 +106,87 @@ function list_hosts($data){
 	    </script>
 	<?php
 	}
+
+	$dbclient->disconnect();
 }
 
+
+/**
+ * Function to list all groups available for the current $_SESSION["user"]
+ *
+ */
+function list_groups($data) {
+	global $config;
+	// Minimal access to manage site ACL
+	$auth_level_required = get_required_auth_level('adm','site','');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+
+    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+
+    $dbclient->connect();
+
+	$q = "select * from groups;";
+	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+	?>
+
+	<table>
+
+	<?php
+	while ($row = $dbclient->fetch_array ($r)) {
+	?>
+	    <tr>
+	        <td><?php echo $row["tag"];?></td>
+	        <td><?php echo $row["description"];?></td>
+
+	    </tr>
+	<?php
+	}
+
+
+	$dbclient->disconnect();
+}
+
+
+/**
+ * Function to list all ACLs available for the current $_SESSION["user"]
+ *
+ */
+function list_acls($data) {
+	global $config;
+	// Minimal access to manage site ACL
+	$auth_level_required = get_required_auth_level('adm','site','');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+
+    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+
+    $dbclient->connect();
+
+	$q = "select * from site_acl;";
+	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+	?>
+
+	<table>
+
+	<?php
+	while ($row = $dbclient->fetch_array ($r)) {
+	?>
+	    <tr>
+	        <td><?php echo $row["m"];?></td>
+	        <td><?php echo $row["z"];?></td>
+	        <td><?php echo $row["op"];?></td>
+	        <td><?php echo $row["auth_level"];?></td>
+
+	    </tr>
+	<?php
+	}
+
+
+	$dbclient->disconnect();
+}
 
 $action    = secure_get("action");
 $arguments = secure_get("args","json");
@@ -116,6 +195,12 @@ switch ($action) {
 	case 'list_hosts':
 		list_hosts($arguments);
 		break;
+	case 'list_groups':
+		list_groups($arguments);
+		break;
+	case 'list_acls':
+		list_acls($arguments);
+		break;	
 	default:
 		print "Unknown action";
 		break;

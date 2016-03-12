@@ -40,22 +40,10 @@ $user->check_auth_level($auth_level_required);
 </head>
 <script languague="javascript">
         function show(id) {
-        	if (id == 'hidden_div1'){
-        		document.getElementById('hidden_div2').style.display = '';
-        		document.getElementById('hidden_div3').style.display = '';
-        	} else if (id == 'hidden_div2'){
-        		document.getElementById('hidden_div1').style.display = '';
-        		document.getElementById('hidden_div3').style.display = '';
-        	} else {
-        		document.getElementById('hidden_div1').style.display = '';
-        		document.getElementById('hidden_div2').style.display = '';
-        	}
-            div = document.getElementById(id);
-            if (div.style.display == ''){
-            	div.style.display = 'block';
-        	} else {
-        		div.style.display = '';
-        	}
+        	document.getElementById('hidden_div1').style.display = '';
+        	document.getElementById('hidden_div2').style.display = '';
+        	document.getElementById('content_group').style.display = '';
+            document.getElementById(id).style.display = "block";
         }
 </script>
 <body>
@@ -84,11 +72,11 @@ $user->check_auth_level($auth_level_required);
 			<div class="menu_button" style="background: #FEFCFF;">
 			<img src="<?php echo $config["html_root"] . "/rs/img/teamwork-in-the-office.png"; ?>" alt="Service Settings"/><p>Usuarios</p></div></a>
 
-			<a href="javascript:show('hidden_div2');" title="Acls">
+			<a href="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_acls');" title="ACLs">
 			<div class="menu_button" style="background: #FEFCFF;">
 			<img src="<?php echo $config["html_root"] . "/rs/img/key-to-success.png"; ?>" alt="Service Settings"/><p>Acls</p></div></a>
 
-			<a href="javascript:show('hidden_div3');" title="Grupos">
+			<a href="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_groups');" title="Grupos">
 			<div class="menu_button" style="background: #FEFCFF;">
 			<img src="<?php echo $config["html_root"] . "/rs/img/group-of-businessmen.png"; ?>" alt="Service Settings"/><p>Grupos</p></div></a>
 		</nav>
@@ -201,8 +189,8 @@ $user->check_auth_level($auth_level_required);
 			</table>
 		</div>
 
-		<div id="hidden_div3">
-			<p>caca</p>
+		<div id="content_group">
+			<p>Cargando...</p>
 		</div>
 	</section>
 		<!--			
