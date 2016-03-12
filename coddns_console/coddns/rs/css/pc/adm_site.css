@@ -5,7 +5,7 @@ pre {
 }
 
 nav {
-	width: 85%;
+	width: 90%;
     min-width: 450px;
     margin: 15px auto;
     font-size: 1em;
@@ -86,9 +86,8 @@ img.add {
 }
 
 #adm_site_section{
-    border: 1px solid black;
     width: 80%;
-    height: 300px;
+    margin-top: 40px;
 }
 .button_return {
     width: 100px;
@@ -96,4 +95,17 @@ img.add {
     position: fixed;
     bottom: 0;
     height: 15%;
+}
+
+nav ul {
+    width: 100%;
+    margin: 0px;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+nav ul li:active:before {
+    background-color: blue;
 }

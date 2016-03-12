@@ -110,6 +110,52 @@ function list_hosts($data){
 	$dbclient->disconnect();
 }
 
+/**
+ * Function to list all users available for the current $_SESSION["user"]
+ *
+ */
+function list_users($data) {
+	global $config;
+	// Minimal access to manage site ACL
+	$auth_level_required = get_required_auth_level('adm','site','');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+
+    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+
+    $dbclient->connect();
+
+	//$q = "select mail, last_login, ip_last_login from users where rol = 2;";
+	//$l = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+	$q = "select * from users;";
+	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+	?>
+
+	<table>
+		<thead>
+			<tr>
+				<td>Email</td>
+				<td>Login</td>
+				<td>Ip Login</td>
+			</tr>
+		</thead>
+	<?php
+	while ($row = $dbclient->fetch_array ($r)) {
+	?>
+		<tbody>
+		    <tr>
+		        <td><?php echo $row["mail"];?></td>
+		        <td><?php echo $row["first_login"];?></td>
+		        <td><?php echo $row["ip_first_login"];?></td>
+		    </tr>
+	    </tbody>
+	<?php
+	}
+
+	$dbclient->disconnect();
+}
 
 /**
  * Function to list all groups available for the current $_SESSION["user"]
@@ -132,18 +178,23 @@ function list_groups($data) {
 	?>
 
 	<table>
-
+		<thead>
+			<tr>
+				<td>Nombre</td>
+				<td>Descripci&oacuten</td>
+			</tr>
+		</thead>
 	<?php
 	while ($row = $dbclient->fetch_array ($r)) {
 	?>
-	    <tr>
-	        <td><?php echo $row["tag"];?></td>
-	        <td><?php echo $row["description"];?></td>
-
-	    </tr>
+		<tbody>
+		    <tr>
+		        <td><?php echo $row["tag"];?></td>
+		        <td><?php echo $row["description"];?></td>
+		    </tr>
+	    </tbody>
 	<?php
 	}
-
 
 	$dbclient->disconnect();
 }
@@ -170,20 +221,27 @@ function list_acls($data) {
 	?>
 
 	<table>
-
+		<thead>
+			<tr>
+				<td>M</td>
+				<td>z</td>
+				<td>P&aacutegina</td>
+				<td>Nivel de Aturizaci&oacuten	</td>
+			</tr>
+		</thead>
 	<?php
 	while ($row = $dbclient->fetch_array ($r)) {
 	?>
-	    <tr>
-	        <td><?php echo $row["m"];?></td>
-	        <td><?php echo $row["z"];?></td>
-	        <td><?php echo $row["op"];?></td>
-	        <td><?php echo $row["auth_level"];?></td>
-
-	    </tr>
+		<tbody>
+		    <tr>
+		        <td><?php echo $row["m"];?></td>
+		        <td><?php echo $row["z"];?></td>
+		        <td><?php echo $row["op"];?></td>
+		        <td><?php echo $row["auth_level"];?></td>
+		    </tr>
+	    </tbody>
 	<?php
 	}
-
 
 	$dbclient->disconnect();
 }
@@ -194,6 +252,9 @@ $arguments = secure_get("args","json");
 switch ($action) {
 	case 'list_hosts':
 		list_hosts($arguments);
+		break;
+	case 'list_users':
+		list_users($arguments);
 		break;
 	case 'list_groups':
 		list_groups($arguments);
