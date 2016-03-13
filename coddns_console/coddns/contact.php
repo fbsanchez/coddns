@@ -29,22 +29,86 @@ $auth_level_required = get_required_auth_level('','contact','');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
+if (isset ($_POST["name"])){
+	$name   = $_POST["name"];
+}
+if (isset ($_POST["email"])){
+	$email   = $_POST["email"];
+}
+if (isset ($_POST["tel"])){
+	$tel   = $_POST["tel"];
+}
+if (isset ($_POST["mesage"])){
+	$mesage   = $_POST["mesage"];
+}
+
 
 ?>
-
 <!DOCTYPE HTML>
 
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="rs/css/pc/contact.css">
-
-
 </head>
 
 <body>
 	<section>
 		<h2>Enviar un mensaje a los desarrolladores</h2>
-		<form action="#" method="POST">
+
+<?php
+
+if (!isset ($config["slack_url"])){
+?>
+	<p>No se ha encontrado el token "slack_url" en la configuraci&oacute;n</p>
+	<p>Por favor, revise el manual</p>
+
+<?php
+}elseif( isset($mesage)
+	&& ( 
+		isset($name)
+		||  isset($email)
+		||  isset($tel))) {   // FORM COMPLETED
+
+	isset ($name) or $name   = "Anónimo";
+	isset ($email) or $email = "No definido";
+	isset ($tel) or $tel     = "No definido";
+
+	if (isset ($_POST["email"])){
+		$email   = $_POST["email"];
+	}
+	if (isset ($_POST["tel"])){
+		$tel   = $_POST["tel"];
+	}
+	if (isset ($_POST["mesage"])){
+		$mesage   = $_POST["mesage"];
+	}
+
+
+?>
+	<p> Tu mensaje es:</p>
+	<pre>
+		<?php
+		echo "Name:" . $name . "\n";
+		echo "Tel:"  . $tel . "\n";
+		echo "Email:" . $email . "\n";
+		echo "Msg:" . $mesage . "\n";
+		?>
+	</pre>
+	<?php
+
+
+	// Send mesage with curl:
+
+	$gmsg = "New message from: $name\nPhone: $tel\nEmail: $email\n" . $mesage . "\n";
+
+	exec ("curl --data \"$gmsg\" \"" . $config["slack_url"] . "\"", $service_output, $return);
+
+
+
+}
+else {   // DISPLAY FORM
+?>
+		<form action="#" method="POST" onsubmit="">
 			<ul>
 				<li>
 					<label>Nombre</label><input name="name" type="text"/>
@@ -56,13 +120,17 @@ $user->check_auth_level($auth_level_required);
 					<label>Telefono</label><input name="tel" type="text" pattern="(\+[0-9]{2}){0,1}[0-9]{9}" title="Introduce un n&uacute;mero de tel&eacute;fono v&aacute;lido"/>
 				</li>
 			</ul>
-			<textarea name="mesage"></textarea>
+			<textarea id="mesage" name="mesage" placeholder="Escribe tu mensaje aqu&iacute;..."></textarea>
 			<ul>
 				<li>
 					<input type="submit" value="Enviar" />
 				</li>
 			</ul>
 		</form>
+
+<?php 
+}
+?>
 
 	</section>
 </body>
