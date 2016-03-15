@@ -193,6 +193,9 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('adm','site','manager',100),
     ('adm','service','',100),
     ('adm','service','manager',100),
+    ('adm','servers','',100),
+    ('adm','servers','status',100),
+    ('adm','zones','',100),
     ('cms','','',0),
     ('ajax','','',0);
 

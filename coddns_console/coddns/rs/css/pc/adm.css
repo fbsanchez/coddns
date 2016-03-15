@@ -40,24 +40,6 @@ tbody tr:hover{
     background: #E8F1F9;
 }
 
-div.server{
-	width: 500px;
-	height: 100px;
-	margin: 15px 0px;
-	clear: both;
-}
-
-div.server img{
-	cursor: pointer;
-	float: left;
-	width: 50px;
-	margin: 5px;
-}
-div.server div{
-	float: left;
-	max-width: 400px;
-	margin: 15px 10px;
-}
 div.menu_button{
     float: left;
     width: 250px;
@@ -79,3 +61,4 @@ img.add {
 #hidden_div_1, #hidden_div_2, #hidden_div_3 {
 	display: none;
 }
+

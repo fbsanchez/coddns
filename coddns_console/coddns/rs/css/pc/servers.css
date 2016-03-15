@@ -1,0 +1,21 @@
+div.server{
+	width: 500px;
+	height: 100px;
+	margin: 15px 0px;
+	clear: both;
+}
+
+div.server img{
+	cursor: pointer;
+	float: left;
+	width: 50px;
+	margin: 5px;
+}
+div.server div{
+	float: left;
+	max-width: 400px;
+	margin: 15px 10px;
+}
+div.server a:hover{
+	border:none;
+}

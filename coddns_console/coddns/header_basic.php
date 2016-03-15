@@ -81,10 +81,12 @@ else {
                     switch($operation){
                         case "login":
                         case "signin":
-                        case "remember":
                             $menu_item_priv_zone = "pl_select";
                             break;
                         case "mod":
+                            $menu_item_usermod = "pl_select";
+                            break;
+                        case "remember":
                             $menu_item_user = "pl_select";
                             break;
                         case "resetpass":
@@ -144,61 +146,58 @@ else {
 </div>
 <a href="<?php echo $config["html_root"];?>/"><img src="<?php echo $config["html_root"];?>/rs/img/coddns_225.png" alt="logo"></a>
 <div id="menu">
-    <ul>
-
 <?php
     
 if (check_show($user,null,"main",null)) {
     $enable_main = 1;
 ?>
-        <li><a id="menu_item_main"      class="<?php echo $menu_item_main;?>"     href="<?php echo $config["html_root"];?>/">Inicio</a></li>
+        <a id="menu_item_main"      class="<?php echo $menu_item_main;?>"     href="<?php echo $config["html_root"];?>/">Inicio</a>
 <?php } ?>
 
 <?php
 if (check_show($user,null,"downloads",null)) {
     $enable_downloads = 1;?>
-        <li><a id="menu_item_downloads" class="<?php echo $menu_item_downloads;?>" href="<?php echo $config["html_root"];?>/?z=downloads">Descargas</a></li>
+        <a id="menu_item_downloads" class="<?php echo $menu_item_downloads;?>" href="<?php echo $config["html_root"];?>/?z=downloads">Descargas</a>
 <?php } ?>
 
 <?php
 if ((file_exists('cms/')) && (check_show($user,"cms",null,null))) {
     $enable_cms = 1;
 ?>
-        <li><a id="menu_item_pub" class="<?php echo $menu_item_pub;?>" href="<?php echo $config["html_root"];?>/?m=cms">Documentaci&oacute;n</a></li>
+        <a id="menu_item_pub" class="<?php echo $menu_item_pub;?>" href="<?php echo $config["html_root"];?>/?m=cms">Documentaci&oacute;n</a>
 <?php } ?>
 <?php
 if (check_show($user,"usr","hosts",null)) {
     $enable_hosts = 1;
 ?>
-        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=hosts">&Aacute;rea personal</a></li>
+        <a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=hosts" title="&Aacute;rea personal">Cuenta</a>
 <?php } ?>
 <?php
 if (check_show($user,"usr","users","mod")) {
     $enable_users_mod = 1;
 ?>
-        <li><a id="menu_item_user"      class="<?php echo $menu_item_user;?>"       href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=mod">Mi cuenta</a></li>
+        <a id="menu_item_user"      class="<?php echo $menu_item_user;?>"       href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=mod">Mi cuenta</a>
 <?php } ?>
 <?php
 if (check_show($user,"adm",null,null)) {
     $enable_adm = 1;
 ?>
-        <li><a id="menu_item_adm"      class="<?php echo $menu_item_adm;?>"       href="<?php echo $config["html_root"];?>/?m=adm">Administraci&oacute;n</a></li>
+        <a id="menu_item_adm"      class="<?php echo $menu_item_adm;?>"       href="<?php echo $config["html_root"];?>/?m=adm">Administraci&oacute;n</a>
 <?php } ?>
 <?php
 if (($user->get_is_logged()) && (check_show($user,null,"logout",null))) {
     $enable_logout = 1;
 ?>
-        <li><a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/?z=logout">Desconectarme</a></li>
+        <a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/?z=logout">Desconectarme</a>
 <?php } ?>
 <?php
 if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"))) {
     $enable_users_login = 1;
 ?>
-        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=login">&Aacute;rea personal</a></li>
+        <a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=login">&Aacute;rea personal</a>
 <?php
 }
 ?>
-    </ul>
     <script type="text/javascript">
     function red(id,zone,page){
         <?php
@@ -239,15 +238,15 @@ if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"
     <?php
 if (check_show($user,null,"logout",null)) {
 ?>
-        <li><a id="menu_item_contact"    class="<?php echo $menu_item_contact;?>"     href="<?php echo $config["html_root"];?>/?z=contact">Contactar</a></li>
+        <a id="menu_item_contact"    class="<?php echo $menu_item_contact;?>"     href="<?php echo $config["html_root"];?>/?z=contact">Contactar</a>
 <?php } ?>
 
-        <li>
+        
             <a id="menu_item_policy"  href="#" class="pl" onclick="red(this,'main_section','cpolicy.html');"><?php echo $text[$lan]["cookie_policy"];?></a>
-        </li>
-        <li>
+        
+        
             <a id="menu_item_cookies" href="#" class="pl" onclick="red(this,'main_section','terms.html');"><?php echo $text[$lan]["terms"];?></a>
-        </li>
+        
     </ul>
     <div style="display:inline-block;">
     <a target="_new" title="Fco de Borja S&aacute;nchez" href='https://plus.google.com/104344930735301242497/about'>
@@ -261,4 +260,5 @@ if (check_show($user,null,"logout",null)) {
     </div>
 </div>
 </header>
+
 

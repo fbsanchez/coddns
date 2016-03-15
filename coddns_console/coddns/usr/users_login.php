@@ -77,7 +77,7 @@ $text["en"]["remember"]    = "Did you forgot your password?";
             <input type="password" name="p" id="p" placeholder="password" required/>
         </li>
         <li>
-            <a id="remember" href="<?php echo $config["html_root"];?>/?z=remember&lang=<?php echo $lan;?>"><?php echo $text[$lan]["remember"];?> </a>
+            <a id="remember" href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=remember&lang=<?php echo $lan;?>"><?php echo $text[$lan]["remember"];?> </a>
             <input type="submit" value="<?php
                 echo $text[$lan]["f_send"];
             ?>"/>

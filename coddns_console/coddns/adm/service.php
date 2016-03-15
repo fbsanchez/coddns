@@ -36,66 +36,27 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="rs/css/pc/adm.css">
+<link rel="stylesheet" type="text/css" href="rs/css/pc/adm_service.css">
 </head>
 
 <body>
 	<section>
-		<h2>Administraci&oacute;n del servicio Bind</h2>
+		<h2>Centro de administraci&oacute;n</h2>
 
-
-		<div>
-			<?php 
-			// Action pane
-			?>
-			<a href="<?php echo $config["html_root"] . "/?z=adm&u=service&op=add_server";?>">
-				<img class="add" src="<?php echo $config["html_root"] . "/rs/img/add.png";?>" alt="add" />
-				<span>Agregar un nuevo servidor</span>
+		<nav>
+			<a style="color:#2D2D2D;" href="#servers" onclick="updateContent('settings_viewer','<?php echo $config["html_root"] . "/adm/servers.php"?>');">
+				Administrar servidores
 			</a>
+
+			<a style="color:#2D2D2D;" href="#zones" onclick="updateContent('settings_viewer','<?php echo $config["html_root"] . "/adm/zones.php"?>');">
+				Administrar zonas
+			</a>
+		</nav>
+
+		<div id="settings_viewer">
 		</div>
 
-		<?php
-		$named_ok = 0;
-		// check named service:
-		exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
-		if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
-
-		$dbclient = new DBClient($db_config);
-		$dbclient->connect() or die($dbclient->lq_error());
-
-		$q = "select s.id,s.tag, count(z.domain) nzones from servers s, zones z where z.server_id=s.id group by s.id;";
-		$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
-		while ($r = $dbclient->fetch_object($results)) {
-
-			?>
-
-			<div class="server">
-				<?php
-
-				echo "<a href='" . $config["html_root"] . "/?m=adm&z=service&op=manager&id=" . $r->tag . "'><img src=\"";
-				if ($named_ok == 1) {
-					echo $config["html_root"] . "/rs/img/server_up_50.png";
-					$status = "Operativo";
-				}
-				else {
-					echo $config["html_root"] . "/rs/img/server_down_50.png";
-					$status = "Desconectado";
-				}
-				echo "\" alt='server status'/></a>";
-				?>
-
-				<div>
-				<p>Servidor: <?php echo $r->tag;?></p>
-				<p>Estado: <?php echo $status;?></p>
-				<p>Zonas cargadas: <?php echo $r->nzones;?></p>
-				</div>
-			</div>
-		<?php
-		}
-		?>			
-
-		<a href="<?php echo $config["html_root"] . "/?m=adm" ?>">Volver</a>
+		<a class="return" href="<?php echo $config["html_root"] . "/?m=adm" ?>">Volver</a>
 	</section>
 </body>
 
