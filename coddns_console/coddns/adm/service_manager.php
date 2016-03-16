@@ -66,6 +66,10 @@ $user->check_auth_level($auth_level_required);
 						,$log_output
 						,$return);
 
+					exec ("tail -n 15 /var/named/data/named.security 2>&1"
+						,$security_log_output
+						,$return);
+
 					exec ("du -c -D -s -h /var/named/data | grep -i total | awk '{print $1}'"
 						,$log_size
 						,$return);
@@ -89,6 +93,14 @@ $user->check_auth_level($auth_level_required);
 						echo  $line . "\n";
 					}
 					echo "</pre>";
+					echo "<br>";
+					echo "<p>Informaci&oacute;n del log de seguridad:</p>";
+					echo "<pre>";
+					foreach ($security_log_output as $line){
+						echo  $line . "\n";
+					}
+					echo "</pre>";
+	
 				}
 				else {
 					echo "<p>Bind est&aacute; detenido. No hay ninguna instancia activa</p>";
