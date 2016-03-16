@@ -13,3 +13,9 @@ section a {
 section a:hover{
 	border-bottom: 2px solid #EC8606;
 }
+div#settings_viewer {
+	padding: 40px;
+    width: 90%;
+    margin: 15px auto;
+}
+

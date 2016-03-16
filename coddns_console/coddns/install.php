@@ -150,7 +150,7 @@ $global_ok = 0;
 $writable_config_ok = 0;
 
 // check named service:
-exec ("rndc status 2>/dev/null | wc -l", $service_output, $return);
+exec ("rndc 2>&1 | tail | grep Version | wc -l", $service_output, $return);
 if (($return == 0) && ($service_output[0] >= 1)) { $named_ok  = 1; }
 
 // check ddns_manager is present
@@ -197,7 +197,7 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 			<ul>
 				<li>
 					<div class="status <?php check_item($named_ok);?>">&nbsp;</div>
-						<b>Bind - Servicio DNS</b>
+						<b>Bind - Servicio DNS</b> <?php echo $service_status[0];?>
 				</li>
 				<li>
 					<div class="status <?php check_item($dnsmgr_ok);?>">&nbsp;</div>
