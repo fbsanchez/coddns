@@ -150,8 +150,8 @@ $global_ok = 0;
 $writable_config_ok = 0;
 
 // check named service:
-exec ("rndc 2>&1 | tail | grep Version | wc -l", $service_output, $return);
-if (($return == 0) && ($service_output[0] >= 1)) { $named_ok  = 1; }
+exec ("rndc 2>&1 | tail | grep Version", $service_output, $return);
+if ($return == 0) { $named_ok  = 1; }
 
 // check ddns_manager is present
 exec ("which dnsmgr | wc -l", $dnsmgr_output, $return);
