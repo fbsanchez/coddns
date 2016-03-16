@@ -197,7 +197,7 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 			<ul>
 				<li>
 					<div class="status <?php check_item($named_ok);?>">&nbsp;</div>
-						<b>Bind - Servicio DNS</b><br><span style="fontsize: 0.9em;text-indent:15px;"> <?php echo $service_output[0];?> </span>
+						<b>Bind - Servicio DNS</b><br><span style="font-size: 0.9em;margin-left: 25px;"> <?php echo $service_output[0];?> </span>
 				</li>
 				<li>
 					<div class="status <?php check_item($dnsmgr_ok);?>">&nbsp;</div>
