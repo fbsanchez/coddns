@@ -70,7 +70,7 @@ $user->check_auth_level($auth_level_required);
 						,$log_size
 						,$return);
 
-					exec ("/etc/init.d/named status 2>&1", $status_output, $return);
+					exec ("rndc status 2>&1", $status_output, $return);
 
 					echo "<p>Volcado de estado del servicio:</p><pre>";
 					foreach ($status_output as $line) {
