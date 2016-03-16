@@ -225,6 +225,7 @@ if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"
             echo "menu_item_priv_zone.className='pl';\n";
         }
     ?>
+		menu_item_contact.className='pl';
         menu_item_policy.className='pl';
         menu_item_cookies.className='pl';
 
@@ -243,10 +244,10 @@ if (check_show($user,null,"logout",null)) {
 <?php } ?>
 
         <li>
-            <a id="menu_item_policy"  href="#" class="pl" onclick="red(this,'main_section','cpolicy.html');"><?php echo $text[$lan]["cookie_policy"];?></a>
+            <a id="menu_item_policy"  href="#" class="pl" onclick="red(this,'main','cpolicy.html');"><?php echo $text[$lan]["cookie_policy"];?></a>
         </li>
         <li>
-            <a id="menu_item_cookies" href="#" class="pl" onclick="red(this,'main_section','terms.html');"><?php echo $text[$lan]["terms"];?></a>
+            <a id="menu_item_cookies" href="#" class="pl" onclick="red(this,'main','terms.html');"><?php echo $text[$lan]["terms"];?></a>
         </li>
     </ul>
     <div style="display:inline-block;">

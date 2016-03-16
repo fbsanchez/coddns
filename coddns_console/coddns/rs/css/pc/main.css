@@ -15,6 +15,7 @@ body{
 }
 div#main{
     margin-left: 200px;
+	padding: 25px;
     padding-top: 50px;
     background: #fff;
 }
@@ -35,9 +36,9 @@ h3 {
     margin: 15px 0;
 }
 section {
-    width: 80%;
     min-width: 500px;
     margin: 0 auto; 
+    overflow: hidden;
 }
 
 div#ajax_message_wrapper{
@@ -63,11 +64,6 @@ div#ajax_message_wrapper a#ajax_message_close{
 }
 div#ajax_message_wrapper a#ajax_message_close:hover{
     font-weight: bold;
-}
-section{
-    width: 60%;
-    margin: 0 auto;
-    overflow: hidden;
 }
 section#signin{
 }

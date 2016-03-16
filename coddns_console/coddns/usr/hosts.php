@@ -31,8 +31,8 @@ $user->check_auth_level($auth_level_required);
 
 
 /* CASTELLANO */
+$text["es"]["hosts_title"] = "<h2>Gestor de etiquetas</h2>";
 $text["es"]["hosts_welcome"] = "
-    <h2>Gestor de etiquetas</h2>
     <p>Aqu&iacute; puedes agregar nuevas etiquetas para tus dispositivos (<i>hosts</i>) o administrar las existentes.</p>
     <p>Recuerda que la responsabilidad sobre los contenidos que abras a Internet es s&oacute;lo tuya.</p>
 ";
@@ -46,6 +46,7 @@ $text["es"]["dberror"]       = "Wooops, contacte con el administrador";
 $text["es"]["reg_type"]      = "Tipo de registro";
 
 /* ENGLISH */
+$text["en"]["hosts_title"] = "<h2>Gestor de etiquetas</h2>";
 $text["en"]["hosts_welcome"] = "
     <h2>Tag manager</h2>
     <p>Here you can add new tags for your devices (<i>hosts</i>) or manage them.</p>
@@ -61,6 +62,7 @@ $text["en"]["dberror"]       = "Wooops, please contact the administrator at foot
 $text["en"]["reg_type"]      = "DNS record type";
 
 /* DEUTSCH */
+$text["de"]["hosts_title"] = "<h2>Gestor de etiquetas</h2>";
 $text["de"]["hosts_welcome"] = "
     <h2>Tag manager</h2>
     <p>Here you can add new tags for your devices (<i>hosts</i>) or manage them.</p>
@@ -169,9 +171,10 @@ $text["de"]["reg_type"]      = "DNS record type";
 
 <body>
 <section style="text-align: justify; margin-bottom: 20px;">
-<?php
-echo $text[$lan]["hosts_welcome"];
-?>
+<?php echo $text[$lan]["hosts_title"]; ?>
+<div style="width: 80%; margin: 0 auto;">
+<?php echo $text[$lan]["hosts_welcome"];?>
+</div>
 </section>
 <section class="uarea">
     <form id="newhost" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
