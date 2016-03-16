@@ -236,7 +236,6 @@ if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"
 </div>
 <div id="contact">
     <ul>
-
     <?php
 if (check_show($user,null,"logout",null)) {
 ?>

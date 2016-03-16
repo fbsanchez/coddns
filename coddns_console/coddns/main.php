@@ -37,8 +37,8 @@ session_write_close();
 
 
 /* CASTELLANO */
+$text["es"]["main_title"]="<h2>&iexcl;Hola!</h2>";
 $text["es"]["main_welcome"]="
-    <h2>&iexcl;Hola!</h2>
     <p>&iquest;Necesitas acceso a tu <b>servidor privado</b> de casa <b>desde internet</b>? &iquest;o quieres ver las c&aacute;maras de vigilancia de tu domicilio? Es posible que prefieras <b>acceder a tus contenidos multimedia desde cualquier sitio</b> sin tener que cargar con un disco duro extra&iacute;ble o contratar (y pagar...) una IP est&aacute;tica, o tener que confirmar tu direcci&oacute;n de correo cada mes para mantener el servicio...</p>
     <br>
     <img src=\"" . $config["html_root"] . "/rs/img/coddns_schema.png\" alt='schema'/>
@@ -56,8 +56,8 @@ $text["es"]["main_welcome"]="
 ";
 
 /* ENGLISH */
+$text["en"]["main_title"]="<h2>Hi!</h2>";
 $text["en"]["main_welcome"]="
-    <h2>Hi!</h2>
     <p>Need access to your <b>private server</b> at home <b>from Internet?</b> Or do you want to see the surveillance cameras in your home? You may prefer to <b>access your personal media from anywhere</b> without having to carry a removable hard drive or hire (and paid...) a static IP, or have to confirm your email every month to keep the service ...</p>
     <br>
     <img src=\"" . $config["html_root"] . "/rs/img/coddns_schema.png\" alt='schema'/>
@@ -75,6 +75,7 @@ $text["en"]["main_welcome"]="
 ";
 
 /* DEUTSCH */
+$text["de"]["main_title"]="<h2>Hallo!</h2>";
 $text["de"]["main_welcome"]="
     <h2>Hallo!</h2>
     <p>Ben&ouml;tigen den Zugriff auf Ihre privaten Server zu Hause? Oder wollen Sie, um die &uuml;berwachungskameras in Ihrem Haus sehen? Sie k&ouml;nnen es vorziehen, Ihre Medien von &uuml;berall aus zugreifen, ohne eine Wechselfestplatte durchf&uuml;hren oder mieten Sie eine statische IP, oder m&uuml;ssen Sie Ihre E-Mail best&auml;tigen jeden Monat, um den Dienst zu halten...</p>
@@ -110,10 +111,15 @@ $text["de"]["remember"]    = "Did you forgot your password?";
 <head>
 <style type="text/css">
     section img{
-        width: 70%;
-        margin: 0 auto 15px;
-        display: block;
+	    width: 50%;
+	    min-width: 450px;
+	    margin: 0 auto 15px;
+	    display: block;
     }
+	article {
+		width: 80%;
+		margin: 40px auto;
+	}
 
 </style>
 </head>
@@ -121,6 +127,7 @@ $text["de"]["remember"]    = "Did you forgot your password?";
 <body>
 
 <section style="margin-bottom: 20px; text-align: justify;">
+<?php echo $text[$lan]["main_title"];?>
 <article>
     <?php echo $text[$lan]["main_welcome"];?>
 </article>
