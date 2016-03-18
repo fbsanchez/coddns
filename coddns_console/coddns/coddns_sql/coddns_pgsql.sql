@@ -194,7 +194,7 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('adm','servers','status',100),
     ('adm','zones','',100),
     ('cms','','',0),
-    ('ajax','','',0);
+    ('','ajax','',0);
 
 -- RECORD_TYPES
 INSERT INTO record_types(tag,description,auth_level)

@@ -20,7 +20,7 @@ require_once (dirname(__FILE__) . "/lib/db.php");
 require_once (dirname(__FILE__) . "/lib/util.php");
 require_once (dirname(__FILE__) . "/lib/coduser.php");
 
-$auth_level_required = get_required_auth_level('ajax','','');
+$auth_level_required = get_required_auth_level('','ajax','');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
