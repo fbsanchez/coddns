@@ -91,7 +91,7 @@ img.add {
 }
 .button_return {
     width: 100px;
-    padding-left: 75%;
+    right: 15px;
     position: fixed;
     bottom: 0;
     height: 15%;
@@ -106,6 +106,7 @@ nav ul li {
     display: inline-block;
 }
 
-nav ul li:active:before {
-    background-color: blue;
+nav ul li a.selected > div {
+    color: #fff;
+    background-color: #1F282B; 
 }
