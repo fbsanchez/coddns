@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS site_acl(
     m character varying(200),
     z character varying(200),
     op character varying(200),
+    tag character varying(200) default NULL,
     auth_level int NOT NULL DEFAULT 100,
     CONSTRAINT pkey_site_acl PRIMARY KEY(m,z,op)
 );
@@ -168,6 +169,7 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('','logout','',0),
     ('','main','',0),
     ('','rest_host','',0),
+    ('','contact','',0),
     ('usr','','',1),
     ('usr','hosts','',1),
     ('usr','hosts','mod',1),
@@ -188,6 +190,9 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('adm','site','manager',100),
     ('adm','service','',100),
     ('adm','service','manager',100),
+    ('adm','servers','',100),
+    ('adm','servers','status',100),
+    ('adm','zones','',100),
     ('cms','','',0),
     ('ajax','','',0);
 

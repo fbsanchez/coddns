@@ -140,8 +140,12 @@ section a:hover{
 }
 
 a.return{
-    display:block;
+    display: block;
     position: fixed;
     left: 230px;
+    padding: 5px;
     bottom: 20px;
+    background: #fff;
+    border-radius: 25%;
+    box-shadow: 0 0 5px 2px #ddd;
 }

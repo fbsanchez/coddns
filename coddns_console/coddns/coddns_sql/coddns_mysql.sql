@@ -138,6 +138,7 @@ CREATE TABLE IF NOT EXISTS site_acl(
     z varchar(200),
     op varchar(200),
     auth_level int NOT NULL DEFAULT 100,
+    tag character varying(200) default NULL,
     CONSTRAINT pkey_site_acl PRIMARY KEY(m,z,op)
 ) engine=InnoDB;
 
