@@ -21,3 +21,4 @@ $RECYCLE.BIN/
 # CMS Integration
 coddns_console/coddns/cms/*
 coddns_console/coddns/include/config.php
+/code/coddns/coddns_core/opt/ddns/coddns_core
