@@ -50,7 +50,7 @@ div#ajax_message_wrapper{
     left: 50%;
     margin-left: -200px;
     border: 1px solid #ddd;
-    box-shadow: 0px 2px 3px #ddd;
+    box-shadow: 0px 5px 20px -5px #343434;
     background: #fff;
     transition: max-height 0.3s 0s;
 }
@@ -64,6 +64,9 @@ div#ajax_message_wrapper a#ajax_message_close{
 }
 div#ajax_message_wrapper a#ajax_message_close:hover{
     font-weight: bold;
+}
+div#ajax_message{
+    padding: 15px;
 }
 section#signin{
 }

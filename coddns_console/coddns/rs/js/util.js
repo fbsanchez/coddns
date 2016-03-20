@@ -221,3 +221,46 @@ function minimize_menu(){
 function raise_ajax_message(){
   ajax_message_wrapper.style['max-height'] = '200px';
 }
+
+/**
+ * Move window over the page
+ *
+ *
+ **/
+var item=null;
+window.onmousedown = function (e){
+  if(e.target.id){
+    t =  document.getElementById(e.target.id);
+    if(t.attributes.draggable){
+      item = t;
+      document.body.style["user-select"]= "none";
+      document.body.style["-webkit-user-select"]="none";
+      document.body.style["-moz-user-select"]= "none";
+      document.body.style["-khtml-user-select"]= "none";
+      document.body.style["-ms-user-select"]= "none";
+    }
+  }
+}
+window.onmouseup = function (e){
+  if(item){
+    item.style.cursor="auto";
+    item=null;
+    document.body.style["user-select"]= "auto";
+    document.body.style["-webkit-user-select"]="auto";
+    document.body.style["-moz-user-select"]= "auto";
+    document.body.style["-khtml-user-select"]= "auto";
+    document.body.style["-ms-user-select"]= "auto";
+  }
+};
+window.onmousemove = function (e){ 
+  if(item){
+    item.style.top=(e.clientY)+"px";
+    item.style.left=(e.clientX)+"px"; 
+    item.style.position="fixed";
+    item.style.cursor="all-scroll";
+  }
+};
+
+/**
+ * END: Move window over the page
+ **/
