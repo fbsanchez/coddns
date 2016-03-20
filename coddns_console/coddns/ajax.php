@@ -240,16 +240,18 @@ function list_acls($data) {
 
     $dbclient->connect();
 
-	$q = "select * from site_acl;";
+	$q = "select sa.tag, r.tag as rol from roles r, site_acl sa where sa.auth_level=r.auth_level;
+";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+	$l = "select tag from roles;";
+	$s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 
 	?>
 
 	<table>
 		<thead>
 			<tr>
-				<td>M</td>
-				<td>z</td>
 				<td>P&aacutegina</td>
 				<td>Nivel de Aturizaci&oacuten	</td>
 			</tr>
@@ -259,10 +261,14 @@ function list_acls($data) {
 	?>
 		<tbody>
 		    <tr>
-		        <td><?php echo $row["m"];?></td>
-		        <td><?php echo $row["z"];?></td>
-		        <td><?php echo $row["op"];?></td>
-		        <td><?php echo $row["auth_level"];?></td>
+		        <td><?php echo $row["tag"];?></td>
+		        <td>
+		        	<select>
+		        		<?php while ($row2 = $dbclient->fetch_array ($s)) { ?>
+		        		<option selected="<?php echo $row["auth_level"];?>"><?php echo $row2['tag']; ?></option>
+		        		<?php } ?>
+		        	</select>
+		        </td>
 		    </tr>
 	    </tbody>
 	<?php
