@@ -125,20 +125,25 @@ function list_users($data) {
 
     $dbclient->connect();
 
-	//$q = "select mail, last_login, ip_last_login from users where rol = 2;";
-	//$l = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
-	$q = "select * from users;";
+	$q = "select u.mail as mail, r.tag as rol, u.ip_last_login as ip_last_login, u.last_login as last_login, u.first_login as first_login from users u, roles r where r.id=u.rol;";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 	?>
+	<div>
+		<button onclick="pop_up_function()">Crear un nuevo usuario</button>
+		<button>Eliminar seleccionados</button>
+		<button>Eliminar Todos Menos El Administrador</button>
+	</div>
 
 	<table>
 		<thead>
 			<tr>
 				<td>Email</td>
-				<td>Login</td>
-				<td>Ip Login</td>
+				<td>Rol</td>
+				<td>&Uacuteltimo acceso</td>
+				<td>Ip &Uacuteltimo acceso</td>
+				<td>Miembro desde</td>
+				<td>Acciones</td>
 			</tr>
 		</thead>
 	<?php
@@ -147,8 +152,14 @@ function list_users($data) {
 		<tbody>
 		    <tr>
 		        <td><?php echo $row["mail"];?></td>
+		        <td><?php echo $row["rol"];?></td>
+		        <td><?php echo $row["ip_last_login"]?></td>
+		        <td><?php echo $row["last_login"];?></td>
 		        <td><?php echo $row["first_login"];?></td>
-		        <td><?php echo $row["ip_first_login"];?></td>
+		        <td>
+		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
+		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/></a>
+		        </td>
 		    </tr>
 	    </tbody>
 	<?php
@@ -175,27 +186,41 @@ function list_groups($data) {
 	$q = "select * from groups;";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
+	$l = "select count(u.id) as count_user from users u, groups g, tusers_groups ug where u.id = ug.oid and g.id = ug.gid;";
+	$s = $dbclient->exeq($l) or die ($dbclient->lq_error());
+
 	?>
+
+	<div>
+		<button>Crear un nuevo grupo</button>
+		<button>Eliminar grupos seleccionados</button>
+	</div>
 
 	<table>
 		<thead>
 			<tr>
 				<td>Nombre</td>
 				<td>Descripci&oacuten</td>
+				<td>Miembros</td>
+				<td>Acciones</td>
 			</tr>
 		</thead>
 	<?php
-	while ($row = $dbclient->fetch_array ($r)) {
+	while ($row = $dbclient->fetch_array ($r) and $row2 = $dbclient->fetch_array ($s)) {
 	?>
 		<tbody>
 		    <tr>
 		        <td><?php echo $row["tag"];?></td>
 		        <td><?php echo $row["description"];?></td>
+		        <td><?php echo $row2["count_user"];?></td>
+		        <td>
+		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
+		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/></a>
+		        </td>
 		    </tr>
 	    </tbody>
 	<?php
 	}
-
 	$dbclient->disconnect();
 }
 

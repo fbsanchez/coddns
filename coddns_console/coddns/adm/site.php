@@ -29,6 +29,15 @@ $auth_level_required = get_required_auth_level('adm','site','');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
+$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+
+$dbclient->connect();
+
+$q = "select tag from roles;";
+$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+$l = "select tag from groups;";
+$s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 ?>
 
 
@@ -74,6 +83,10 @@ $user->check_auth_level($auth_level_required);
 	 		id.childNodes[1].childNodes[1].setAttribute("src", "<?php echo $config["html_root"] . "/rs/img/people-2.png"; ?>");
 	 	}
 	 }
+
+	 function pop_up_function(){
+	 	console.log('vamos por aki');
+	 }
 </script>
 <body>
 	<section>
@@ -96,8 +109,44 @@ $user->check_auth_level($auth_level_required);
 		</nav>
 	</section>
 	<section id="adm_site_section">
-		<div id="content_group">
-
+		<div>
+			<form>
+				<table>
+					<tr>
+						<th>Email</th>
+						<td><input type="text" name="email" placeholder="coddns@gmail.com"></input></td>
+					</tr>
+					<tr>
+						<th>Rol</th>
+						<td>
+							<select>
+								<?php
+								while ($row = $dbclient->fetch_array ($r)) {
+								?>
+									<option name="rol"><?php echo $row['tag']; ?></option>
+								<?php
+								}
+								?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>Grupos</th>
+						<td>
+							<select>
+								<?php
+								while ($row = $dbclient->fetch_array ($s)) {
+								?>
+									<option name="grupos"><?php echo $row['tag']; ?></option>
+								<?php
+								}
+								?>
+							</select>
+						</td>
+					</tr>
+				</table>
+				<input type="submit"></input>
+			</form>
 		</div>
 	</section>
 	<a href="<?php echo $config["html_root"] . "/?m=adm" ?>" title="Return" class="button_return">
