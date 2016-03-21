@@ -233,11 +233,15 @@ function minimize_menu(){
  * Toggle the visibility of an id
  */
 function toggleDisplay(id){
-  if (id.style.display == "none"){
-    id.style.display = "block";
+  var item=getElementById(id);
+  if (! item){
+    return false;
+  }
+  if (item.style.display == "none"){
+    item.style.display = "block";
   }
   else {
-    id.style.display = "none";
+    item.style.display = "none";
   }
 }
 
