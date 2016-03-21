@@ -48,9 +48,9 @@ $user->check_auth_level($auth_level_required);
 		}
 	}
 	function mark(id){
-		document.getElementById("service").className="";
-		document.getElementById("servers").className="";
-		document.getElementById("zones").className="";
+		document.getElementById("link_service").className="";
+		document.getElementById("link_servers").className="";
+		document.getElementById("link_zones").className="";
 		id.className = "selected";
 	}
 </script>
