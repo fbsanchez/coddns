@@ -201,7 +201,7 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','server','manager',100,'Configuraci&oacute;n del servidor'),
     ('adm','server','rq_manager',100,'Receptor de formulario de configuraci&oacute;n del servidor'),
     ('adm','zones','',100,'Administraci&oacute;n de zonas'),
-    ('cms','','',0,'Documentaci&oacute;n'),;
+    ('cms','','',0,'Documentaci&oacute;n');
 
 -- RECORD_TYPES
 INSERT INTO record_types(tag,description,auth_level)
