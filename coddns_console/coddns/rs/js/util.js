@@ -233,7 +233,7 @@ function minimize_menu(){
  * Toggle the visibility of an id
  */
 function toggleDisplay(id){
-  var item=getElementById(id);
+  var item=document.getElementById(id);
   if (! item){
     return false;
   }
