@@ -20,6 +20,11 @@ require_once(dirname(__FILE__) . "/../lib/db.php");
 require_once(dirname(__FILE__) . "/../lib/util.php");
 require_once(dirname(__FILE__) . "/../lib/coduser.php");
 
+if (! defined("_VALID_ACCESS")) { // Avoid direct access
+    header ("Location: " . $config["html_root"] . "/");
+    exit (1);
+}
+
 $auth_level_required = get_required_auth_level('adm','server','manager');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
@@ -63,12 +68,13 @@ $r = $dbclient->get_sql_object("Select * from servers where tag='$servername'");
 	<pre contenteditable="true" id="gconf">
 	<?php
 	// Read and show main named.conf
-	read_file("/etc/named.conf");
+	//read_file("/etc/named.conf");
+	read_file("/var/named/data/test.txt");
 	?>
 	</pre>
 
 	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server_rq_manager.php', true);return false;">
-	<input id="gconf_input" type="hidden" />
+	<input id="gconf_input" name="gconf_input" type="hidden" />
 	<ul>
 		<li>
 			<input type="submit" value="Actualizar" />

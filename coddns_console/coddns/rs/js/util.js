@@ -17,83 +17,83 @@
 /**
  * Copies the content of DOM object with id a in b
  */
-function copyContent (a,b) {
-    document.getElementById(b).value =  
-        atob(document.getElementById(a).innerHTML);
-    return true;
+ function copyContent (a,b) {
+  document.getElementById(b).value =  
+  btoa(document.getElementById(a).innerHTML);
+  return true;
 }
 
 
 /**
  * Serializes the variables of a given formulary
  */
-function serialize(form){
-    if(!form||form.nodeName!=="FORM")
-        {return }
-        var i,j,q=[];
-        for(i=form.elements.length-1;i>=0;i=i-1){
-                if(form.elements[i ].name===""){
-                        continue
-                }
-                switch(form.elements[i].nodeName){
-                case"INPUT":
-                        switch(form.elements[i].type){
-                        case"text":
-                        case"hidden":
-                        case"button":
-                        case"reset":
-            case"number":
-            case"email":
-                        case"submit":
-                                q.push(form.elements[i].name+"="+encodeURIComponent(form.elements[i].value));
-                                break;
-                        case"checkbox":
-                        case "radio":
-                                if(form.elements[i].checked){
-                                        q.push(form.elements[i].name+"="+encodeURIComponent(form.elements[i].value))
-                                }
-                                break;
-                case"password":
-                    q.push(form.elements[i].name+"="+encodeURIComponent(btoa(form.elements[i].value)));
-                    break;
-                        case"file":break;
-                        }
-                        break;
-                case"TEXTAREA":
-                        q.push(form.elements[i].name+"="+encodeURIComponent(form.elements[i].value));
-                        break;
-                case"SELECT":
-                        switch(form.elements[i ].type){
-                        case"select-one":
-                                q.push(form.elements[i].name+"="+encodeURIComponent(form.elements[i].value));
-                                break;
-                        case"select-multiple":
-                                for(j=form .elements[i].options.length-1;j>=0;j=j-1){
-                                        if(form.elements[i].options[j].selected){
-                                                q.push(form.elements[i].name+"="+encodeURIComponent(form. elements[i].options[j].value))
-                                        }
-                                }
-                                break;
-                        }
-                break;
-                case"BUTTON":
-                        switch(form.elements[i].type){
-                        case"reset":
-                        case"submit":
-                        case"button":
-                                q.push(form. elements[i].name+"="+encodeURIComponent(form.elements[i].value));
-                                break;
-                        }
-                        break;
-                }
+ function serialize(form){
+  if(!form||form.nodeName!=="FORM")
+    {return }
+  var i,j,q=[];
+  for(i=form.elements.length-1;i>=0;i=i-1){
+    if(form.elements[i].name===""){
+      continue;
+    }
+    switch(form.elements[i].nodeName){
+      case"INPUT":
+      switch(form.elements[i].type){
+        case"text":
+        case"hidden":
+        case"button":
+        case"reset":
+        case"number":
+        case"email":
+        case"submit":
+        q.push(form.elements[i].name+"="+encodeURIComponent(form.elements[i].value));
+        break;
+        case"checkbox":
+        case "radio":
+        if(form.elements[i].checked){
+          q.push(form.elements[i].name+"="+encodeURIComponent(form.elements[i].value))
         }
-        return q.join("&");
+        break;
+        case"password":
+        q.push(form.elements[i].name+"="+encodeURIComponent(btoa(form.elements[i].value)));
+        break;
+        case"file":break;
+      }
+      break;
+      case"TEXTAREA":
+      q.push(form.elements[i].name+"="+encodeURIComponent(form.elements[i].value));
+      break;
+      case"SELECT":
+      switch(form.elements[i ].type){
+        case"select-one":
+        q.push(form.elements[i].name+"="+encodeURIComponent(form.elements[i].value));
+        break;
+        case"select-multiple":
+        for(j=form .elements[i].options.length-1;j>=0;j=j-1){
+          if(form.elements[i].options[j].selected){
+            q.push(form.elements[i].name+"="+encodeURIComponent(form. elements[i].options[j].value))
+          }
+        }
+        break;
+      }
+      break;
+      case"BUTTON":
+      switch(form.elements[i].type){
+        case"reset":
+        case"submit":
+        case"button":
+        q.push(form. elements[i].name+"="+encodeURIComponent(form.elements[i].value));
+        break;
+      }
+      break;
+    }
+  }
+  return q.join("&");
 };
 
 /* INPUT VALIDATION */
 function validateEmail(email) {
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
+  var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(email);
 }
 
 
@@ -107,7 +107,7 @@ function evalScript( elem ) {
   head.insertBefore( script, head.firstChild );
   head.removeChild( script );
   if ( elem.parentNode ) {
-      elem.parentNode.removeChild( elem );
+    elem.parentNode.removeChild( elem );
   }
 }
 
@@ -126,10 +126,10 @@ var html = { // Default values
   xmlHttp  : null,
   send     : function (){
     if (window.XMLHttpRequest){
-        this.xmlHttp=new XMLHttpRequest();
+      this.xmlHttp=new XMLHttpRequest();
     }
     else {
-        this.xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+      this.xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
     }
     if( this.method == "GET" ){
       this.xmlHttp.open( this.method, this.url+"?"+this.args, this.sync );
@@ -143,18 +143,18 @@ var html = { // Default values
     this.xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     if( this.callback )
       this.xmlHttp.onreadystatechange = function () {
-                                          if(this.readyState == 4 &&this.status == 200){
-                                            html.response = this.response;
-                                            html.callback();
-                                            if(html.scroll){
-                                              window.scrollTo(0,0);
-                                            }
-                                            html.scroll = true;
-                                          }
-                                        }
-    this.xmlHttp.send( this.args );
+        if(this.readyState == 4 &&this.status == 200){
+          html.response = this.response;
+          html.callback();
+          if(html.scroll){
+            window.scrollTo(0,0);
+          }
+          html.scroll = true;
+        }
+      }
+      this.xmlHttp.send( this.args );
+    }
   }
-}
 
 
 /**
@@ -163,7 +163,7 @@ var html = { // Default values
  * rsc activates the script recognizer of html received.
  *
  */
-function updateContent(id, url, query, rsc, myEvent, method) {
+ function updateContent(id, url, query, rsc, myEvent, method) {
   html.url      = url;
   html.args     = query;
   if( method )
@@ -172,16 +172,16 @@ function updateContent(id, url, query, rsc, myEvent, method) {
     html.method   = "POST";
   html.callback = function() {
     if(html.xmlHttp.readyState == 4 && html.xmlHttp.status == 200){
-        if ( id )
-          document.getElementById(id).innerHTML=html.response;
-        if ( rsc ){
-          var myScripts = document.getElementsByTagName('script');
-          while (myScripts.length > 0){
-            evalScript(myScripts[0]);
-          }
+      if ( id )
+        document.getElementById(id).innerHTML=html.response;
+      if ( rsc ){
+        var myScripts = document.getElementsByTagName('script');
+        while (myScripts.length > 0){
+          evalScript(myScripts[0]);
         }
-        if(myEvent)
-          myEvent();
+      }
+      if(myEvent)
+        myEvent();
     }
   };
   html.scroll   = false;
@@ -239,8 +239,8 @@ function raise_ajax_message(){
  *
  *
  **/
-var item=null;
-window.onmousedown = function (e){
+ var item=null;
+ window.onmousedown = function (e){
   if(e.target.id){
     t =  document.getElementById(e.target.id);
     if(t.attributes.draggable){
@@ -281,10 +281,10 @@ window.onmousemove = function (e){
 /**
  * Colors generation based on static array
  */
-var colors = ["#F92727","#2F97B9","#69A037","#E4D51A"];
-var ncolors = 4;
-var color_index = -1;
-function getNextColor(){
+ var colors = ["#F92727","#2F97B9","#69A037","#E4D51A"];
+ var ncolors = 4;
+ var color_index = -1;
+ function getNextColor(){
   return colors[(color_index = (color_index+1)%ncolors)];
 }
 
