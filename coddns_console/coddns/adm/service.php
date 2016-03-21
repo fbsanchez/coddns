@@ -41,8 +41,10 @@ $user->check_auth_level($auth_level_required);
 <script type="text/javascript">
 	var anchors = location.href.split('#');
 	window.onload = function (){
-		if (document.getElementById(anchors[1])){
-			document.getElementById(anchors[1]).onclick();
+		var tab="link_" + anchors[1];
+
+		if (document.getElementById(tab)){
+			document.getElementById(tab).onclick();
 		}
 	}
 	function mark(id){
@@ -55,19 +57,29 @@ $user->check_auth_level($auth_level_required);
 </head>
 
 <body>
+
+<?php
+$clickservices = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/service_status.php');\"";
+$clickservers = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/servers.php');\"";
+$clickzones = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/zones.php');\"";
+
+?>
+<a id="service" style="display:none;"></a>
+<a id="servers" style="display:none;"></a>
+<a id="zones" style="display:none;"></a>
 	<section>
 		<h2>Centro de administraci&oacute;n</h2>
 
 		<nav>
-			<a id="service" href="#service" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
+			<a id="link_service" href="#service" class="" <?php echo $clickservices; ?> >
 				Servicio
 			</a>
 
-			<a id="servers" href="#servers" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/servers.php"?>');">
+			<a id="link_servers" href="#servers" class="" <?php echo $clickservers; ?> >
 				Servidores
 			</a>
 
-			<a id="zones" href="#zones" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/zones.php"?>');">
+			<a id="link_zones" href="#zones" class="" <?php echo $clickzones; ?> >
 				Zonas
 			</a>
 		</nav>

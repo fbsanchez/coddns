@@ -47,7 +47,7 @@ $user->check_auth_level($auth_level_required);
 		<h2>Administraci&oacute;n del servicio</h2>
 		<nav>
 			<a id="s0" class="" onclick="mark(this);updateContent('adm_service_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
-				Servicio
+				Estado
 			</a>
 
 			<a id="s1" class="" onclick="mark(this);updateContent('adm_service_content','<?php echo $config["html_root"] . "/adm/service.php"?>');">

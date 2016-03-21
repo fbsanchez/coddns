@@ -215,7 +215,6 @@ function fsgo(fid, zoneid, url, reloadSC, launchEvent){
 // }
 
 visible_menu = 1;
-
 function minimize_menu(){
   if (visible_menu == 1){
     visible_menu = 0;
@@ -228,6 +227,18 @@ function minimize_menu(){
   header.className = "";
   main.removeAttribute("style");
   return false;
+}
+
+/**
+ * Toggle the visibility of an id
+ */
+function toggleDisplay(id){
+  if (id.style.display == "none"){
+    id.style.display = "block";
+  }
+  else {
+    id.style.display = "none";
+  }
 }
 
 function raise_ajax_message(){
