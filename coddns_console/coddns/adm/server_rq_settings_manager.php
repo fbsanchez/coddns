@@ -20,7 +20,7 @@ require_once(dirname(__FILE__) . "/../lib/db.php");
 require_once(dirname(__FILE__) . "/../lib/util.php");
 require_once(dirname(__FILE__) . "/../lib/coduser.php");
 
-$auth_level_required = get_required_auth_level('adm','server','rq_manager');
+$auth_level_required = get_required_auth_level('adm','server','rq_settings_manager');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
@@ -39,8 +39,9 @@ function check_valid_conf($conf){
 
 $config = secure_get("gconf_input", "base64");
 
-echo $config;
+write_file($config,"/var/named/data/test.txt");
 
+echo $config;
 
 
 ?>

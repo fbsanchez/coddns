@@ -65,9 +65,9 @@ $clickservers = "onclick=\"mark(this);updateContent('adm_content','" . $config["
 $clickzones = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/zones.php');\"";
 
 ?>
-<a id="service" style="display:none;"></a>
-<a id="servers" style="display:none;"></a>
-<a id="zones" style="display:none;"></a>
+	<a id="service" style="display:none;"></a>
+	<a id="servers" style="display:none;"></a>
+	<a id="zones" style="display:none;"></a>
 	<section>
 		<h2>Centro de administraci&oacute;n</h2>
 

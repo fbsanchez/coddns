@@ -28,11 +28,9 @@ $auth_level_required = get_required_auth_level('adm','server','manager');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
-$servername = secure_get("id");
-
-
-$dbclient = new DBClient($db_config);
-$r = $dbclient->get_sql_object("Select * from servers where tag='$servername'");
+if(!isset($servername)){
+	$servername = secure_get("id");
+}
 
 ?>
 
@@ -42,43 +40,64 @@ $r = $dbclient->get_sql_object("Select * from servers where tag='$servername'");
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/tabs.css" />
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/service_status.css"/>
 
 </head>
 
 <body>
-	<section>
-	<h3>Administrar <i><?php echo $servername;?></i></h3>
-	<h4>Informaci&oacute;n del servidor</h4>
-	
-	<ul style="margin: 15px 0;">
-		<li>
-			<label>Nombre:</label><input type="text" value="<?php echo $servername;?>"/>
-		</li>
-		<li>
-			<label>IP:</label><input type="text" value="<?php echo long2ip($r->ip);?>"/>
-		</li>
-		<li>
-			<label>Estado:</label><input type="text" value="<?php echo $r->status;?>"/>
-		</li>
-	</ul>
-	
-	<h4>Configuraci&oacute;n del servidor</h4>
-	<pre contenteditable="true" id="gconf">
-	<?php
-	// Read and show main named.conf
-	//read_file("/etc/named.conf");
-	read_file("/var/named/data/test.txt");
-	?>
-	</pre>
+<?php
+$clickstatus        = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server_status.php','id=" . $servername . "');\"";
+$clickcontrol       = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server_control.php','id=" . $servername . "');\"";
+$clickconfiguration = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server_settings_manager.php','id=" . $servername . "');\"";
+$clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server_versioning.php','id=" . $servername . "');\"";
 
-	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server_rq_manager.php', true);return false;">
-	<input id="gconf_input" name="gconf_input" type="hidden" />
-	<ul>
-		<li>
-			<input type="submit" value="Actualizar" />
-		</li>
-	</ul>
+?>
+	<a id="status" style="display:none;"></a>
+	<a id="control" style="display:none;"></a>
+	<a id="settings_manager" style="display:none;"></a>
+	<a id="versioning" style="display:none;"></a>
+	<script type="text/javascript">
+		var anchors = location.href.split('#');
+		window.onload = function (){
+			var tab="link_" + anchors[1];
+
+			if (document.getElementById(tab)){
+				document.getElementById(tab).onclick();
+			}
+		}
+		function mark(id){
+			document.getElementById("link_status").className="";
+			document.getElementById("link_control").className="";
+			document.getElementById("link_settings_manager").className="";
+			document.getElementById("link_versioning").className="";
+			document.getElementById("srv_content").innerHTML = "Cargando...";
+			id.className = "selected";
+		}
+	</script>
+	<section>
+	<h2>Administrar <i><?php echo $servername;?></i></h2>
+	<nav>
+		<a id="link_status" href="#status" class="" <?php echo $clickstatus; ?> >
+			Estado
+		</a>
+
+		<a id="link_control" href="#control" class="" <?php echo $clickcontrol; ?> >
+			Control
+		</a>
+
+		<a id="link_settings_manager" href="#settings_manager" class="" <?php echo $clickconfiguration; ?> >
+			Configuraci&oacute;n
+		</a>
+		<a id="link_versioning" href="#versioning" class="" <?php echo $clickversioning; ?> >
+			Backup
+		</a>
+	</nav>
+
+	<div id="srv_content" class="content">
+		
+	</div>
+
+
+	<a class="return" href="<?php echo $config["html_root"];?>/?m=adm&z=service#servers">Volver</a>
 	</section>
 </body>
 
