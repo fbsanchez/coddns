@@ -83,12 +83,8 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 	 		id.childNodes[1].childNodes[1].setAttribute("src", "<?php echo $config["html_root"] . "/rs/img/people-2.png"; ?>");
 	 	}
 	 }
-
-	 function pop_up_function(){
-	 	console.log('vamos por aki');
-	 }
 </script>
-<body>
+<body onload="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_users');">
 	<section>
 		<h2>Panel de administraci&oacute;n del sitio</h2>
 		<nav
@@ -108,46 +104,51 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 			</ul>
 		</nav>
 	</section>
-	<section id="adm_site_section">
-		<div>
-			<form>
-				<table>
-					<tr>
-						<th>Email</th>
-						<td><input type="text" name="email" placeholder="coddns@gmail.com"></input></td>
-					</tr>
-					<tr>
-						<th>Rol</th>
-						<td>
-							<select>
-								<?php
-								while ($row = $dbclient->fetch_array ($r)) {
-								?>
-									<option name="rol"><?php echo $row['tag']; ?></option>
-								<?php
-								}
-								?>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th>Grupos</th>
-						<td>
-							<select>
-								<?php
-								while ($row = $dbclient->fetch_array ($s)) {
-								?>
-									<option name="grupos"><?php echo $row['tag']; ?></option>
-								<?php
-								}
-								?>
-							</select>
-						</td>
-					</tr>
-				</table>
-				<input type="submit"></input>
+	<div id="form_create_users" style="display:none;" draggable>
+		<div class="pop_up_headers">
+			<h3>Crear Usuarios</h3>
+			<button class="pop_up_headers_close">X</button>
+		</div>
+		<div class="pop_up_body">
+			<form id="newusers" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
+				<ul>
+					<li>
+						<label>Email</label>
+						<input type="text" name="email" placeholder="coddns@gmail.com" required="required"></input>
+					</li>
+					<li>
+						<label>Rol</label>
+						<select>
+							<?php
+							while ($row = $dbclient->fetch_array ($r)) {
+							?>
+								<option name="rol"><?php echo $row['tag']; ?></option>
+							<?php
+							}
+							?>
+						</select>
+					</li>
+					<li>
+						<label>Grupos</label>
+						<select>
+							<?php
+							while ($row = $dbclient->fetch_array ($s)) {
+							?>
+								<option name="grupos"><?php echo $row['tag']; ?></option>
+							<?php
+							}
+							?>
+						</select>
+					</li>
+				</ul>
 			</form>
 		</div>
+		<div class="pop_up_footer">
+			<input type="submit"></input>
+		</div>
+	</div>
+	<section id="adm_site_section">
+		
 	</section>
 	<a href="<?php echo $config["html_root"] . "/?m=adm" ?>" title="Return" class="button_return">
 	<img src="<?php echo $config["html_root"] . "/rs/img/web-7.png"; ?>" alt="Service Settings"/></a>

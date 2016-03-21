@@ -130,7 +130,7 @@ function list_users($data) {
 
 	?>
 	<div>
-		<button onclick="pop_up_function()">Crear un nuevo usuario</button>
+		<button onclick="toggleDisplay('form_create_users')">Crear un nuevo usuario</button>
 		<button>Eliminar seleccionados</button>
 		<button>Eliminar Todos Menos El Administrador</button>
 	</div>
