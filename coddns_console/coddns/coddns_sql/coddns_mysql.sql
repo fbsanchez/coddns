@@ -175,6 +175,7 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('','rest_host','',0,'No tienes acceso'),
     ('','contact','',0,'Contactanos'),
     ('','ajax','',0,'Ajax'),
+    ('','err404','',0,'Ajax'),
     ('usr','','',1,''),
     ('usr','hosts','',1,'Gestor de etiquetas'),
     ('usr','hosts','mod',1,''),

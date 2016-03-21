@@ -67,7 +67,7 @@ $user->check_auth_level($auth_level_required);
 
 			<div class="server">
 
-				<a id="show_<?php echo $r->tag;?>" href="<?php echo $config["html_root"];?>?z=adm&m=server&op=manager&id=<?php echo $r->tag; ?>');">
+				<a id="show_<?php echo $r->tag;?>" href="<?php echo $config["html_root"];?>?z=adm&m=server&op=manager&id=<?php echo $r->tag; ?>">
 				<?php 
 				echo "<img src=\"";
 

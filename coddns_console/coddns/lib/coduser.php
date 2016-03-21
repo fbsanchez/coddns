@@ -213,7 +213,7 @@ class CODUser {
 		$auth_level = $this->load_auth_level();
 
 		if (! isset($level)){
-			redirect ($this->config["html_root"] . "/err404.html");
+			redirect ($this->config["html_root"] . "/?z=err404");
 			exit(0);
 		}
 
