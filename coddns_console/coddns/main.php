@@ -49,10 +49,12 @@ session_write_close();
 <body>
 
 <section style="margin-bottom: 20px; text-align: justify;">
+    <h1>Inicio</h1>
+    <article>
+        <h3>Estado general</h3>
 
-<article>
-    <?php echo $text[$lan]["main_welcome"];?>
-</article>
+        
+    </article>
 </section>
 </body>
 </html>

@@ -4,7 +4,6 @@ header{
 	width: 200px;
 	position: fixed;
 	background: #1F282B;
-	box-shadow: 0 0 1px #ccc;
 	color: #ddd;
 	overflow: hidden;
 	transition: width 0.2s 0s, height 0.4s 0.2s;
@@ -80,6 +79,7 @@ header a.pl:hover{
 header a.pl_select {
     color: #444;
     background: #fff;
+    border-left: 5px solid #EC8606;
 }
 
 nav {
