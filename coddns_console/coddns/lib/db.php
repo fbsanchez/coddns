@@ -191,6 +191,9 @@ class DBClient {
       case "json":{
         return json_decode($clsqlarg);
       }
+      case "base64":{
+        return base64_decode($clsqlarg);
+      }
       default: return null;
     }
   }

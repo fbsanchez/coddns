@@ -4,16 +4,17 @@ div.mtr_like {
 
 div.mtr_like a {
     display: block;
-    width: 250px;
-    height: 120px;
+    width: 180px;
+    height: 80px;
     background: #488BA0;
+    font-size: 1em;
     color: #fff;
     margin: 1px;
     float: left;
     border: 1px solid #ddd;
     box-shadow: 0 0 1px #ddd;
     text-align: center;
-    padding-top: 50px;
+    padding-top: 30px;
     transition: background 0.2s 0s;
 }
 

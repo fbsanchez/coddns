@@ -39,29 +39,35 @@ $user->check_auth_level($auth_level_required);
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/tabs.css">
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/adm_service.css">
 <script type="text/javascript">
+	var anchors = location.href.split('#');
+	window.onload = function (){
+		if (document.getElementById(anchors[1])){
+			document.getElementById(anchors[1]).onclick();
+		}
+	}
 	function mark(id){
-		document.getElementById("a0").className="";
-		document.getElementById("a1").className="";
-		document.getElementById("a2").className="";
+		document.getElementById("service").className="";
+		document.getElementById("servers").className="";
+		document.getElementById("zones").className="";
 		id.className = "selected";
 	}
 </script>
 </head>
 
-<body onload="mark(document.getElementById('a0'));updateContent('adm_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
+<body>
 	<section>
 		<h2>Centro de administraci&oacute;n</h2>
 
 		<nav>
-			<a id="a0" href="#servers" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
+			<a id="service" href="#service" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
 				Servicio
 			</a>
 
-			<a id="a1" href="#servers" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/servers.php"?>');">
+			<a id="servers" href="#servers" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/servers.php"?>');">
 				Servidores
 			</a>
 
-			<a id="a2" href="#zones" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/zones.php"?>');">
+			<a id="zones" href="#zones" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/zones.php"?>');">
 				Zonas
 			</a>
 		</nav>

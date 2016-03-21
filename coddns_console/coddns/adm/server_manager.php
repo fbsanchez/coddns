@@ -39,6 +39,7 @@ $r = $dbclient->get_sql_object("Select * from servers where tag='$servername'");
 <head>
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/tabs.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/service_status.css"/>
+
 </head>
 
 <body>
@@ -59,12 +60,20 @@ $r = $dbclient->get_sql_object("Select * from servers where tag='$servername'");
 	</ul>
 	
 	<h4>Configuraci&oacute;n del servidor</h4>
-	<pre>
+	<pre contenteditable="true" id="gconf">
 	<?php
 	// Read and show main named.conf
 	read_file("/etc/named.conf");
 	?>
 	</pre>
+
+	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server_rq_manager.php', true);return false;">
+	<input id="gconf_input" type="hidden" />
+	<ul>
+		<li>
+			<input type="submit" value="Actualizar" />
+		</li>
+	</ul>
 	</section>
 </body>
 

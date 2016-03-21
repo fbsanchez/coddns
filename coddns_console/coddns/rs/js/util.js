@@ -14,7 +14,19 @@
  * <summary> </summary>
  */
 
+/**
+ * Copies the content of DOM object with id a in b
+ */
+function copyContent (a,b) {
+    document.getElementById(b).value =  
+        atob(document.getElementById(a).innerHTML);
+    return true;
+}
 
+
+/**
+ * Serializes the variables of a given formulary
+ */
 function serialize(form){
     if(!form||form.nodeName!=="FORM")
         {return }

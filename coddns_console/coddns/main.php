@@ -58,7 +58,7 @@ if ($user->get_is_logged()){
 <section style="margin-bottom: 20px; text-align: justify;">
     <h1>Inicio</h1>
     <article>
-        <h3>Vista general</h3>
+        <h3>Resumen general</h3>
         <div class="chart_wrapper">
             <h4>Zonas por servidor</h4>
             <br>
@@ -88,7 +88,7 @@ if ($user->get_is_logged()){
     ?>
                 ];
                 var zone_usage_chart = new Chart(zone_usage).Pie(zonedata,{
-                    responsive : true,
+                    responsive : false,
                     animationEasing: "easeOutQuart",
                     animationSteps : 40,
                     legendTemplate : "<ul class=\"zone_usage-legend\">"

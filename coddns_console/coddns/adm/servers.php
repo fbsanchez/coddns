@@ -36,7 +36,6 @@ $user->check_auth_level($auth_level_required);
 
 <body>
 	<section>
-
 	<legend>Haz click en el servidor que desees administrar:</legend>
 <?php 
 		/*
@@ -68,7 +67,7 @@ $user->check_auth_level($auth_level_required);
 
 			<div class="server">
 
-				<a href="javascript:updateContent('server_info','<?php echo $config["html_root"]; ?>/adm/server_manager.php','id=<?php echo $r->tag; ?>');">
+				<a id="show_<?php echo $r->tag;?>" href="javascript:updateContent('server_info','<?php echo $config["html_root"]; ?>/adm/server_manager.php','id=<?php echo $r->tag; ?>');">
 				<?php 
 				echo "<img src=\"";
 
