@@ -90,6 +90,24 @@ function read_file($filepath,$mode = "r", $tostring = false){
     }
 }
 
+
+/**
+ * Reads a file and stores it in a string, or prints it to output
+ */
+function write_file($content, $filepath,$mode = "w"){
+    if (!isset($content)){
+        return null;
+    }
+    $file = @fopen($filepath, $mode);
+    if ($file) {
+        fwrite($file, $content);
+        fclose($file);
+        return 1;
+    }
+    return null;
+}
+
+
 /**
  * Securize an argument passed through GET method
  */

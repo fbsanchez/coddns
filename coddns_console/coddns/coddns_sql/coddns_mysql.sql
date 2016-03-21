@@ -143,6 +143,17 @@ CREATE TABLE IF NOT EXISTS site_acl(
 ) engine=InnoDB;
 
 
+-- Table versioning
+CREATE TABLE IF NOT EXISTS versioning(
+    id serial,
+    filepath varchar(1024),
+    original_filepath varchar(255),
+    created timestamp DEFAULT CURRENT_TIMESTAMP,
+    description text,
+    CONSTRAINT pkey_versioning PRIMARY KEY(id,original_filepath)
+) engine=InnoDB;
+
+
 -- EO Table definitions
 
 
@@ -199,8 +210,9 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','service','manager',100,'Administraci&oacute;n del servicios'),
     ('adm','servers','',100,'Administraci&oacute;n de servidores'),
     ('adm','server','status',100,'Estado del servidor'),
-    ('adm','server','manager',100,'Configuraci&oacute;n del servidor'),
-    ('adm','server','rq_manager',100,'Receptor de formulario de configuraci&oacute;n del servidor'),
+    ('adm','server','manager',100,'Centro de configuraci&oacute;n de servidores'),
+    ('adm','server','settings_manager',100,'Editor de configuraci&oacute;n de servidores'),
+    ('adm','server','rq_settings_manager',100,'Receptor de formulario de configuraci&oacute;n del servidor'),
     ('adm','zones','',100,'Administraci&oacute;n de zonas'),
     ('cms','','',0,'Documentaci&oacute;n');
 
