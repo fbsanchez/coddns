@@ -51,6 +51,7 @@ $user->check_auth_level($auth_level_required);
 		document.getElementById("link_service").className="";
 		document.getElementById("link_servers").className="";
 		document.getElementById("link_zones").className="";
+		document.getElementById("adm_content").innerHTML = "Cargando...";
 		id.className = "selected";
 	}
 </script>
