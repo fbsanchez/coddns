@@ -117,7 +117,8 @@ if ($user->get_is_logged()){
 
         <div class="mtr_like">
             <a href="<?php echo $config["html_root"] . "/?m=usr&z=hosts"; ?>">Gestionar hosts</a>
-            <a href="<?php echo $config["html_root"] . "/?m=adm&z=service"; ?>">Admininistrar el servicio</a>
+            <a href="<?php echo $config["html_root"] . "/?m=adm&z=service#service"; ?>">Admininistrar el servicio</a>
+            <a href="<?php echo $config["html_root"] . "/?m=adm&z=service#servers"; ?>">Admininistrar servidores</a>
             <a href="<?php echo $config["html_root"] . "/?m=adm&z=site"; ?>">Admininistrar el sitio</a>
             
         </div>
