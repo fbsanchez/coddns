@@ -31,6 +31,9 @@ if (!isset($_SESSION["lan"])){
 $lan = $_SESSION["lan"];
 session_write_close();
 
+if ($user->get_is_logged()){
+    redirect($config[html_root] . "/?z=usr&m=hosts");
+}
 
 /* CASTELLANO */
 $text["es"]["dberror"] = "<div class='err'>Wooops, contacte con el administrador del sitio</div>";

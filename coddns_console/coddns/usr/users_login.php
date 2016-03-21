@@ -36,6 +36,9 @@ if (!isset($_SESSION["lan"])){
 $lan = $_SESSION["lan"];
 session_write_close();
 
+if ($user->get_is_logged()){
+    redirect($config[html_root] . "/?z=usr&m=hosts");
+}
 
 
 /* CASTELLANO */
@@ -87,6 +90,10 @@ $text["en"]["remember"]    = "Did you forgot your password?";
     </form>
 </section>
 
+<?php
+if (get_required_auth_level('usr','users','signin') == 0){
+    // SHOW THE SIGNIN FORM IF IT'S ENABLED ON CONFIGURATION
+?>
 <section id="signin">
     <h2><?php echo $text[$lan]["main_reg"];?></h2>
     <form id="signinf" method="POST" action="usr/rq_signin.php" onsubmit="fsgo('signinf', 'signin_response','usr/users_rq_signin.php', true);return false;">
@@ -117,5 +124,16 @@ $text["en"]["remember"]    = "Did you forgot your password?";
     <div id="signin_response"></div>
     </form>
 </section>
-
+<?php
+}
+else {
+?>
+<section>
+    <article style="margin-top: 50px;">
+        <p>&gt; El registro no est&aacute; disponible, por favor, p&oacute;ngase en contacto con el administrador del sistema para recibir sus credenciales.</p>
+    </article>
+</section>
+<?php
+}
+?>
 

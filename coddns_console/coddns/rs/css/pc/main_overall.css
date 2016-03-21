@@ -1,0 +1,40 @@
+div.mtr_like {
+    width: 100%;
+}
+
+div.mtr_like a {
+    display: block;
+    width: 250px;
+    height: 120px;
+    background: #488BA0;
+    color: #fff;
+    margin: 1px;
+    float: left;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 1px #ddd;
+    text-align: center;
+    padding-top: 50px;
+    transition: background 0.2s 0s;
+}
+
+div.mtr_like a:hover {
+    box-shadow: 0 0 2px #888;
+    background: #EC8606;
+}
+
+
+div.chart_wrapper {
+    float: left;
+    margin: 15px;
+}
+
+article{
+    clear:both;
+    margin: 0px auto;
+    padding-bottom: 30px;
+}
+
+article.nav{
+    padding-top: 50px;
+    margin-top: 250px;
+}

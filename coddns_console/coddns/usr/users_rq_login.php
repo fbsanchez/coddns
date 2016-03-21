@@ -31,6 +31,10 @@ if (!isset($_SESSION["lan"])){
 $lan = $_SESSION["lan"];
 session_write_close();
 
+if ($user->get_is_logged()){
+    redirect($config[html_root] . "/?z=usr&m=hosts");
+}
+
 /* CASTELLANO */
 $text["es"]["err1"] = "<div class='err'>Rellene todos los datos</div>";
 $text["es"]["err2"] = "<div class='err'>No cumple las longitudes minimas</div>";

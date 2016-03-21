@@ -264,3 +264,15 @@ window.onmousemove = function (e){
 /**
  * END: Move window over the page
  **/
+
+
+/**
+ * Colors generation based on static array
+ */
+var colors = ["#F92727","#2F97B9","#69A037","#E4D51A"];
+var ncolors = 4;
+var color_index = -1;
+function getNextColor(){
+  return colors[(color_index = (color_index+1)%ncolors)];
+}
+
