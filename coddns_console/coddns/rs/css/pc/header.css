@@ -48,10 +48,9 @@ header > a > img {
 }
 
 header div#menu{
-	width: 200px;
-	padding-left: 30px;
-	margin-top: 20px;
+	width: 100%;
     z-index: 10;
+    margin-top: 15px;
     background: #1F282B;
     position: absolute;
 }
@@ -62,17 +61,25 @@ header * ul {
 	margin: 0;
 	width: 100%;
 }
-
-header a {
-	padding: 3px;
+header * ul li {
+	padding: 0px;
+}
+header * ul li a{
+	display: block;
+	width: 100%;
+	padding: 0.5em;
+	padding-left: 30px;
 	margin: 0 auto;
 	color: #999EA2;
 	text-decoration: none;
 }
-
-header a.pl:hover, header a.pl_select {
-    color: #FFF;
-    border-bottom: 2px solid #EC8606;
+header a.pl:hover{
+	background: #EC8606;
+	color: #fff;
+}
+header a.pl_select {
+    color: #444;
+    background: #fff;
 }
 
 nav {
@@ -83,9 +90,7 @@ nav {
 }
 
 header div#contact{
-    width: 200px;
-    padding-left: 25px;
-    padding-right: 30px;
+	width: 100%;
     z-index: 0;
     position: absolute;
     bottom: 0;
@@ -94,6 +99,7 @@ header div#contact{
 header div#contact div.pic{
 	width: 45px;
 	height: 45px;
+	margin: 10px -20px 10px 30px;
 	border-radius: 50%;
 }
 header div#contact div.pic:hover{
