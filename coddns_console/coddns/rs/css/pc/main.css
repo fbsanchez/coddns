@@ -3,6 +3,7 @@
     padding: 0;
     font-family: 'Source Sans Pro';
     box-sizing: border-box;
+    text-rendering: optimizeLegibility;
 }
 html{
 	width: 100%;
@@ -142,13 +143,24 @@ section a:hover{
     border-bottom: 1px solid #EC8606;
 }
 
-a.return{
+a.return {
     display: block;
     position: fixed;
     left: 230px;
     padding: 5px;
     bottom: 20px;
     background: #fff;
-    border-radius: 25%;
-    box-shadow: 0 0 5px 2px #ddd;
+    border: 1px solid #ddd;
+    box-shadow: 1px 1px 10px -5px #888;
+    font-size: 0.9em;
+    transition: padding 0.1s 0s, margin 0.1s 0s, font-size 0.1s 0s;
+}
+
+a.return:hover {
+    font-size: 1em;
+    padding: 10px;
+    margin-bottom: -5px;
+    margin-left: -5px;
+    box-shadow: 1px 1px 5px #343434;
+    border: 1px solid #ddd;
 }

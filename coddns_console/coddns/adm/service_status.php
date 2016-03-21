@@ -20,12 +20,7 @@ require_once(dirname(__FILE__) . "/../lib/db.php");
 require_once(dirname(__FILE__) . "/../lib/util.php");
 require_once(dirname(__FILE__) . "/../lib/coduser.php");
 
-if (! defined("_VALID_ACCESS")) { // Avoid direct access
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
-}
-
-$auth_level_required = get_required_auth_level('adm','service','manager');
+$auth_level_required = get_required_auth_level('adm','service','status');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
@@ -36,12 +31,11 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_manager.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_status.css";?>" />
 </head>
 
 <body>
 	<section>
-		<h2>Panel de administraci&oacute;n</h2>
 		<nav>
 		</nav>
 		<div>
@@ -108,7 +102,6 @@ $user->check_auth_level($auth_level_required);
 			?>
 
 		</div>
-		<a href="<?php echo $config["html_root"] . "/?m=adm&z=service" ?>">Volver</a>
 	</section>
 </body>
 

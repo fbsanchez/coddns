@@ -46,12 +46,19 @@ function check_user_agent ( $type = NULL ) {
         }
         return false;
 }
+
+/**
+ * Returns if the page is being viewed through HTTPS protocol
+ */
 function isOverHTTPS(){
     if (isset($_SERVER["HTTPS"]) && $_SERVER['SERVER_PORT'] == '443')
         return true;
     return false;
 }
 
+/**
+ * Redirect the client to the given url
+ */
 function redirect($url){
     if (headers_sent()){
       die('<script type="text/javascript">window.location.href="' . $url . '";</script>');
@@ -61,8 +68,31 @@ function redirect($url){
     }    
 }
 
+/**
+ * Reads a file and stores it in a string, or prints it to output
+ */
+function read_file($filepath,$mode = "r", $tostring = false){
+    $file = @fopen($filepath, $mode);
+    $str = "";
+    if ($file) {
+        while (($buffer = fgets($file, 4096)) !== false) {
+            if($tostring === false){
+                echo $buffer;
+            }
+            else {
+                $str .= $buffer;
+            }
+        }
+        if (!feof($file)) {
+            echo "Failed to open $filepath in $mode mode<br>";
+        }
+        fclose($file);
+    }
+}
 
-
+/**
+ * Securize an argument passed through GET method
+ */
 function secure_get($argument, $mode = "url_get"){
     require_once(dirname(__FILE__) . "/db.php");
 
@@ -75,6 +105,9 @@ function secure_get($argument, $mode = "url_get"){
     return null;
 }
 
+/**
+ * Returns the required auth_level for a page
+ */
 function get_required_auth_level($mode,$zone,$operation){
     require_once(dirname(__FILE__) . "/db.php");
     include(dirname(__FILE__) . "/../include/config.php");

@@ -10,14 +10,3 @@ pre{
 	border: 2px dashed #365156;	
 	white-space: pre-line;
 }
-
-div#adm_server_section {
-	box-shadow: 0 0 1px #444;
-}
-
-
-textarea.conf{
-	font-family: monospace;
-	width: 100%;
-	padding: 15px;
-}

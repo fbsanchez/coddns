@@ -20,15 +20,9 @@ require_once(dirname(__FILE__) . "/../lib/db.php");
 require_once(dirname(__FILE__) . "/../lib/util.php");
 require_once(dirname(__FILE__) . "/../lib/coduser.php");
 
-if (! defined("_VALID_ACCESS")) { // Avoid direct access
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
-}
-
 $auth_level_required = get_required_auth_level('adm','service','manager');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
-
 ?>
 
 
@@ -36,79 +30,34 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_manager.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/tabs.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/service_manager.css" />
+
+<script type="text/javascript">
+	function mark(id){
+		document.getElementById("s0").className="";
+		document.getElementById("s1").className="";
+		id.className = "selected";
+	}
+</script>
 </head>
 
 <body>
 	<section>
-		<h2>Panel de administraci&oacute;n</h2>
+		<h2>Administraci&oacute;n del servicio</h2>
 		<nav>
+			<a id="s0" class="" onclick="mark(this);updateContent('adm_service_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
+				Servicio
+			</a>
+
+			<a id="s1" class="" onclick="mark(this);updateContent('adm_service_content','<?php echo $config["html_root"] . "/adm/service.php"?>');">
+				Servidores
+			</a>
 		</nav>
-		<div>
-		<h3>Estado del servicio</h3>
 
-			<?php
-				// check named service:
-				exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
-				if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
-
-				
-				if ($named_ok) {
-					exec ("ps axo pcpu,pmem,command | grep named | grep -v grep | awk 'BEGIN {sum=0}{sum+=$1}{print sum}'"
-						,$cpu_usage
-						,$return);
-
-					exec ("ps axo pcpu,pmem,command | grep named | grep -v grep | awk 'BEGIN {sum=0}{sum+=$2}{print sum}'"
-						,$ram_usage
-						,$return);
-
-					exec ("tail -n 15 /var/named/data/named.run 2>&1"
-						,$log_output
-						,$return);
-
-					exec ("tail -n 15 /var/named/data/named.security 2>&1"
-						,$security_log_output
-						,$return);
-
-					exec ("du -c -D -s -h /var/named/data | grep -i total | awk '{print $1}'"
-						,$log_size
-						,$return);
-
-					exec ("rndc status 2>&1", $status_output, $return);
-
-					echo "<p>Volcado de estado del servicio:</p><pre>";
-					foreach ($status_output as $line) {
-						echo $line . "\n";
-					}
-					echo "</pre>";
-
-					echo "<p>El estado de Bind es correcto con " . $out[0] . " instancia(s) activa(s)</p>";
-					echo sprintf("<p>Uso de CPU: %.02f %%</p>", $cpu_usage[0]);
-					echo sprintf("<p>Uso de RAM: %.02f %%</p>", $ram_usage[0]);
-					echo "<br><br>";
-
-					echo "<p>Hay un total de " . $log_size[0] . "B en logs</p>";
-					echo "<p>Informaci&oacute;n del log:</p><pre>";
-					foreach ($log_output as $line){
-						echo  $line . "\n";
-					}
-					echo "</pre>";
-					echo "<br>";
-					echo "<p>Informaci&oacute;n del log de seguridad:</p>";
-					echo "<pre>";
-					foreach ($security_log_output as $line){
-						echo  $line . "\n";
-					}
-					echo "</pre>";
-	
-				}
-				else {
-					echo "<p>Bind est&aacute; detenido. No hay ninguna instancia activa</p>";
-				}
-			?>
-
+		<div id="adm_service_content" class="content">
 		</div>
-		<a href="<?php echo $config["html_root"] . "/?m=adm&z=service" ?>">Volver</a>
+
 	</section>
 </body>
 

@@ -37,36 +37,41 @@ $user->check_auth_level($auth_level_required);
 <body>
 	<section>
 
+	<legend>Haz click en el servidor que desees administrar:</legend>
+<?php 
+		/*
 		<div>
-			<?php 
-			// Action pane
+			
+	
 			?>
 			<a href="<?php echo $config["html_root"] . "/?z=adm&u=service&op=add_server";?>">
 				<img class="add" src="<?php echo $config["html_root"] . "/rs/img/add.png";?>" alt="add" />
 				<span>Agregar un nuevo servidor</span>
 			</a>
 		</div>
-
-		<?php
-		$named_ok = 0;
-		// check named service:
-		exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
-		if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
+*/
 
 		$dbclient = new DBClient($db_config);
 		$dbclient->connect() or die($dbclient->lq_error());
 
-		$q = "select s.id,s.tag, count(z.domain) nzones from servers s, zones z where z.server_id=s.id group by s.id;";
+		$q = "select s.id,s.tag,(select count(*) from zones z where z.server_id=s.id ) as nzones from servers s;";
 		$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 		while ($r = $dbclient->fetch_object($results)) {
 
+				$named_ok = 0;
+				// check named service:
+				exec ("rndc status | grep running | wc -l", $out, $return);
+				if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
+
 			?>
 
 			<div class="server">
-				<?php
 
-				echo "<a href='" . $config["html_root"] . "/?m=adm&z=service&op=manager&id=" . $r->tag . "'><img src=\"";
+				<a href="javascript:updateContent('server_info','<?php echo $config["html_root"]; ?>/adm/server_manager.php','id=<?php echo $r->tag; ?>');">
+				<?php 
+				echo "<img src=\"";
+
 				if ($named_ok == 1) {
 					echo $config["html_root"] . "/rs/img/server_up_50.png";
 					$status = "Operativo";
@@ -75,9 +80,9 @@ $user->check_auth_level($auth_level_required);
 					echo $config["html_root"] . "/rs/img/server_down_50.png";
 					$status = "Desconectado";
 				}
-				echo "\" alt='server status'/></a>";
+				echo "\" alt='server status'/>";
 				?>
-
+				</a>
 				<div>
 				<p>Servidor: <?php echo $r->tag;?></p>
 				<p>Estado: <?php echo $status;?></p>
@@ -86,9 +91,12 @@ $user->check_auth_level($auth_level_required);
 			</div>
 		<?php
 		}
-		?>			
 
-		<a href="<?php echo $config["html_root"] . "/?m=adm" ?>">Volver</a>
+		$dbclient->disconnect();
+		?>
+	</section>
+
+	<section style="margin-top: 40px;clear:both;" id="server_info">
 	</section>
 </body>
 

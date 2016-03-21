@@ -36,24 +36,37 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="rs/css/pc/adm_service.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/tabs.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/adm_service.css">
+<script type="text/javascript">
+	function mark(id){
+		document.getElementById("a0").className="";
+		document.getElementById("a1").className="";
+		document.getElementById("a2").className="";
+		id.className = "selected";
+	}
+</script>
 </head>
 
-<body>
+<body onload="mark(document.getElementById('a0'));updateContent('adm_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
 	<section>
 		<h2>Centro de administraci&oacute;n</h2>
 
 		<nav>
-			<a style="color:#2D2D2D;" href="#servers" onclick="updateContent('settings_viewer','<?php echo $config["html_root"] . "/adm/servers.php"?>');">
-				Administrar servidores
+			<a id="a0" href="#servers" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
+				Servicio
 			</a>
 
-			<a style="color:#2D2D2D;" href="#zones" onclick="updateContent('settings_viewer','<?php echo $config["html_root"] . "/adm/zones.php"?>');">
-				Administrar zonas
+			<a id="a1" href="#servers" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/servers.php"?>');">
+				Servidores
+			</a>
+
+			<a id="a2" href="#zones" class="" onclick="mark(this);updateContent('adm_content','<?php echo $config["html_root"] . "/adm/zones.php"?>');">
+				Zonas
 			</a>
 		</nav>
 
-		<div id="settings_viewer">
+		<div id="adm_content" class="content">
 		</div>
 
 		<a class="return" href="<?php echo $config["html_root"] . "/?m=adm" ?>">Volver</a>

@@ -20,8 +20,12 @@ require_once(dirname(__FILE__) . "/../lib/db.php");
 require_once(dirname(__FILE__) . "/../lib/util.php");
 require_once(dirname(__FILE__) . "/../lib/coduser.php");
 
+if (! defined("_VALID_ACCESS")) { // Avoid direct access
+    header ("Location: " . $config["html_root"] . "/");
+    exit (1);
+}
 
-$auth_level_required = get_required_auth_level('adm','service','manager');
+$auth_level_required = get_required_auth_level('adm','server','status');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
@@ -32,7 +36,7 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_manager.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_status.css";?>" />
 </head>
 
 <body>
@@ -62,6 +66,10 @@ $user->check_auth_level($auth_level_required);
 						,$log_output
 						,$return);
 
+					exec ("tail -n 15 /var/named/data/named.security 2>&1"
+						,$security_log_output
+						,$return);
+
 					exec ("du -c -D -s -h /var/named/data | grep -i total | awk '{print $1}'"
 						,$log_size
 						,$return);
@@ -85,6 +93,14 @@ $user->check_auth_level($auth_level_required);
 						echo  $line . "\n";
 					}
 					echo "</pre>";
+					echo "<br>";
+					echo "<p>Informaci&oacute;n del log de seguridad:</p>";
+					echo "<pre>";
+					foreach ($security_log_output as $line){
+						echo  $line . "\n";
+					}
+					echo "</pre>";
+	
 				}
 				else {
 					echo "<p>Bind est&aacute; detenido. No hay ninguna instancia activa</p>";
@@ -92,7 +108,7 @@ $user->check_auth_level($auth_level_required);
 			?>
 
 		</div>
-		<a class="return" href="<?php echo $config["html_root"] . "/?m=adm&z=service" ?>">Volver</a>
+		<a href="<?php echo $config["html_root"] . "/?m=adm&z=service" ?>">Volver</a>
 	</section>
 </body>
 
