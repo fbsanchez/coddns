@@ -14,8 +14,6 @@ pre{
 div#adm_server_section {
 	box-shadow: 0 0 1px #444;
 }
-
-
 textarea{
 	width: 100%;
     height: 100px;
@@ -23,13 +21,16 @@ textarea{
     padding: 10px;
     background: #DBECEF;
     border-radius: 15px;
-    margin: 20px auto;
+    margin: 15px auto;
     resize: none;
     font-family: courier;
     outline: none;
 }
-
 textarea:focus{
 	background: #fff;
 	border-color: #174850;
+}
+
+p {
+	margin-top: 30px;	
 }
