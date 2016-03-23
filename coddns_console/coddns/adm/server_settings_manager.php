@@ -45,11 +45,27 @@ if (!isset ($servername)){
 	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server_rq_settings_manager.php', true);return false;">
 	<input id="gconf_input" name="gconf_input" type="hidden" />
 
+	<?php echo "<p>Content of /etc/named.conf</p>"; ?>
 	<textarea id="gconf" onclick="grow(this);" onkeydown="grow(this);"><?php
-	// Read and show main named.conf
-	//read_file("/etc/named.conf");
-	read_file("/var/named/data/test.txt");
+
+
+	$includes_array = read_file("/etc/named.conf");
+
 	?></textarea>
+	
+	<?php
+
+		$id=0;
+		foreach ($includes_array as $fin){
+
+			echo "<input type='hidden' name='gconf_extra_" . $id . "' value='" . $fin . "'/>";
+			echo "<p>Content of " . $fin . "</p>";
+			echo "<textarea id='gconf_extra_" . ($id++) . "_content'  onclick='grow(this);' onkeydown='grow(this);'>";
+			array_push($includes_array, read_file($fin));
+			echo "</textarea>";
+		}
+	?>
+	
 
 	<ul>
 		<li>

@@ -73,9 +73,14 @@ function redirect($url){
  */
 function read_file($filepath,$mode = "r", $tostring = false){
     $file = @fopen($filepath, $mode);
+    $includes = array();
     $str = "";
     if ($file) {
-        while (($buffer = fgets($file, 4096)) !== false) {
+        while (($buffer = fgets($file)) !== false) {
+            if (preg_match("/include +\"(.*?)\"/", $buffer, $tmp)) {
+                array_push($includes, $tmp[1]);
+            }
+
             if($tostring === false){
                 echo $buffer;
             }
@@ -87,6 +92,13 @@ function read_file($filepath,$mode = "r", $tostring = false){
             echo "Failed to open $filepath in $mode mode<br>";
         }
         fclose($file);
+    }
+
+    if ($tostring != false) {
+        $tostring = $str;
+    }
+    else {
+        return $includes;
     }
 }
 
