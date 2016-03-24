@@ -86,8 +86,8 @@ CREATE TABLE IF NOT EXISTS servers (
     gid bigint unsigned NOT NULL default 1,
     srv_user varchar(200),
     srv_password text,
-    config text,
-    config_md5 varchar(200),
+    main_config_file varchar(255),
+    fingerprint text,
     status int DEFAULT 0,
     CONSTRAINT pkey_servers PRIMARY KEY (id),
     CONSTRAINT fkey_servers_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
