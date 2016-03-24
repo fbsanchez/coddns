@@ -46,6 +46,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 <html>
 <head>
 	<link rel="stylesheet" type="text/css" href="rs/css/pc/adm_site.css">
+	<link rel="stylesheet" type="text/css" href="rs/css/pc/pop_up.css">
 </head>
 <script languague="javascript">
 	 function linkselected(id_elem){
@@ -104,7 +105,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 			</ul>
 		</nav>
 	</section>
-	<div id="form_create_users" style="display:none;" draggable>
+	<div id="form_create_users" class="pop_up_form" style="display:none;" draggable>
 		<div class="pop_up_headers">
 			<h3>Crear Usuarios</h3>
 			<button class="pop_up_headers_close">X</button>
