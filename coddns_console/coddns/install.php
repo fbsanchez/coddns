@@ -1,4 +1,4 @@
-﻿<?php
+<?php 
 /**
  * <copyright company="CODDNS">
  * Copyright (c) 2013 All Right Reserved, http://coddns.es/
@@ -20,6 +20,8 @@
 defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
 defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
 defined ("MIN_DB_LENGTH") or define ("MIN_DB_LENGTH", 2);
+
+session_start();
 
 require_once(dirname(__FILE__) . "/lib/db.php");
 
@@ -136,7 +138,6 @@ if ($phase == 1) {
 // TESTS BEGIN
 
 // First of all unset all active sessions
-session_start();
 session_destroy();
 session_write_close();
 
@@ -554,7 +555,6 @@ elseif ($phase == 2) {
                    "port"    =>"$dbport",
                    "name"    =>"$dbname",
                    "schema"  =>"$schema");
-			session_start();
 			$_SESSION["config"] = $db_config;
 			session_write_close();
 		}
@@ -659,7 +659,6 @@ elseif ($phase == 2) {
 <?php
 }
 elseif ($phase == 3){
-	session_start();
 	$config = $_SESSION["config"];
 	session_write_close();
 

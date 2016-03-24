@@ -27,6 +27,16 @@ $user->check_auth_level($auth_level_required);
 if (!isset ($servername)){
 	$servername = secure_get("id");
 }
+else {
+	die ("Unauthorized to access this content.");
+}
+
+
+
+// retrieve credentials from DB
+
+$dbclient = new DBClient($db_config);
+
 
 ?>
 

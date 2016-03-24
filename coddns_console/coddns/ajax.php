@@ -265,7 +265,7 @@ function list_acls($data) {
 		        <td>
 		        	<select>
 		        		<?php while ($row2 = $dbclient->fetch_array ($s)) { ?>
-		        		<option selected="<?php echo $row["auth_level"];?>"><?php echo $row2['tag']; ?></option>
+		        		<option selected="<?php echo $row2["auth_level"];?>"><?php echo $row2['tag']; ?></option>
 		        		<?php } ?>
 		        	</select>
 		        </td>

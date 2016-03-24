@@ -34,7 +34,9 @@ class CODUser {
 	function CODUser(){
 		$this->load_cfg();
 		$checks = 0;
-		session_start();
+		if (session_status() == PHP_SESSION_NONE){
+			session_start();
+		}
 		if(isset ($_SESSION["email"])){
 			$this->mail = $_SESSION["email"];
 			$checks++;
@@ -103,7 +105,9 @@ class CODUser {
 
 		$dbclient->disconnect();
 
-		session_start();
+		if (session_status() == PHP_SESSION_NONE){
+			session_start();
+		}
 		$_SESSION["email"] = $r->mail;
 		$_SESSION["rol"]   = $r->rol;
 		$_SESSION["time"]  = time();
@@ -151,7 +155,9 @@ class CODUser {
 		    $q = "Select * from users where lower(mail)=lower('" . $user . "') and pass='" . $pass . "';";
 		    $r = $dbclient->get_sql_object($q);
 
-			session_start();
+			if (session_status() == PHP_SESSION_NONE){
+				session_start();
+			}
 			$_SESSION["email"] = $r->mail;
 			$_SESSION["rol"]   = $r->rol;
 			$_SESSION["time"]  = time();
@@ -193,7 +199,9 @@ class CODUser {
 		$this->rol        = $result->rol;
 		$this->auth_level = $result->auth_level;
 
-		session_start();
+		if (session_status() == PHP_SESSION_NONE){
+			session_start();
+		}
 		$_SESSION["rol"]        = $this->rol;
 		$_SESSION["auth_level"] = $this->auth_level;
 		session_write_close();
