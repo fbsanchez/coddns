@@ -100,17 +100,15 @@ else { // SERVER CREDENTIALS ARE SET
 	$server_credentials["ip"]   = long2ip($r->ip);
 	
 	$sshclient = new SSHClient($server_credentials);
-	$output = $sshclient->launch("cat /etc/named.conf");
+	//	$output = $sshclient->launch("cat /etc/named.conf");
 
 	$scp_res = $sshclient->get_file("/var/named/data/test.txt", "/tmp/prueba.txt");
 	$scp_res = $sshclient->send_file("/tmp/prueba.txt", "/root/prueba.txt");
 
-	var_dump($output);
-
-	echo "<br />";
-
-	var_dump($scp_res);
-
+	if ($scp_res) {
+		// set correct grants on remote file
+		$output = $sshclient->launch("chown named:apache /root/prueba.txt; chmod 660 /root/prueba.txt");
+	}
 ?>
 
 	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server_rq_settings_manager.php', true);return false;">
