@@ -114,12 +114,12 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 			<div class="pop_up_body">
 				<ul>
 					<li>
-						<label for="user_email">Email</label>
+						<label for="user_email">Email:</label>
 						<input type="text" id="user_email" name="email" placeholder="coddns@gmail.com" required="required"></input>
 					</li>
 					<li>
-						<label for="user_rol">Rol</label>
-						<select id="user_rol">
+						<label for="user_rol">Rol:</label>
+						<select id="user_rol" name="rol">
 							<?php
 							while ($row = $dbclient->fetch_array ($r)) {
 							?>
@@ -130,8 +130,10 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 						</select>
 					</li>
 					<li>
-						<label for="user_groups">Grupos</label>
-						<select id="user_groups">
+						<label for="user_groups">Grupos:</label>
+					</li>
+					<li>
+						<select id="user_groups" name="groups" multiple>
 							<?php
 							while ($row = $dbclient->fetch_array ($s)) {
 							?>
@@ -139,6 +141,14 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 							<?php
 							}
 							?>
+						</select>
+						<div class="multiselect_button">
+							<button>>></button>
+							<button>></button>
+							<button><</button>
+							<button><<</button>
+						</div>
+						<select name="rol" multiple>
 						</select>
 					</li>
 				</ul>
