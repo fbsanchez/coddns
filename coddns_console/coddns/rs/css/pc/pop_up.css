@@ -1,5 +1,6 @@
 .pop_up_form{
-    padding-top: 50px; 
+    padding-top: 10px; 
+    padding-color: green; 
     position: fixed;
     width: 30%;
     border-radius: 5px;
@@ -36,6 +37,17 @@
     width: 100%;
 }
 
+.pop_up_body ul li > input{
+    width: 40%;
+    float: right;
+}
+
+
+.pop_up_body ul li > select{
+    width: 40%;
+    float: right;
+}
+
 .pop_up_footer{
     width: 100%;
     height: 40px;
@@ -51,4 +63,5 @@
     color: #ffffff;
     margin: 5px;
     float: right;
+    cursor: all-scroll;
 }

@@ -106,20 +106,20 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 		</nav>
 	</section>
 	<div id="form_create_users" class="pop_up_form" style="display:none;" draggable>
-		<div class="pop_up_headers">
-			<h3>Crear Usuarios</h3>
-			<button class="pop_up_headers_close">X</button>
-		</div>
-		<div class="pop_up_body">
-			<form id="newusers" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
+		<form id="newusers" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
+			<div class="pop_up_headers">
+				<h3>Crear Usuarios</h3>
+				<button class="pop_up_headers_close" onclick="toggleDisplay('form_create_users')">X</button>
+			</div>
+			<div class="pop_up_body">
 				<ul>
 					<li>
-						<label>Email</label>
-						<input type="text" name="email" placeholder="coddns@gmail.com" required="required"></input>
+						<label for="user_email">Email</label>
+						<input type="text" id="user_email" name="email" placeholder="coddns@gmail.com" required="required"></input>
 					</li>
 					<li>
-						<label>Rol</label>
-						<select>
+						<label for="user_rol">Rol</label>
+						<select id="user_rol">
 							<?php
 							while ($row = $dbclient->fetch_array ($r)) {
 							?>
@@ -130,8 +130,8 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 						</select>
 					</li>
 					<li>
-						<label>Grupos</label>
-						<select>
+						<label for="user_groups">Grupos</label>
+						<select id="user_groups">
 							<?php
 							while ($row = $dbclient->fetch_array ($s)) {
 							?>
@@ -142,11 +142,11 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 						</select>
 					</li>
 				</ul>
-			</form>
-		</div>
-		<div class="pop_up_footer">
-			<input type="submit"></input>
-		</div>
+			</div>
+			<div class="pop_up_footer">
+				<input type="submit"></input>
+			</div>
+		</form>
 	</div>
 	<section id="adm_site_section">
 		
