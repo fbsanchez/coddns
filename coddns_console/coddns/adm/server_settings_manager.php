@@ -32,11 +32,25 @@ else {
 }
 
 
-
 // retrieve credentials from DB
 
 $dbclient = new DBClient($db_config);
 
+$q = "Select * from servers where lower(tag)=lower('" . $servername . "');";
+$r = $dbclient->get_sql_object($q);
+
+if ( (! isset ($password) ) || (! isset($srv_user)) ) {
+	$srv_pass = $r->srv_password;
+	$srv_user = $r->srv_user;
+}
+session_start();
+if (isset($_SESSION["srv_user"])) {
+	$srv_user = $_SESSION["srv_user"];
+}
+if (isset($_SESSION["srv_pass"])) {
+	$srv_pass = $_SESSION["srv_pass"];
+}
+session_write_close();
 
 ?>
 
@@ -51,7 +65,47 @@ $dbclient = new DBClient($db_config);
 
 <body>
 	<section>
-	<h4>Configuraci&oacute;n del servidor</h4>
+	<h4>Configuraci&oacute;n del servidor: <i><?php echo $r->tag;?></i></h4>
+
+
+<?php
+if ( (! isset ($srv_pass) ) || (! isset($srv_user)) ) {
+?>
+	<form method="POST" action="#settings_manager" onsubmit="this.elements['p'].value = btoa(this.elements['p'].value);">
+	<p>&gt;&gt; No se ha encontrado una contrase&ntilde;a para acceder a <?php echo long2ip($r->ip);?></p>
+	<p>Indique una a continuaci&oacute;n:</p>
+	<ul>
+		<li>
+			<label>Usuario:</label>
+			<input type="text" name="u" placeholder="usuario"/>
+		</li>
+		<li>
+			<label>Contrase&ntilde;a:</label>
+			<input type="password" name="p" placeholder="password"/>
+		</li>
+		<li>
+			<input type="submit" value="Conectar"/>
+		</li>
+	</ul>
+	</form>
+<?php
+}
+else { // SERVER CREDENTIALS ARE SET
+
+	require_once(dirname(__FILE__) . "/../lib/sshclient.php");
+
+	// initialize ssh client
+	$server_credentials["user"] = $srv_user;
+	$server_credentials["pass"] = $srv_pass;
+	$server_credentials["ip"]   = long2ip($r->ip);
+	
+	$sshclient = new SSHClient($server_credentials);
+	$output = $sshclient->launch("cat /etc/named.conf");
+
+	var_dump($output);
+
+?>
+
 	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server_rq_settings_manager.php', true);return false;">
 	<input id="gconf_input" name="gconf_input" type="hidden" />
 
@@ -62,7 +116,6 @@ $dbclient = new DBClient($db_config);
 	$includes_array = read_file("/etc/named.conf");
 
 	?></textarea>
-	
 	<?php
 
 		$id=0;
@@ -74,15 +127,17 @@ $dbclient = new DBClient($db_config);
 			array_push($includes_array, read_file($fin));
 			echo "</textarea>";
 		}
-	?>
-	
-
+	?>	
 	<ul>
 		<li>
 			<input type="submit" value="Actualizar" />
 		</li>
 	</ul>
 	</form>
+
+<?php
+}
+?>
 	</section>
 </body>
 

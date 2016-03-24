@@ -18,6 +18,10 @@
  * Class SSHClient is based in SSH2 PHP Library
  * Allows to connect to a remote machine and execute
  * commands.
+ *
+ *
+ * Requires php-pecl-ssh2
+ * yum --enablerepo=remi install php-pecl-ssh2
  */
 
 require_once (dirname(__FILE__) . "/../lib/db.php");
@@ -29,12 +33,14 @@ class SSHClient {
 	var $ip   = null;
 	var $user = null;
 	var $pass = null;
+	var $port = 22;
 
 	var $connection    = false;
 	var $authenticated = false;
 	var $connected     = false;
 
-	var $stream = null;
+	var $stream      = null;
+	var $errorStream = null;
 
 	// Builder
 	function SSHClient($ssh_config){
@@ -49,6 +55,9 @@ class SSHClient {
 		$this->ip   = $ssh_config["ip"];
 		$this->user = $ssh_config["user"];
 		$this->pass = $ssh_config["pass"];
+		if (isset($ssh_config["port"])){
+			$this->port = $ssh_config["port"];
+		}
 
 		return $this;
 
@@ -112,12 +121,16 @@ class SSHClient {
 		}
 
 		$this->stream = ssh2_exec($this->connection, $command);
+		$this->errorStream = ssh2_fetch_stream($this->stream, SSH2_STREAM_STDERR);
 
 		return $this->stream;
 	}
 
-	function get_last_execution_output(){
-		return $this->stream;
+	function get_output(){
+		return stream_get_contents($this->stream);
+	}
+	function get_stderr(){
+		return stream_get_contents($this->errorStream);
 	}
 
 	function disconnect(){
@@ -138,6 +151,32 @@ class SSHClient {
 		$this->connected     = false;
 		$this->connection    = false;
 		$this->authenticated = false;
+	}
+
+	function launch($command){
+		if (!$this->connected){
+			$this->connect();
+		}
+		if (!$this->authenticated){
+			$this->authenticate();
+		}
+		if (!$this->authenticated){
+			return null;
+		}
+
+		$this->exec($command);
+		// Enable blocking for both streams
+		stream_set_blocking($this->errorStream, true);
+		stream_set_blocking($this->stream, true);
+
+		$out[0] = $this->get_output();
+		$out[1] = $this->get_stderr();
+
+		fclose($this->errorStream);
+		fclose($this->stream);
+
+		$this->disconnect();
+		return $out;
 	}
 }
 
