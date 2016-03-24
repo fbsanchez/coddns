@@ -23,5 +23,6 @@ if (isset ($_POST["text"])){
 ?>
 </textarea>
 
+<?php phpinfo();?>
 </body>
 </html>

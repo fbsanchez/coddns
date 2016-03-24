@@ -178,6 +178,40 @@ class SSHClient {
 		$this->disconnect();
 		return $out;
 	}
+
+	function send_file($local_file, $remote_file){
+		if (!$this->connected){
+			$this->connect();
+		}
+		if (!$this->authenticated){
+			$this->authenticate();
+		}
+		if (!$this->authenticated){
+			return null;
+		}
+
+		$r = ssh2_scp_send($this->connection, $local_file, $remote_file);
+
+		$this->disconnect();
+		return $r;
+	}
+
+	function get_file($remote_file, $local_file) {
+		if (!$this->connected){
+			$this->connect();
+		}
+		if (!$this->authenticated){
+			$this->authenticate();
+		}
+		if (!$this->authenticated){
+			return null;
+		}
+
+		$r = ssh2_scp_recv($this->connection, $remote_file, $local_file);
+
+		$this->disconnect();
+		return $r;
+	}
 }
 
 

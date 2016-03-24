@@ -170,6 +170,7 @@ if (is_writable(dirname(__FILE__) . "/include")){
 // check php extensions
 if (check_lib("mysqli"))           { $mysqli_ok = 1; }
 if (check_lib("pgsql"))            { $pgsql_ok  = 1; }
+if (check_lib("ssh2"))             { $ssh2_ok   = 1; }
 
 if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 	if ($mysqli_ok+$pgsql_ok >= 1){
@@ -228,6 +229,12 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 			<ul>
 				<li>
 					<div class="status <?php check_item($nmap_ok);?>">&nbsp;</div> nmap
+				</li>
+				<li>
+					<div class="status <?php check_item($ssh2_ok);?>">&nbsp;</div> PHP PECL SSH2
+					<?php if ($ssh2_ok != 1) {?>
+					<br><span style="font-size: 0.9em;margin-left: 25px;">Librer&iacute;as acceso SSH: yum install php-pecl-ssh2</span>
+					<?php }?>
 				</li>
 			</ul>
 		</div>
