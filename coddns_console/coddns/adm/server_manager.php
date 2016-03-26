@@ -32,11 +32,11 @@ if(!isset($servername)){
 	$servername = secure_get("id");
 }
 session_start();
-if (!isset($_SESSION["srv_user"])){
-	$_SESSION["srv_user"] = secure_get("u");
+if (!isset($_SESSION["servers"][$servername]["user"])){
+	$_SESSION["servers"][$servername]["user"] = secure_get("u");
 }
-if (!isset($_SESSION["srv_pass"])){
-	$_SESSION["srv_pass"] = secure_get("p","base64");
+if (!isset($_SESSION["servers"][$servername]["pass"])){
+	$_SESSION["servers"][$servername]["pass"] = secure_get("p","base64");
 }
 
 session_write_close();

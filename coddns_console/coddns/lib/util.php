@@ -17,6 +17,25 @@
 
 require_once(dirname(__FILE__) . "/../include/config.php");
 
+/**
+ *
+ */
+function load_extra_config($cnf){
+    include_once (dirname(__FILE__) . "/db.php");
+    $dbclient = new DBClient($cnf["db_config"]);
+
+    $dbclient->connect() or die ($dbclient->lq_error());
+    $q = "select * from settings;";
+    $r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+    while ($row = $dbclient->fetch_array ($r) ) {
+        $cnf[$row["field"]] = $row["value"];
+    }
+    $dbclient->disconnect();
+
+    return $cnf;
+}
+
+
 /* USER-AGENTS
 ================================================== */
 function check_user_agent ( $type = NULL ) {

@@ -25,12 +25,6 @@ session_start();
 
 require_once(dirname(__FILE__) . "/lib/db.php");
 
-function isOverHTTPS(){
-    if (isset($_SERVER["HTTPS"]) && $_SERVER['SERVER_PORT'] == '443')
-        return true;
-    return false;
-}
-
 function check_lib($item){
 	if (!extension_loaded($item)) {
 		return FALSE;
@@ -62,7 +56,7 @@ function print_header($phase) {
 <title>CODDNS Installer - Integrated management of name resolution services</title>
 
 <?php
-    if(isOverHTTPS()) {
+    if (isset($_SERVER["HTTPS"]) && $_SERVER['SERVER_PORT'] == '443') {
 ?>
 <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <?php
@@ -725,6 +719,9 @@ elseif ($phase == 3){
 	$str_config .= "defined (\"MIN_HOST_LENGTH\") or define (\"MIN_HOST_LENGTH\", 1);\n";
 	$str_config .= "defined (\"MAX_HOST_LENGTH\") or define (\"MAX_HOST_LENGTH\", 200);\n";
 	$str_config .= "defined (\"ITEMS_PER_PAGE\") or define (\"ITEMS_PER_PAGE\", 15);\n";
+	$str_config .= "\n";
+	$str_config .= "include_once (dirname(__FILE__) . \"/../lib/util.php\");\n";
+	$str_config .= "\$config = load_extra_config(\$config);\n";
 	$str_config .= "\n";
 	$str_config .= "?>\n";
 

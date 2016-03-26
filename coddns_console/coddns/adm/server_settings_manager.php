@@ -39,16 +39,17 @@ $dbclient = new DBClient($db_config);
 $q = "Select * from servers where lower(tag)=lower('" . $servername . "');";
 $r = $dbclient->get_sql_object($q);
 
-if ( (! isset ($password) ) || (! isset($srv_user)) ) {
-	$srv_pass = $r->srv_password;
-	$srv_user = $r->srv_user;
-}
+
+// tried to get DB data
+$server_info["user"] = $r->srv_user;
+$server_info["pass"] = $r->srv_password;
+
+
+// also tried to get user specifications (form), if defined.
 session_start();
-if (isset($_SESSION["srv_user"])) {
-	$srv_user = $_SESSION["srv_user"];
-}
-if (isset($_SESSION["srv_pass"])) {
-	$srv_pass = $_SESSION["srv_pass"];
+if (   (isset($_SESSION["servers"][$servername]["user"]))
+	&& (isset($_SESSION["servers"][$servername]["pass"])) ) {
+	$server_info = $_SESSION["servers"][$servername];
 }
 session_write_close();
 
@@ -69,7 +70,7 @@ session_write_close();
 
 
 <?php
-if ( (! isset ($srv_pass) ) || (! isset($srv_user)) ) {
+if ( (! isset ($server_info["user"]) ) || (! isset($server_info["pass"])) ) {
 ?>
 	<form method="POST" action="#settings_manager" onsubmit="this.elements['p'].value = btoa(this.elements['p'].value);">
 	<p>&gt;&gt; No se ha encontrado una contrase&ntilde;a para acceder a <?php echo long2ip($r->ip);?></p>
@@ -95,8 +96,8 @@ else { // SERVER CREDENTIALS ARE SET
 	require_once(dirname(__FILE__) . "/../lib/sshclient.php");
 
 	// initialize ssh client
-	$server_credentials["user"] = $srv_user;
-	$server_credentials["pass"] = $srv_pass;
+	$server_credentials["user"] = $server_info["user"];
+	$server_credentials["pass"] = $server_info["pass"];
 	$server_credentials["ip"]   = long2ip($r->ip);
 	
 	$sshclient = new SSHClient($server_credentials);

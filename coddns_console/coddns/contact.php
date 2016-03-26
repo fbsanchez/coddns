@@ -56,12 +56,10 @@ if (isset ($_POST["mesage"])){
 		<h2>Enviar un mensaje a los desarrolladores</h2>
 
 <?php
-
-if (!isset ($config["slack_url"])){
+if ((!isset ($config["slack_url"])) || ($config["slack_url"] == '')) {
 ?>
 	<p>No se ha encontrado el token "slack_url" en la configuraci&oacute;n</p>
-	<p>Por favor, revise el manual</p>
-
+	<p>Por favor, ajuste el valor en ajustes.</p>
 <?php
 }elseif( isset($mesage)
 	&& ( 

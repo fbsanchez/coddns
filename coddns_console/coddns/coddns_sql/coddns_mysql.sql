@@ -154,6 +154,14 @@ CREATE TABLE IF NOT EXISTS versioning(
 ) engine=InnoDB;
 
 
+-- Table settings
+CREATE TABLE IF NOT EXISTS settings(
+    id serial,
+    field varchar(255) NOT NULL UNIQUE,
+    value text,
+    CONSTRAINT pkey_settings PRIMARY KEY(id,field)
+) engine=InnoDB;
+
 -- EO Table definitions
 
 
@@ -223,3 +231,12 @@ INSERT INTO record_types(tag,description,auth_level)
 	('NS','NS register type',0),
 	('CNAME','CNAME register type',0),
 	('MX','MX register type',0);
+
+
+-- SETTINGS - DEFAULT
+INSERT INTO settings(field,value)
+ values
+    ("slack_url", ""),
+    ("installdir", "/opt/coddns/");
+
+
