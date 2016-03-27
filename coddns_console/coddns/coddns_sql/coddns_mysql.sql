@@ -132,6 +132,39 @@ CREATE TABLE IF NOT EXISTS hosts (
 ) engine=InnoDB;
 
 
+-- Table SZB
+CREATE TABLE IF NOT EXISTS stats_szb (
+    id_block serial,
+    id_server bigint DEFAULT NULL,
+    id_zone bigint DEFAULT NULL,
+    tag varchar(250),
+    CONSTRAINT pkey_stats_szb PRIMARY KEY (id_block,tag)
+) engine=InnodB;
+
+
+-- Table stats_item
+CREATE TABLE IF NOT EXISTS stats_item (
+    id serial,
+    id_block bigint unsigned NOT NULL,
+    tag varchar(250),
+    CONSTRAINT pkey_stats_stats_item PRIMARY KEY (id),
+    CONSTRAINT fkey_stats_item_block FOREIGN KEY (id_block) REFERENCES stats_szb(id_block) ON DELETE CASCADE ON UPDATE CASCADE
+) engine=InnodB;
+
+
+-- Table stats_data
+CREATE TABLE IF NOT EXISTS stats_data (
+    value int,
+    utimestamp int,
+    id_item bigint unsigned NOT NULL,
+    CONSTRAINT pkey_stats_stats_data PRIMARY KEY (utimestamp,id_item),
+    CONSTRAINT fkey_stats_data_item FOREIGN KEY (id_item) REFERENCES stats_item(id) ON DELETE CASCADE ON UPDATE CASCADE
+) engine=InnodB;
+
+
+
+-- Auxiliary tables
+
 -- Table site ACL
 CREATE TABLE IF NOT EXISTS site_acl(
     m varchar(200),
