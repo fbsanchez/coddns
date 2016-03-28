@@ -294,11 +294,20 @@ window.onmousemove = function (e){
 /**
  * Colors generation based on static array
  */
- var colors = ["#F92727","#2F97B9","#69A037","#E4D51A"];
- var ncolors = 4;
- var color_index = -1;
- function getNextColor(){
-  return colors[(color_index = (color_index+1)%ncolors)];
+var colors = ["#E69A4B","#40BB88","#41D1E8","#F92727","#2F97B9","#69A037","#E4D51A"];
+var shapes = ["rgba(230, 154, 75, 0.5)", "rgba(64,187,136,0.5)","rgba(65, 209, 232, 0.5)","rgba(249, 39, 39, 0.5)","rgba(47, 151, 185, 0.5)","rgba(105, 160, 55, 0.5)","rgba(228, 213, 26, 0.5)"];
+var color_index = -1;
+function getNextColor(){
+  return colors[(color_index = (color_index+1)%colors.length)];
+}
+function getCurrentColor(){
+  return colors[color_index];
+}
+function getCurrentShape(){
+  return shapes[color_index];
+}
+function nextColor(){
+  color_index = (color_index+1)%colors.length; 
 }
 
 

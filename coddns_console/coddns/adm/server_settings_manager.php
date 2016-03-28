@@ -42,7 +42,7 @@ $r = $dbclient->get_sql_object($q);
 
 // tried to get DB data
 $server_info["user"] = $r->srv_user;
-$server_info["pass"] = $r->srv_password;
+$server_info["pass"] = coddns_decrypt($r->srv_password);
 
 
 // also tried to get user specifications (form), if defined.

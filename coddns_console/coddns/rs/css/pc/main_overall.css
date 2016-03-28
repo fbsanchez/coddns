@@ -36,6 +36,19 @@ article{
 }
 
 article.nav{
-    padding-top: 50px;
-    margin-top: 250px;
+    clear:both;
+}
+
+div.graph_wrapper{
+    float: left;
+    margin: 0 50px;
+}
+
+canvas{
+    display: inline-block;
+}
+div.canvas_legend{
+}
+ul{
+    width: auto;
 }
