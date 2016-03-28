@@ -22,3 +22,5 @@ $RECYCLE.BIN/
 coddns_console/coddns/cms/*
 coddns_console/coddns/include/config.php
 coddns_core/opt/ddns/coddns_core
+coddns_core/lib/*
+coddns_core/lib
