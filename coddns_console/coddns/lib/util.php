@@ -18,7 +18,7 @@
 require_once(dirname(__FILE__) . "/../include/config.php");
 
 /**
- *
+ * Read extra configuration from DB
  */
 function load_extra_config($cnf){
     include_once (dirname(__FILE__) . "/db.php");
@@ -33,6 +33,40 @@ function load_extra_config($cnf){
     $dbclient->disconnect();
 
     return $cnf;
+}
+
+
+/**
+ * Encrypt (basic)
+ */
+function coddns_encrypt($str){
+    $out = "";
+
+    $chars = str_split($str);
+    $nchars = count($chars);
+    $i = 0;
+    foreach ($chars as $char){
+        $out .= pow(ord($char)+($i++),2);
+        if ($i < $nchars){
+             $out .= "-";
+        }
+    }
+    return $out;
+}
+
+/**
+ * Decrypt (basic)
+ */
+function coddns_decrypt($str){
+    $out = "";
+
+    $chars = explode("-", $str);
+    $nchars = count($chars);
+    $i = 0;
+    foreach ($chars as $char){
+        $out .= chr(sqrt($char)-($i++));
+    }
+    return $out;   
 }
 
 
