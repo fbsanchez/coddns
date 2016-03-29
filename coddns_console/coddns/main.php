@@ -154,7 +154,7 @@ $label_set = 0;
 $data["label"] = "[";
 while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
     // get all items dependent on those block elements
-    $q = "select id, tag from stats_item where id_block=" . $row_blocks["id_block"] . ";";
+    $q = "select id, tag from stats_item where id_block=" . $row_blocks["id_block"] . " and tag like '%updates%';";
     $r_items = $dbclient->exeq($q) or die($dbclient->lq_error());
 
     while ($row_items = $dbclient->fetch_array ($r_items)) {
