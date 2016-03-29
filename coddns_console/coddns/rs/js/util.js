@@ -303,6 +303,9 @@ function getNextColor(){
 function getCurrentColor(){
   return colors[color_index];
 }
+function getNextShape(){
+  return shapes[(color_index = (color_index+1)%colors.length)];
+}
 function getCurrentShape(){
   return shapes[color_index];
 }

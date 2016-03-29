@@ -17,6 +17,7 @@
 
 require_once (dirname(__FILE__) . "/include/config.php");
 require_once (dirname(__FILE__) . "/lib/util.php");
+require_once (dirname(__FILE__) . "/lib/graphs.php");
 require_once (dirname(__FILE__) . "/lib/coduser.php");
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
@@ -53,6 +54,135 @@ session_write_close();
 if ($user->get_is_logged()){
     // USER ZONE - OVERALL STATUS VIEW
 
+
+$dbclient = new DBClient($db_config);
+
+
+/******************************************************
+ * GRAPHS
+ *  1st: zone usage
+ *  2st: zone general statistics (require coddns_core)
+ ******************************************************/
+
+/**
+ * 1st GRAPH: Zone usage
+ */
+// build data for zones per server chart:
+$dbclient->connect() or die($dbclient->lq_error());
+$q = "select s.id,s.tag,(select count(*) from zones z where z.server_id=s.id ) as nzones from servers s;";
+$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+$chart_pie["title"]  = "Zonas por servidor";
+$chart_pie["id"]     = "zone_usage";
+$chart_pie["width"]  = "150";
+$chart_pie["height"] = "250";
+$chart_pie["legend_style"] = "width: 150px;";
+
+$labels   = "";
+$data     = "";
+$bgColor  = "";
+$hbgColor = "";
+
+while ($r = $dbclient->fetch_object($results)) {
+    $labels   .= "'" . $r->tag . "',";
+    $data     .= $r->nzones . ",";
+    $bgColor  .= "getNextColor(),";
+    $hbgColor .= "getCurrentShape(),";
+}
+$chart_pie["data"]["labels"]           = rtrim($labels, ",");
+$chart_pie["data"]["datasets"]["data"] = rtrim($data, ",");
+$chart_pie["data"]["datasets"]["backgroundColor"]      = rtrim($bgColor, ",");
+$chart_pie["data"]["datasets"]["hoverBackgroundColor"] = rtrim($hbgColor, ",");
+
+$dbclient->disconnect();
+
+
+/* --------------------------------------------------------------------------- */
+/* --------------------------------------------------------------------------- */
+
+
+/**
+ * 2nd GRAPH: zone general statistics (require coddns_core)
+ */
+$dbclient->connect() or die($dbclient->lq_error());
+// Build data for linear graph
+
+$chart_linear["title"]  = "Estad&iacute;sticas por zona";
+$chart_linear["id"]     = "zone_stats";
+$chart_linear["width"]  = "600";
+$chart_linear["height"] = "400";
+$chart_linear["legend_style"] = "width: 600px;";
+
+// get all block elements dependent on zones:
+$q = "select b.id_block,z.domain from stats_szb b, zones z where b.id_zone=z.id;";
+$r_blocks = $dbclient->exeq($q) or die($dbclient->lq_error());
+
+$i = 0; // initialize 'series' counter
+
+$utime_init = time() - 86400;
+$time_interval = 300;
+$now = time();
+
+$chart_linear["labels"] = "";
+for ($x = 0; $x <= ($now-$utime_init); $x+=$time_interval) {
+    $chart_linear["labels"] .= "'" . date("Ymd H:i:s", $utime_init + $x) . "'";
+    if ($x < $now){
+        $chart_linear["labels"] .= ",";
+    }
+}
+
+while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
+    // get all items dependent on those block elements
+    $q = "select id, tag from stats_item where id_block=" . $row_blocks["id_block"] . ";";
+    $r_items = $dbclient->exeq($q) or die($dbclient->lq_error());
+
+    while ($row_items = $dbclient->fetch_array ($r_items)) {
+        // get all final data
+        $q = "select * from (select * from stats_data where id_item=" . $row_items["id"] . " and utimestamp >= " . $utime_init . " order by utimestamp desc) sub order by utimestamp asc;";
+        $r_data = $dbclient->exeq($q) or die($dbclient->lq_error());
+
+        $d[$i]["label"] = $row_items["tag"];
+        $d[$i]["data"]  = "";
+        $d[$i]["backgroundColor"] = "getNextShape()";
+        $d[$i]["borderColor"]     = "getCurrentShape()";
+
+        $column = 0;
+        while ($row_data = $dbclient->fetch_array ($r_data)) {
+            // organize
+            $current_time_segment_floor = $utime_init + (($column) * $time_interval);
+            while ( $current_time_segment_floor < $now ){
+                // calculate segment
+                $current_time_segment_floor = $utime_init + (($column) * $time_interval);
+                $current_time_segment_ceil  = $utime_init + (($column+1) * $time_interval);
+
+                // check data in segment (column)
+                if ( ( $current_time_segment_ceil  >  $row_data["utimestamp"] )
+                  && ( $current_time_segment_floor <= $row_data["utimestamp"] ) ) {
+                    // if the value is in the "segment" of time is represented in the graph, add the data:
+                    $d[$i]["data"] .= $row_data["value"] . ",";
+                    $column++;
+                    break;
+                }
+                else{
+                    // else set to null, and skip this segment
+                    $d[$i]["data"] .= "null,";
+                }
+                $column++;
+            }
+        }
+        $d[$i]["data"] = rtrim($d[$i]["data"], ",");
+
+        $d[$i]["data"] .= "";
+        // Next dataset
+        $i++;
+    }
+}
+$chart_linear["datasets"] = $d;
+
+
+
+
+
 ?>
 
 <section style="margin-bottom: 20px; text-align: justify;">
@@ -61,185 +191,15 @@ if ($user->get_is_logged()){
         <h3>Resumen general</h3>
         <div class="chart_wrapper">
             <div class="graph_wrapper">
-                <h4>Zonas por servidor</h4>
-                <br>
-                <canvas id="zone_usage" width="150" height="150"></canvas>
-                <div class="canvas_legend" style="width: 150px;" id="zone_usage_legend"></div>
+                <?php
+                    echo print_graph_pie($chart_pie);
+                ?>
             </div>
             <div class="graph_wrapper">
-                <h4>Estad&iacute;sticas por zona</h4>
-                <br>
-                <canvas id="zone_stats" width="600" height="200"></canvas>
-                <div class="canvas_legend" style="width: 600px;"  id="zone_stats_legend"></div>
-            </div>
-
-<?php
-/**********************************************************
- * GRAPHS
- *  1st: zone usage
- *  2st: zone general statistics (require coddns_core)
- ******************************************************/
-
-
-
-/**
- * 1st GRAPH: Zone usage
- */
-?>
-
-
-            <script type="text/javascript">
-                var zone_usage = document.getElementById("zone_usage").getContext('2d');;
-                var zonedata   = [
-
-<?php
-    $dbclient = new DBClient($db_config);
-    $dbclient->connect() or die($dbclient->lq_error());
-    $q = "select s.id,s.tag,(select count(*) from zones z where z.server_id=s.id ) as nzones from servers s;";
-    $results = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
-    while ($r = $dbclient->fetch_object($results)) {
-        ?>
-            {
-                value: <?php echo $r->nzones; ?>,
-                label: "<?php echo $r->tag;?>",
-                color: getNextColor()
-            },
-    <?php
-    }
-
-    $dbclient->disconnect();
-?>
-                ];
-                var zone_usage_chart = new Chart(zone_usage).Pie(zonedata,{
-                    responsive : false,
-                    animationEasing: "easeOutQuart",
-                    animationSteps : 40,
-                    legendTemplate : "<ul class=\"zone_usage-legend\">"
-                    + "<% for (var i=0; i<segments.length; i++){%>"
-                        +"<li style=\""
-                        + "padding: 0;"
-                        +"\"><span style=\""
-                            + "background-color:<%=segments[i].fillColor%>;"
-                            + "width: 1em;"
-                            + "height: 1em;"
-                            + "display: inline-block;"
-                            + "margin: -3px 15px;"
-                        + "\"></span>"
-                        +"<%if(segments[i].label){%><%=segments[i].label%><%}%>"
-                    +"</li><%}%></ul>"
-                  });
-                var segments = zone_usage_chart.segments;
-                document.getElementById("zone_usage_legend").innerHTML = zone_usage_chart.generateLegend();
-
-            </script>
-<?php
-/**
- * 2nd GRAPH: zone general statistics (require coddns_core)
- */
-
-
-// retrieve axis data:
-
-$dbclient->connect() or die($dbclient->lq_error());
-
-$data = array();
-
-// get all block elements dependent on zones:
-$q = "select b.id_block,z.domain from stats_szb b, zones z where b.id_zone=z.id;";
-$r_blocks = $dbclient->exeq($q) or die($dbclient->lq_error());
-
-$i = 0; // initialize 'series' counter
-$label_set = 0;
-$data["label"] = "[";
-while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
-    // get all items dependent on those block elements
-    $q = "select id, tag from stats_item where id_block=" . $row_blocks["id_block"] . " and tag like '%updates%';";
-    $r_items = $dbclient->exeq($q) or die($dbclient->lq_error());
-
-    while ($row_items = $dbclient->fetch_array ($r_items)) {
-        // get all final data
-        $q = "select * from stats_data where id_item=" . $row_items["id"] . " order by utimestamp desc limit 20;";
-        $r_data = $dbclient->exeq($q) or die($dbclient->lq_error());
-
-        $data["datasets"][$i]["label"] = $row_items["tag"];
-        $data["datasets"][$i]["data"]  = "[";
-
-        while ($row_data = $dbclient->fetch_array ($r_data)) {
-            // organize
-            $data["datasets"][$i]["data"] .= $row_data["value"] . ",";
-            if ($label_set == 0){
-                $data["label"] .= "'" . date("H:i:s",$row_data["utimestamp"]) . "',";
-            }
-        }
-        $data["datasets"][$i]["data"] = rtrim($data["datasets"][$i]["data"], ",");
-        if ($label_set == 0){
-            $data["label"] = rtrim($data["label"], ",");
-            $data["label"] .= "]";
-        }
-        $label_set = 1;
-
-        $data["datasets"][$i]["data"] .= "]";
-        // Next dataset
-        $i++;
-    }
-}
-
-?>
-<div>
-</div>
-
-
-            <script type="text/javascript">
-                var zone_stats = document.getElementById("zone_stats").getContext('2d');
-                var data = {
-                labels: <?php echo $data["label"]; ?>,
-                datasets: [
                 <?php
-
-                foreach ($data["datasets"] as $dataset){
-                    echo "{";
-                    echo "label: '" . $dataset["label"] . "',";
-                    ?>
-                    strokeColor: getNextColor(),
-                    pointColor: getCurrentColor(),
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(151,187,205,1)",
-                    <?php
-                    echo "data: " . $dataset["data"];
-                    echo "},";
-                }
+                    echo print_graph_line($chart_linear);
                 ?>
-                ]};
-                var zone_stats_chart = new Chart(zone_stats).Line(data, {
-                    multiTooltipTemplate: function(chartData){
-                        return chartData.datasetLabel+" : " + chartData.value;
-                    },
-                    responsive : false,
-                    pointDotRadius : 3,
-                    pointDotStrokeWidth : 1,
-                    datasetFill: false,
-                    animationSteps : 40,
-                    legendTemplate : "<ul class=\"zone_usage-legend\">"
-                    + "<% for (var i=0; i<datasets.length; i++){%>"
-                        +"<li style=\""
-                        + "padding: 0;"
-                        +"\"><span style=\""
-                            + "background-color:<%=datasets[i].pointColor%>;"
-                            + "width: 1em;"
-                            + "height: 1em;"
-                            + "display: inline-block;"
-                            + "margin: -3px 15px;"
-                        + "\"></span>"
-                        +"<%if(datasets[i].label){%><%=datasets[i].label%><%}%>"
-                    +"</li><%}%></ul>"
-                });
-                var datasets = zone_stats_chart.datasets;
-                document.getElementById("zone_stats_legend").innerHTML = zone_stats_chart.generateLegend();
-
-            </script>
-
+            </div>
 
         </div>
 

@@ -49,6 +49,6 @@ canvas{
 }
 div.canvas_legend{
 }
-ul{
+div > ul{
     width: auto;
 }

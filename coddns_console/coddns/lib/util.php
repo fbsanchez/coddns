@@ -42,6 +42,10 @@ function load_extra_config($cnf){
 function coddns_encrypt($str){
     $out = "";
 
+    if ((! isset($str)) || ($str == "")){
+        return null;
+    }
+
     $chars = str_split($str);
     $nchars = count($chars);
     $i = 0;
@@ -59,6 +63,10 @@ function coddns_encrypt($str){
  */
 function coddns_decrypt($str){
     $out = "";
+
+    if ((! isset($str)) || ($str == "")){
+        return null;
+    }
 
     $chars = explode("-", $str);
     $nchars = count($chars);

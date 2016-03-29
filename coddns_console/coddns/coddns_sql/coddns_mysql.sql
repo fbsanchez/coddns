@@ -270,6 +270,7 @@ INSERT INTO record_types(tag,description,auth_level)
 INSERT INTO settings(field,value)
  values
     ("slack_url", ""),
-    ("installdir", "/opt/coddns/");
+    ("installdir", "/opt/coddns/"),
+    ("rndc_key", "/share/ddns/rndc.key");
 
 
