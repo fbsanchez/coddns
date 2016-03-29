@@ -159,10 +159,10 @@ while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
 
     while ($row_items = $dbclient->fetch_array ($r_items)) {
         // get all final data
-        $q = "select * from stats_data where id_item=" . $row_items["id"] . " order by utimestamp asc limit 10;";
+        $q = "select * from stats_data where id_item=" . $row_items["id"] . " order by utimestamp desc limit 20;";
         $r_data = $dbclient->exeq($q) or die($dbclient->lq_error());
 
-        $data["datasets"][$i]["label"] = $row_blocks["domain"] . "/" . array_pop (explode ("::", $row_items["tag"]));
+        $data["datasets"][$i]["label"] = $row_items["tag"];
         $data["datasets"][$i]["data"]  = "[";
 
         while ($row_data = $dbclient->fetch_array ($r_data)) {
@@ -201,7 +201,6 @@ while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
                     echo "{";
                     echo "label: '" . $dataset["label"] . "',";
                     ?>
-                    fillColor: "rgba(0,0,0,0)",
                     strokeColor: getNextColor(),
                     pointColor: getCurrentColor(),
                     pointStrokeColor: "#fff",
@@ -214,8 +213,13 @@ while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
                 ?>
                 ]};
                 var zone_stats_chart = new Chart(zone_stats).Line(data, {
+                    multiTooltipTemplate: function(chartData){
+                        return chartData.datasetLabel+" : " + chartData.value;
+                    },
                     responsive : false,
-                    animationEasing: "easeOutQuart",
+                    pointDotRadius : 3,
+                    pointDotStrokeWidth : 1,
+                    datasetFill: false,
                     animationSteps : 40,
                     legendTemplate : "<ul class=\"zone_usage-legend\">"
                     + "<% for (var i=0; i<datasets.length; i++){%>"
