@@ -84,6 +84,64 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 	 		id.childNodes[1].childNodes[1].setAttribute("src", "<?php echo $config["html_root"] . "/rs/img/people-2.png"; ?>");
 	 	}
 	 }
+	 /*
+		pass from multiselect other multiselect items ordered
+	 */
+	 function SelectMoveRows(SS1,SS2) {
+	    var SelID='';
+	    var SelText='';
+	    for (i=SS1.options.length - 1; i>=0; i--) {
+	        if (SS1.options[i].selected == true) {
+	            SelID=SS1.options[i].value;
+	            SelText=SS1.options[i].text;
+	            var newRow = new Option(SelText,SelID);
+	            SS2.options[SS2.length]=newRow;
+	            SS1.options[i]=null;
+	        }
+	    }
+	    SelectSort(SS2);
+	}
+
+    function SelectMoveRows(SS1,SS2) {
+    	var SelID='';
+    	var SelText='';
+    	// Move rows from SS1 to SS2 from bottom to top
+    	for (i=SS1.options.length - 1; i>=0; i--) {
+	        if (SS1.options[i].selected == true) {
+	            SelID=SS1.options[i].value;
+	            SelText=SS1.options[i].text;
+	            var newRow = new Option(SelText,SelID);
+	            SS2.options[SS2.length]=newRow;
+	            SS1.options[i]=null;
+	        }
+    	}
+    	SelectSort(SS2);
+	}
+
+	function SelectSort(SelList) {
+	    var ID='';
+	    var Text='';
+	    for (x=0; x < SelList.length - 1; x++)
+	    {
+	        for (y=x + 1; y < SelList.length; y++)
+	        {
+	            if (SelList[x].text > SelList[y].text)
+	            {
+	                // Swap rows
+	                ID=SelList[x].value;
+	                Text=SelList[x].text;
+	                SelList[x].value=SelList[y].value;
+	                SelList[x].text=SelList[y].text;
+	                SelList[y].value=ID;
+	                SelList[y].text=Text;
+	            }
+	        }
+	    }
+	}
+
+	/*
+		end function multiselect
+	*/
 </script>
 <body onload="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_users');">
 	<section>
@@ -106,7 +164,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 		</nav>
 	</section>
 	<div id="form_create_users" class="pop_up_form" style="display:none;" draggable>
-		<form id="newusers" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
+		<form name="new_users" id="newusers" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
 			<div class="pop_up_headers">
 				<h3>Crear Usuarios</h3>
 				<button class="pop_up_headers_close" onclick="toggleDisplay('form_create_users')">X</button>
@@ -133,7 +191,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 						<label for="user_groups">Grupos:</label>
 					</li>
 					<li>
-						<select id="user_groups" name="groups" multiple>
+						<select id="user_groups" name="select_groups" multiple>
 							<?php
 							while ($row = $dbclient->fetch_array ($s)) {
 							?>
@@ -143,12 +201,10 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 							?>
 						</select>
 						<div class="multiselect_button">
-							<button>>></button>
-							<button>></button>
-							<button><</button>
-							<button><<</button>
+							<button onClick="SelectMoveRows(document.new_users.select_groups,document.new_users.groups)">></button>
+							<button onClick="SelectMoveRows(document.new_users.groups, document.new_users.select_groups)"><</button>
 						</div>
-						<select name="rol" multiple>
+						<select name="groups" multiple>
 						</select>
 					</li>
 				</ul>
