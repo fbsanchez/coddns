@@ -31,8 +31,20 @@ if (   (! isset ($_POST["email"])  )
     || (! isset ($_POST["groups"]) )) {
     $error = 1;
 }
-var_dump($error);
+
 var_dump($_POST);
+var_dump($error);
+/*
+if(!$error){
+	$dbclient->connect() or die ($dbclient->lq_error());
+	$q = "insert into users (mail, rol) values ('" . $_POST["email"] . "', '" . $_POST["rol"] . "');";
+	$dbclient->exeq($q) or die($dbclient->lq_error());
+	//$r = "select id from users where mail='"$_POST["email"]"';";
+	//$s = "insert into tusers_groups (gid, oid) values (aki va el bucle para que meta todos los grupos, "$dbclient->exeq($r) or die($dbclient->lq_error())");";
+	//$dbclient->exeq($s) or die($dbclient->lq_error());
+	$dbclient->disconnect();
+}
+*/
 ?>
 
 

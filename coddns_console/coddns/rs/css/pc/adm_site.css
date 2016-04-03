@@ -115,4 +115,18 @@ nav ul li a.selected > div {
     background-color: #1F282B; 
 }
 
+.button_users{
+    margin: 10px;
+    padding: 5px 10px 5px;
+    border: none;
+    background: #EC8606;
+    color: #FFF;
+    transition: border-radius 0.1s 0s, box-shadow 0.1s 0s;
+    cursor: pointer;
+    float: right;
+}
 
+.button_users:hover{
+    border-radius: 15px 0 15px 0px;
+    box-shadow: 0 0 2px #ccc;
+}

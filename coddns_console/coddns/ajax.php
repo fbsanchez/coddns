@@ -130,9 +130,8 @@ function list_users($data) {
 
 	?>
 	<div>
-		<button onclick="toggleDisplay('form_create_users')">Crear un nuevo usuario</button>
-		<button>Eliminar seleccionados</button>
-		<button>Eliminar Todos Menos El Administrador</button>
+		<button class="button_users" onclick="toggleDisplay('form_create_users')">Crear usuario</button>
+		<button class="button_users" onclick="toggleDisplay('form_delete_users')">Eliminar usuarios</button>
 	</div>
 
 	<table>
@@ -144,6 +143,7 @@ function list_users($data) {
 				<td>Ip &Uacuteltimo acceso</td>
 				<td>Miembro desde</td>
 				<td>Acciones</td>
+				<td><input type="checkbox" /></td>
 			</tr>
 		</thead>
 	<?php
@@ -160,6 +160,7 @@ function list_users($data) {
 		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
 		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/></a>
 		        </td>
+		        <td><input type="checkbox" /></td>
 		    </tr>
 	    </tbody>
 	<?php
@@ -186,14 +187,11 @@ function list_groups($data) {
 	$q = "select * from groups;";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
-	$l = "select count(u.id) as count_user from users u, groups g, tusers_groups ug where u.id = ug.oid and g.id = ug.gid;";
-	$s = $dbclient->exeq($l) or die ($dbclient->lq_error());
-
 	?>
 
 	<div>
-		<button>Crear un nuevo grupo</button>
-		<button>Eliminar grupos seleccionados</button>
+		<button class="button_users">Crear grupo</button>
+		<button class="button_users">Eliminar grupos</button>
 	</div>
 
 	<table>
@@ -206,16 +204,30 @@ function list_groups($data) {
 			</tr>
 		</thead>
 	<?php
-	while ($row = $dbclient->fetch_array ($r) and $row2 = $dbclient->fetch_array ($s)) {
+	while ($row = $dbclient->fetch_array ($r)) {
 	?>
 		<tbody>
 		    <tr>
 		        <td><?php echo $row["tag"];?></td>
 		        <td><?php echo $row["description"];?></td>
-		        <td><?php echo $row2["count_user"];?></td>
+		        <td>
+		        	<?php
+			        	$l = "select count(u.id) as count_user from users u, groups g, tusers_groups ug where u.id = ug.oid and g.id = ug.gid and g.tag = '" . $row["tag"] . "';";
+						$s = $dbclient->exeq($l) or die ($dbclient->lq_error());
+			        	while ($row2 = $dbclient->fetch_array ($s)){
+			        		if ($row2["count_user"]){
+			        			echo $row2["count_user"];
+			        		}
+			        		else {
+			        			echo 0;
+			        		}
+			        	}
+		        	?>
+		        </td>
 		        <td>
 		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
 		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/></a>
+		        	<input type="checkbox"/>
 		        </td>
 		    </tr>
 	    </tbody>

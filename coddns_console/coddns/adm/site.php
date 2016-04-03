@@ -143,7 +143,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 							<?php
 							while ($row = $dbclient->fetch_array ($r)) {
 							?>
-								<option name="id_rol"><?php echo $row['tag']; ?></option>
+								<option><?php echo $row['tag']; ?></option>
 							<?php
 							}
 							?>
@@ -157,7 +157,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 							<?php
 							while ($row = $dbclient->fetch_array ($s)) {
 							?>
-								<option name="id_grupos"><?php echo $row['tag']; ?></option>
+								<option><?php echo $row['tag']; ?></option>
 							<?php
 							}
 							?>
@@ -176,8 +176,25 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 			</div>
 		</form>
 	</div>
+	
+	<div id="form_delete_users" class="pop_up_form" style="display:none;" draggable>
+		<form method="POST" action="">
+			<div class="pop_up_headers">
+				<h3>Borrar Usuarios</h3>
+				<button class="pop_up_headers_close" onclick="toggleDisplay('form_delete_users')">X</button>
+			</div>
+			<div class="pop_up_body">
+				<p>¿Estas seguro de eliminar los usuarios seleccionados?</p>
+				<p>¿Deseas eliminar a todos los usuarios menos el admnistrador?</p>
+			</div>
+			<div class="pop_up_footer">
+				<input type="submit" name="Enviar"></input>
+			</div>
+		</form>
+	</div>
+	
 	<section id="adm_site_section">
-		
+	
 	</section>
 	<a href="<?php echo $config["html_root"] . "/?m=adm" ?>" title="Return" class="button_return">
 	<img src="<?php echo $config["html_root"] . "/rs/img/web-7.png"; ?>" alt="Service Settings"/></a>
