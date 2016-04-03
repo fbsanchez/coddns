@@ -99,44 +99,6 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 	            SS1.options[i]=null;
 	        }
 	    }
-	    SelectSort(SS2);
-	}
-
-    function SelectMoveRows(SS1,SS2) {
-    	var SelID='';
-    	var SelText='';
-    	// Move rows from SS1 to SS2 from bottom to top
-    	for (i=SS1.options.length - 1; i>=0; i--) {
-	        if (SS1.options[i].selected == true) {
-	            SelID=SS1.options[i].value;
-	            SelText=SS1.options[i].text;
-	            var newRow = new Option(SelText,SelID);
-	            SS2.options[SS2.length]=newRow;
-	            SS1.options[i]=null;
-	        }
-    	}
-    	SelectSort(SS2);
-	}
-
-	function SelectSort(SelList) {
-	    var ID='';
-	    var Text='';
-	    for (x=0; x < SelList.length - 1; x++)
-	    {
-	        for (y=x + 1; y < SelList.length; y++)
-	        {
-	            if (SelList[x].text > SelList[y].text)
-	            {
-	                // Swap rows
-	                ID=SelList[x].value;
-	                Text=SelList[x].text;
-	                SelList[x].value=SelList[y].value;
-	                SelList[x].text=SelList[y].text;
-	                SelList[y].value=ID;
-	                SelList[y].text=Text;
-	            }
-	        }
-	    }
 	}
 
 	/*
@@ -164,7 +126,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 		</nav>
 	</section>
 	<div id="form_create_users" class="pop_up_form" style="display:none;" draggable>
-		<form name="new_users" id="newusers" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
+		<form name="new_users" id="newusers" method="POST" action="" onsubmit="fsgo('newusers', 'ajax_message','adm/adm_rq_newuser.php', true, raise_ajax_message);return false;">
 			<div class="pop_up_headers">
 				<h3>Crear Usuarios</h3>
 				<button class="pop_up_headers_close" onclick="toggleDisplay('form_create_users')">X</button>
@@ -173,7 +135,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 				<ul>
 					<li>
 						<label for="user_email">Email:</label>
-						<input type="text" id="user_email" name="email" placeholder="coddns@gmail.com" required="required"></input>
+						<input type="email" id="user_email" name="email" placeholder="user@coddns.org" required="required"></input>
 					</li>
 					<li>
 						<label for="user_rol">Rol:</label>
@@ -181,7 +143,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 							<?php
 							while ($row = $dbclient->fetch_array ($r)) {
 							?>
-								<option name="rol"><?php echo $row['tag']; ?></option>
+								<option name="id_rol"><?php echo $row['tag']; ?></option>
 							<?php
 							}
 							?>
@@ -195,7 +157,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 							<?php
 							while ($row = $dbclient->fetch_array ($s)) {
 							?>
-								<option name="grupos"><?php echo $row['tag']; ?></option>
+								<option name="id_grupos"><?php echo $row['tag']; ?></option>
 							<?php
 							}
 							?>
@@ -210,7 +172,7 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 				</ul>
 			</div>
 			<div class="pop_up_footer">
-				<input type="submit"></input>
+				<input type="submit" name="Enviar"></input>
 			</div>
 		</form>
 	</div>

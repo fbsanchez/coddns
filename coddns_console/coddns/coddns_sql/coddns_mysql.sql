@@ -246,6 +246,7 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','','',100,'Panel de administraci&oacute;n'),
     ('adm','site','',100,'Panel de administraci&oacute;n del sitio'),
     ('adm','site','manager',100,'Administraci&oacute;n del sitio'),
+    ('adm','site','rq_new_user',100,'Crear un nuevo usuario'),
     ('adm','service','',100,'Centro de administraci&oacute;n'),
     ('adm','service','status',100,'Estado del servicios'),
     ('adm','service','manager',100,'Administraci&oacute;n del servicios'),

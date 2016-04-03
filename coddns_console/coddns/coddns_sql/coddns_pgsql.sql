@@ -188,6 +188,7 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('adm','','',100),
     ('adm','site','',100),
     ('adm','site','manager',100),
+    ('adm','site','rq_new_user',100),
     ('adm','service','',100),
     ('adm','service','manager',100),
     ('adm','servers','',100),

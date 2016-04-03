@@ -1,8 +1,9 @@
 .pop_up_form{
-    padding-top: 10px; 
+    border-top: 10px solid #EC8606;  
     width: 30%;
     border-radius: 5px;
     background-color: #ffffff;
+    position: fixed;
 }
 .pop_up_form form{
     height: 210px;
