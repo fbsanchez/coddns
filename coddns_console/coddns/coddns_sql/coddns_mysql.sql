@@ -252,6 +252,7 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','service','manager',100,'Administraci&oacute;n del servicios'),
     ('adm','servers','',100,'Administraci&oacute;n de servidores'),
     ('adm','server','status',100,'Estado del servidor'),
+    ('adm','server','control',100,'Control del servidor'),
     ('adm','server','manager',100,'Centro de configuraci&oacute;n de servidores'),
     ('adm','server','settings_manager',100,'Editor de configuraci&oacute;n de servidores'),
     ('adm','server','rq_settings_manager',100,'Receptor de formulario de configuraci&oacute;n del servidor'),
