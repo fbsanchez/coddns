@@ -128,6 +128,35 @@ CREATE TABLE IF NOT EXISTS hosts (
     CONSTRAINT fkey_host_rid   FOREIGN KEY (rid) REFERENCES hosts(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- Table SZB
+CREATE TABLE IF NOT EXISTS stats_szb (
+    id_block serial,
+    id_server bigint DEFAULT NULL,
+    id_zone bigint DEFAULT NULL,
+    tag character varying(250),
+    CONSTRAINT pkey_stats_szb PRIMARY KEY (id_block,tag)
+);
+
+
+-- Table stats_item
+CREATE TABLE IF NOT EXISTS stats_item (
+    id serial,
+    id_block bigint unsigned NOT NULL,
+    tag character varying(250),
+    CONSTRAINT pkey_stats_stats_item PRIMARY KEY (id),
+    CONSTRAINT fkey_stats_item_block FOREIGN KEY (id_block) REFERENCES stats_szb(id_block) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+
+-- Table stats_data
+CREATE TABLE IF NOT EXISTS stats_data (
+    value int,
+    utimestamp int,
+    id_item bigint unsigned NOT NULL,
+    CONSTRAINT pkey_stats_stats_data PRIMARY KEY (utimestamp,id_item),
+    CONSTRAINT fkey_stats_data_item FOREIGN KEY (id_item) REFERENCES stats_item(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+
 -- Table site ACL
 CREATE TABLE IF NOT EXISTS site_acl(
     m character varying(200),
@@ -138,6 +167,37 @@ CREATE TABLE IF NOT EXISTS site_acl(
     CONSTRAINT pkey_site_acl PRIMARY KEY(m,z,op)
 );
 
+-- Auxiliary tables
+
+-- Table site ACL
+CREATE TABLE IF NOT EXISTS site_acl(
+    m character varying(200),
+    z character varying(200),
+    op character varying(200),
+    auth_level int NOT NULL DEFAULT 100,
+    tag character varying(200) default NULL,
+    CONSTRAINT pkey_site_acl PRIMARY KEY(m,z,op)
+);
+
+
+-- Table versioning
+CREATE TABLE IF NOT EXISTS versioning(
+    id serial,
+    filepath character varying(1024),
+    original_filepath character varying(255),
+    created timestamp DEFAULT now(),
+    description text,
+    CONSTRAINT pkey_versioning PRIMARY KEY(id,original_filepath)
+);
+
+
+-- Table settings
+CREATE TABLE IF NOT EXISTS settings(
+    id serial,
+    field character varying(255) NOT NULL UNIQUE,
+    value text,
+    CONSTRAINT pkey_settings PRIMARY KEY(id,field)
+);
 
 -- EO Table definitions
 
@@ -197,6 +257,7 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('cms','','',0),
     ('','ajax','',0);
 
+
 -- RECORD_TYPES
 INSERT INTO record_types(tag,description,auth_level)
  values
@@ -204,3 +265,13 @@ INSERT INTO record_types(tag,description,auth_level)
     ('NS','NS register type',0),
     ('CNAME','CNAME register type',0),
     ('MX','MX register type',0);
+
+
+-- SETTINGS - DEFAULT
+INSERT INTO settings(field,value)
+ values
+    ("slack_url", ""),
+    ("installdir", "/opt/coddns/"),
+    ("rndc_key", "/share/ddns/rndc.key");
+
+
