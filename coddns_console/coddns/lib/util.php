@@ -182,7 +182,7 @@ function write_file($content, $filepath,$mode = "w"){
 
 
 /**
- * Securize an argument passed through GET method
+ * Securize an argument passed to the script
  */
 function secure_get($argument, $mode = "url_get"){
     require_once(dirname(__FILE__) . "/db.php");
