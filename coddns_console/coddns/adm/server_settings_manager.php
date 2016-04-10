@@ -103,6 +103,11 @@ else { // SERVER CREDENTIALS ARE SET
 	$sshclient = new SSHClient($server_credentials);
 	//	$output = $sshclient->launch("cat /etc/named.conf");
 
+	/**
+	 * Check if we're connected & authenticated into the server
+	 * 
+	 */
+
 	$scp_res = $sshclient->get_file("/var/named/data/test.txt", "/tmp/prueba.txt");
 	$scp_res = $sshclient->send_file("/tmp/prueba.txt", "/root/prueba.txt");
 
