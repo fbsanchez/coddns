@@ -87,7 +87,7 @@ else {
     }
     if ( $r->ip != ip2long(_ip()) ){
 		$ip  = _ip();
-        $iip = long2ip($ip);
+        $iip = ip2long($ip);
         $ttl = $r->ttl;
         // 2- UPDATE IF NECESSARY
         $q="update hosts set ip='" . $iip . "', last_updated=now() where oid=(select id from users where mail='" . $user . "') and tag='" . $host . "';";
@@ -97,7 +97,7 @@ else {
         $out = shell_exec("dnsmgr d " . $host . " A " . $ip);
         $out = shell_exec("dnsmgr a " . $host . " A " . $ip . " " . $ttl);
 
-        echo "OK: " . $host . " actualizado a " . $ip . $out . "\n";
+        echo "OK: " . $host . " actualizado a " . $ip  . " " . $out . "\n";
     }
     else{
         echo "OK: La ip asociada a " . $host . " ya estaba actualizada.\n";
