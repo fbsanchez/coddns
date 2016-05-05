@@ -183,7 +183,7 @@ $text["de"]["reg_type"]      = "DNS record type";
             <label><?php echo $text[$lan]["label_tag"];?></label>
         </li>
         <li>
-            <div style="float:left;"><input type="text" id="h" name="h" onchange="checkHostName(this);return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/><i class="extension">.<?php echo $config["domainname"]?></i></div>
+            <div style="float:left;padding: 2px;"><input type="text" id="h" name="h" onchange="checkHostName(this);return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/><i class="extension">.<?php echo $config["domainname"]?></i></div>
 			<div style="float:right;">
 				<label><?php echo $text[$lan]["reg_type"];?>:</label> 
                 <script type="text/javascript">
@@ -251,7 +251,7 @@ $text["de"]["reg_type"]      = "DNS record type";
                 <label><?php echo $text[$lan]["label_ip"];?></label>
             </li>
             <li>
-                <div style="float:left;">
+                <div style="float:left;padding: 2px;">
                     <input type="text" id="ip" name="ip" value="<?php echo _ip();?>" required/> <button onclick="select_my_ip(); return false;"><?php echo $text[$lan]["label_getip"];?></button>
                 </div>
             </li>
