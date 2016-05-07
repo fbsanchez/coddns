@@ -238,9 +238,28 @@ $text["de"]["reg_type"]      = "DNS record type";
 			</div>
             <div id="rec_info" style="clear:both;"></div>
         </li>
-    <div style="float:right;">
-        <span>TTL:</span> <input style="margin: 0 35px 0 15px; width: 90px;" type="number" id="ttl" name="ttl" value="12" />
-    </div>
+        <li>
+            <div style="float:right;">
+                <span>Grupo:</span> <select style="margin: 0 35px 0 15px; width: 90px;" name="group">
+                
+                <?php
+                    // Retrieve all Groups with read grant available for current user
+                    $groups = $user->get_read_groups();
+                    foreach ($groups as $group) {
+                ?>
+                    <option value="<?php echo $group;?>"><?php echo $group;?></option>
+                <?php
+                }
+                
+                ?>
+                </select>
+            </div>
+        </li>
+        <li>
+            <div style="float:right;">
+                <span>TTL:</span> <input style="margin: 0 35px 0 15px; width: 90px;" type="number" id="ttl" name="ttl" value="12" />
+            </div>
+        </li>
     </ul>
     <?php
         // the custom query depends on RR active - ask via AJAX

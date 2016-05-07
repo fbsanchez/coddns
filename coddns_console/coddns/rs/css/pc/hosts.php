@@ -23,6 +23,11 @@ section.uarea ul{
     width: 100%;
     margin: 0px auto;
 }
+section.uarea ul li{
+    padding: 1em;
+    padding-left: 0;
+    padding-right: 0;
+}
 div#launch_help_dns_type{
 	cursor: pointer;
 	float:right;
@@ -127,6 +132,9 @@ td.del{
 
 div#rec_info {
     height: 1em;
+    clear: both;
+    position: absolute;
+    margin-top: 35px;
 }
 
 div#myhosts {
