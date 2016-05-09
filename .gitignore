@@ -22,6 +22,10 @@ $RECYCLE.BIN/
 coddns_console/coddns/cms/*
 coddns_console/coddns/include/config.php
 
+# Packaged clients
+coddns_console/coddns/downloads/*.zip
+coddns_console/coddns/downloads/*.tar.gz
+
 # Restricted content
 coddns_core/core
 coddns_core/core/*
