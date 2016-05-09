@@ -62,16 +62,18 @@ function print_graph_line($chart, $alsoPrint = 0){
     $str .= "var " . $chart["id"] . "_data = {\n";
     $str .= "           labels: [" . $chart["labels"] . "],\n";
     $str .= "           datasets: [\n";
-    foreach ($chart["datasets"] as $d) {
-	    $str .= "                      {\n";
-	    $str .= "                        label: ['" . $d["label"] . "'],\n";
-	    $str .= "                        data: [" . $d["data"] . "],\n";
-	    $str .= "                        pointBorderWidth: 1,\n";
-	    $str .= "                        pointHoverRadius: 5,\n";
-	    $str .= "                        backgroundColor: " . $d["backgroundColor"] . ",\n";
-	    $str .= "                        borderColor: " . $d["borderColor"] . "\n";
-	    $str .= "                      },\n";
-    }
+    if (isset($chart["datasets"])) {
+	    foreach ($chart["datasets"] as $d) {
+		    $str .= "                      {\n";
+		    $str .= "                        label: ['" . $d["label"] . "'],\n";
+		    $str .= "                        data: [" . $d["data"] . "],\n";
+		    $str .= "                        pointBorderWidth: 1,\n";
+		    $str .= "                        pointHoverRadius: 5,\n";
+		    $str .= "                        backgroundColor: " . $d["backgroundColor"] . ",\n";
+		    $str .= "                        borderColor: " . $d["borderColor"] . "\n";
+		    $str .= "                      },\n";
+	    }
+	}
     $str .= "            ]};\n"; // end of data
     $str .= "var " . $chart["id"] . "_chart = new Chart(" . $chart["id"] . ", {\n";
     $str .= "               type: 'line',\n";

@@ -177,7 +177,9 @@ while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
         $i++;
     }
 }
-$chart_linear["datasets"] = $d;
+if(isset($d)){
+    $chart_linear["datasets"] = $d;
+}
 
 
 
