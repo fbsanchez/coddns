@@ -153,10 +153,10 @@ else { // SERVER CREDENTIALS ARE SET
 			$local_fin = transfer_conf_files($config, $sshclient, $serverid, $fin);
 
 			if (isset($local_fin)) {
-				echo "<input type='hidden' name='gconf_extra_" . $id . "' value='" . $fin . "'/>";
-				echo "<p>Content of " . $fin . "</p>";
+				echo "<input type='hidden' name='gconf_extra_" . $id . "' value='" . $local_fin . "'/>";
+				echo "<p>Content of " . $local_fin . "</p>";
 				echo "<textarea id='gconf_extra_" . ($id++) . "_content'  onclick='grow(this);' onkeydown='grow(this);'>";
-				array_push($includes_array, read_file($fin));
+				array_push($includes_array, read_file($local_fin));
 				echo "</textarea>";
 			}
 		}
