@@ -32,6 +32,25 @@ else {
 }
 
 
+function transfer_conf_files($config, $sshclient, $serverid, $remote_configfile){
+	// get folder name
+	$localfile   = $config["spooldir"] . $serverid . $remote_configfile;
+	$localfolder = dirname($localfile);
+
+	// create local folder
+	mkdir ($localfolder, 0770,true);
+
+	// retrieve remote file
+	if ($sshclient->get_file($remote_configfile, $localfile)) {
+		error_log("File " . $remote_configfile . " copied to " . $localfolder);
+		return $localfile;
+	}
+	else {
+		error_log("Failed to copy file " . $remote_configfile . " copied to " . $localfolder);
+	}
+	return undef;
+}
+
 // retrieve credentials from DB
 
 $dbclient = new DBClient($db_config);
@@ -41,6 +60,7 @@ $r = $dbclient->get_sql_object($q);
 
 
 // tried to get DB data
+$serverid = $r->id;
 $server_info["user"] = $r->srv_user;
 $server_info["pass"] = coddns_decrypt($r->srv_password);
 
@@ -111,13 +131,9 @@ else { // SERVER CREDENTIALS ARE SET
 	 * 
 	 */
 
-	$scp_res = $sshclient->get_file($r->main_config_file, "/tmp/prueba.txt");
-	$scp_res = $sshclient->send_file("/tmp/prueba.txt", "/root/prueba.txt");
+	$localfile = transfer_conf_files($config, $sshclient, $serverid, $r->main_config_file);
 
-	if ($scp_res) {
-		// set correct grants on remote file
-		$output = $sshclient->launch("chown named:apache /root/prueba.txt; chmod 660 /root/prueba.txt");
-	}
+	// load files
 ?>
 
 	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server_rq_settings_manager.php', true);return false;">
@@ -127,19 +143,22 @@ else { // SERVER CREDENTIALS ARE SET
 	<textarea id="gconf" onclick="grow(this);" onkeydown="grow(this);"><?php
 
 
-	$includes_array = read_file("/etc/named.conf");
+	$includes_array = read_file($localfile);
 
 	?></textarea>
 	<?php
 
 		$id=0;
 		foreach ($includes_array as $fin){
+			$local_fin = transfer_conf_files($config, $sshclient, $serverid, $fin);
 
-			echo "<input type='hidden' name='gconf_extra_" . $id . "' value='" . $fin . "'/>";
-			echo "<p>Content of " . $fin . "</p>";
-			echo "<textarea id='gconf_extra_" . ($id++) . "_content'  onclick='grow(this);' onkeydown='grow(this);'>";
-			array_push($includes_array, read_file($fin));
-			echo "</textarea>";
+			if (isset($local_fin)) {
+				echo "<input type='hidden' name='gconf_extra_" . $id . "' value='" . $fin . "'/>";
+				echo "<p>Content of " . $fin . "</p>";
+				echo "<textarea id='gconf_extra_" . ($id++) . "_content'  onclick='grow(this);' onkeydown='grow(this);'>";
+				array_push($includes_array, read_file($fin));
+				echo "</textarea>";
+			}
 		}
 	?>	
 	<ul>

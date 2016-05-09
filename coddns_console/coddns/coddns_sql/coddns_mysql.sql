@@ -273,6 +273,7 @@ INSERT INTO settings(field,value)
  values
     ("slack_url", ""),
     ("installdir", "/opt/coddns/"),
+    ("spooldir", "/opt/coddns/spool/"),
     ("rndc_key", "/share/ddns/rndc.key");
 
 
