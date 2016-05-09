@@ -36,7 +36,7 @@ else {
 
 $dbclient = new DBClient($db_config);
 
-$q = "Select * from servers where lower(tag)=lower('" . $servername . "');";
+$q = "Select * from servers where tag='" . $servername . "' ;";
 $r = $dbclient->get_sql_object($q);
 
 
@@ -73,7 +73,7 @@ session_write_close();
 if ( (! isset ($server_info["user"]) ) || (! isset($server_info["pass"])) ) {
 ?>
 	<form method="POST" action="#settings_manager" onsubmit="this.elements['p'].value = btoa(this.elements['p'].value);">
-	<p>&gt;&gt; No se ha encontrado una contrase&ntilde;a para acceder a <?php echo long2ip($r->ip);?></p>
+	<p>&gt;&gt; No se han encontrado credenciales para acceder a <?php echo long2ip($r->ip);?></p>
 	<p>Indique una a continuaci&oacute;n:</p>
 	<ul>
 		<li>
@@ -83,6 +83,9 @@ if ( (! isset ($server_info["user"]) ) || (! isset($server_info["pass"])) ) {
 		<li>
 			<label>Contrase&ntilde;a:</label>
 			<input type="password" name="p" placeholder="password"/>
+		</li>
+		<li>
+			<label>Recordar contrase&ntilde;a</label><input type="checkbox" name="r"/>
 		</li>
 		<li>
 			<input type="submit" value="Conectar"/>
@@ -108,7 +111,7 @@ else { // SERVER CREDENTIALS ARE SET
 	 * 
 	 */
 
-	$scp_res = $sshclient->get_file("/var/named/data/test.txt", "/tmp/prueba.txt");
+	$scp_res = $sshclient->get_file($r->main_config_file, "/tmp/prueba.txt");
 	$scp_res = $sshclient->send_file("/tmp/prueba.txt", "/root/prueba.txt");
 
 	if ($scp_res) {
@@ -120,7 +123,7 @@ else { // SERVER CREDENTIALS ARE SET
 	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server_rq_settings_manager.php', true);return false;">
 	<input id="gconf_input" name="gconf_input" type="hidden" />
 
-	<?php echo "<p>Content of /etc/named.conf</p>"; ?>
+	<?php echo "<p>Content of " . $r->main_config_file . "</p>"; ?>
 	<textarea id="gconf" onclick="grow(this);" onkeydown="grow(this);"><?php
 
 

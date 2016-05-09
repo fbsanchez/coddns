@@ -245,11 +245,13 @@ $text["de"]["reg_type"]      = "DNS record type";
                 <?php
                     // Retrieve all Groups with read grant available for current user
                     $groups = $user->get_read_groups();
-                    foreach ($groups as $group) {
-                ?>
-                    <option value="<?php echo $group;?>"><?php echo $group;?></option>
-                <?php
-                }
+                    if (isset($groups)){
+                        foreach ($groups as $group) {
+                    ?>
+                        <option value="<?php echo $group;?>"><?php echo $group;?></option>
+                    <?php
+                        }
+                    }
                 
                 ?>
                 </select>

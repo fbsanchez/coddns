@@ -70,6 +70,13 @@ class DBClient {
     return $this->client->last_id();
   }
 
+  function do_sql($query){
+    $this->connect() or die($this->lq_error());
+    $r   = $this->exeq($query) or die($this->lq_error());
+    $this->disconnect();
+    return $r;
+  }
+
   function get_sql_object($query){
     $this->connect() or die($this->lq_error());
     $r   = $this->exeq($query) or die($this->lq_error());

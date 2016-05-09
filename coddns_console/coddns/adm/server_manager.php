@@ -31,12 +31,43 @@ $user->check_auth_level($auth_level_required);
 if(!isset($servername)){
 	$servername = secure_get("id");
 }
+
+$dbclient = new DBClient($db_config);
+
+$q = "Select count(*) as n from servers where tag='" . $servername . "' and srv_user != null and srv_password != null;";
+$r = $dbclient->get_sql_object($q);
+
 session_start();
 if (!isset($_SESSION["servers"][$servername]["user"])){
 	$_SESSION["servers"][$servername]["user"] = secure_get("u");
 }
 if (!isset($_SESSION["servers"][$servername]["pass"])){
 	$_SESSION["servers"][$servername]["pass"] = secure_get("p","base64");
+}
+if (!isset($_SESSION["servers"][$servername]["r"])){
+	$remember = secure_get("r","letters");
+	if ($remember == "on"){
+		if (isset($_SESSION["servers"][$servername]["user"])
+			&& (isset ($_SESSION["servers"][$servername]["pass"]))) {
+			// store password for the current server
+			$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+			$dbclient->do_sql("update servers set srv_password = '" . coddns_encrypt($_SESSION["servers"][$servername]["pass"])
+				. "', srv_user='" . $_SESSION["servers"][$servername]["user"]
+				. "' where tag='" . $servername . "'");
+		}
+	}
+
+}
+if (!isset($_SESSION["servers"][$servername]["forget"])){
+	$forget_flag = secure_get("forget","number");
+	if ($forget_flag == 1){
+		// remove password stored for the current server
+		$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+		$dbclient->do_sql("update servers set srv_password = null, srv_user = null where tag='" . $servername . "'");
+		unset ($_SESSION["servers"][$servername]["user"]);
+		unset ($_SESSION["servers"][$servername]["pass"]);
+
+	}
 }
 
 session_write_close();
@@ -83,6 +114,20 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	</script>
 	<section>
 	<h2>Administrar <i><?php echo $servername;?></i></h2>
+	<?php
+	if (($r->n == 1) || (
+		(isset($_SESSION["servers"][$servername]["user"])
+			&& (isset ($_SESSION["servers"][$servername]["pass"]))) 
+		)) {
+	?>
+	<form action="#settings_manager" method="POST">
+		<input type="hidden" value="1" name="forget"/>
+		<input type="submit" value="desconectar" />
+	</form>
+	
+	<?php
+	}
+	?>
 	<nav>
 		<a id="link_status" href="#status" class="" <?php echo $clickstatus; ?> >
 			Estado

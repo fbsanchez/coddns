@@ -102,14 +102,14 @@ li label{
 li input{
     float: right;
 }
-li input[type="email"],li input[type="text"], li input[type="password"] {
+input[type="email"],li input[type="text"], li input[type="password"] {
     width: 150px;
     border: none;
     border-bottom: 1px solid #ccc;
     text-indent: 10px;
     height: 2em;
 }
-li input[type="submit"]{
+input[type="submit"]{
     margin-top: 10px;
     padding: 5px 10px 5px;
     border: none;
@@ -118,7 +118,7 @@ li input[type="submit"]{
     transition: border-radius 0.1s 0s, box-shadow 0.1s 0s;
     cursor: pointer;
 }
-li input[type="submit"]:hover {
+input[type="submit"]:hover {
     border-radius: 15px 0 15px 0px;
     box-shadow: 0 0 2px #ccc;
 }
