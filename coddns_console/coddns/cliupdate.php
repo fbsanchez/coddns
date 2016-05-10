@@ -54,20 +54,24 @@ $user = $dbclient->prepare($_POST["u"], "email");
 $rq_pass = base64_decode($_POST["p"]);
 $pass = hash ("sha512",$config["salt"] . $rq_pass);
 
-$host = strtok($_POST["h"],".");
-$main = strtok(".");
-$dom  = strtok(".");
+$phost = $dbclient->prepare($_POST["edith"], "url_get");
+$fields = explode(".", $phost,2);
+$host   = $fields[0];
+$domain = $fields[1];
 
-$check = $config["domainname"];
-$checkm = strtok ($check, ".");
-$checkd = strtok (".");
 
-if(    ( $main != $checkm )
-    || ( $dom  != $checkd )
-    || ( strlen($host) < MIN_HOST_LENGTH )
-    || ( strlen($host) > MAX_HOST_LENGTH ))
+// Check if user has grants to edit that host
+if (! $user->check_grant_over_item("read", $phost)){
+    die ("ERR: No grants over this item");
+}
+
+if(   ( strlen($host) < MIN_HOST_LENGTH )
+   || ( strlen($host) > MAX_HOST_LENGTH )){
+
     die ("ERR: nombre de host no valido");
-$host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
+}
+
+$host =  $dbclient->prepare($host, "letters") . "." . $zone;
 
 $q="select * from users where mail='" . $user . "' and pass='" . $pass . "';";
 $dbclient->exeq($q);
