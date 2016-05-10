@@ -8,7 +8,7 @@
 
 ddnsconf=`cat /etc/passwd | grep $USER |head -1 | cut -f6 -d':'`"/.userdata"
 global_ddnsconf="/usr/share/ddns/userdata"
-dest="http://coddns.org/coddns/cliupdate.php"
+dest="http://devel.coddns.org/cliupdate.php"
 release=""
 installer=""
 

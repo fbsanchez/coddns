@@ -47,12 +47,16 @@ if   ( ( strlen($_POST["u"]) < MIN_USER_LENGTH )
 
 
 $dbclient = new DBClient($db_config);
-
 $dbclient->connect() or die ("ERR");
 
 $rq_user = $dbclient->prepare($_POST["u"], "email");
 $rq_pass = base64_decode($_POST["p"]);
-$pass = hash ("sha512",$config["salt"] . $rq_pass);
+
+if ($user->login($rq_user, $rq_pass) == null ) {
+    echo "ERR: Registrese en http://" . $config["domainname"];
+    exit (3);
+}
+
 
 $phost = $dbclient->prepare($_POST["h"], "url_get");
 $fields = explode(".", $phost,2);
@@ -71,40 +75,31 @@ if(   ( strlen($host) < MIN_HOST_LENGTH )
     die ("ERR: nombre de host no valido");
 }
 
-$host =  $dbclient->prepare($host, "letters") . "." . $zone;
+$host =  $dbclient->prepare($host, "letters") . "." . $domain;
 
-$q="select * from users where mail='" . $rq_user . "' and pass='" . $pass . "';";
-$dbclient->exeq($q);
-
-if( $dbclient->lq_nresults() == 0 ) {/* no user */
-    die ("ERR: Registrese en http://" . $config["domainname"]);
+// 1- CHECK ACTUAL IP
+$q="select ip,ttl from hosts where oid=(select id from users where mail='" . $rq_user . "') and tag='" . $host . "';";
+$r = $dbclient->fetch_object( $dbclient->exeq($q) );
+if ( $dbclient->lq_nresults() == 0 ) {
+    die ("ERR: Ese host no esta registrado, confirme en http://" . $domain );
 }
-else {
+if ( $r->ip != ip2long(_ip()) ){
+	$ip  = _ip();
+    $iip = ip2long($ip);
+    $ttl = $r->ttl;
+    // 2- UPDATE IF NECESSARY
+    $q="update hosts set ip='" . $iip . "', last_updated=now() where oid=(select id from users where mail='" . $rq_user . "') and tag='" . $host . "';";
+    $dbclient->exeq($q);
 
-    // 1- CHECK ACTUAL IP
-    $q="select ip,ttl from hosts where oid=(select id from users where mail='" . $rq_user . "') and tag='" . $host . "';";
-    $r = pg_fetch_object( $dbclient->exeq($q) );
-    if ( $dbclient->lq_nresults() == 0 ) {
-        die ("ERR: Ese host no esta registrado, confirme en http://" . $check . "." . $checkd );
-    }
-    if ( $r->ip != ip2long(_ip()) ){
-		$ip  = _ip();
-        $iip = ip2long($ip);
-        $ttl = $r->ttl;
-        // 2- UPDATE IF NECESSARY
-        $q="update hosts set ip='" . $iip . "', last_updated=now() where oid=(select id from users where mail='" . $rq_user . "') and tag='" . $host . "';";
-        $dbclient->exeq($q);
+    // LAUNCH DNS UPDATER erase + add
+    $out = shell_exec("dnsmgr d " . $host . " A " . $ip);
+    $out = shell_exec("dnsmgr a " . $host . " A " . $ip . " " . $ttl);
 
-        // LAUNCH DNS UPDATER erase + add
-        $out = shell_exec("dnsmgr d " . $host . " A " . $ip);
-        $out = shell_exec("dnsmgr a " . $host . " A " . $ip . " " . $ttl);
-
-        echo "OK: " . $host . " actualizado a " . $ip  . " " . $out . "\n";
-    }
-    else{
-        echo "OK: La ip asociada a " . $host . " ya estaba actualizada.\n";
-    }
-
+    echo "OK: " . $host . " actualizado a " . $ip  . " " . $out . "\n";
 }
+else{
+    echo "OK: La ip asociada a " . $host . " ya estaba actualizada.\n";
+}
+
 $dbclient->disconnect();
 ?>

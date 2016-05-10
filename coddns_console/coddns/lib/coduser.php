@@ -102,7 +102,7 @@ class CODUser {
 	 */
 	function login($rq_user, $rq_pass){
 		if ($this->logged){
-			return null;
+			return false;
 		}
 
 		$dbclient = new DBClient($this->config["db_config"]);
@@ -129,7 +129,7 @@ class CODUser {
 		$_SESSION["time"]  = time();
 		$_SESSION["oid"]   = $r->id;
 
-		$this->user = $r->mail;
+		$this->mail = $r->mail;
 		$this->rol  = $r->rol;
 		$this->time = $_SESSION["time"];
 		$this->oid  = $r->id;
@@ -179,7 +179,7 @@ class CODUser {
 			$_SESSION["time"]  = time();
 			$_SESSION["oid"]   = $r->id;
 
-			$this->user = $r->mail;
+			$this->mail = $r->mail;
 			$this->rol  = $r->rol;
 			$this->time = $_SESSION["time"];
 			$this->oid  = $r->id;
