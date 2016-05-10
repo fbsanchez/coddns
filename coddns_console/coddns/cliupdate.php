@@ -50,7 +50,7 @@ $dbclient = new DBClient($db_config);
 
 $dbclient->connect() or die ("ERR");
 
-$user = $dbclient->prepare($_POST["u"], "email");
+$rq_user = $dbclient->prepare($_POST["u"], "email");
 $rq_pass = base64_decode($_POST["p"]);
 $pass = hash ("sha512",$config["salt"] . $rq_pass);
 
@@ -73,18 +73,16 @@ if(   ( strlen($host) < MIN_HOST_LENGTH )
 
 $host =  $dbclient->prepare($host, "letters") . "." . $zone;
 
-$q="select * from users where mail='" . $user . "' and pass='" . $pass . "';";
+$q="select * from users where mail='" . $rq_user . "' and pass='" . $pass . "';";
 $dbclient->exeq($q);
 
 if( $dbclient->lq_nresults() == 0 ) {/* no user */
-//    error_log("[TRICK]: Lanzo query de insert...");
-//    error_log("[TRICK]: Agregado usuario " . $user .  " from  " .  _ip());
     die ("ERR: Registrese en http://" . $config["domainname"]);
 }
 else {
 
     // 1- CHECK ACTUAL IP
-    $q="select ip,ttl from hosts where oid=(select id from users where mail='" . $user . "') and tag='" . $host . "';";
+    $q="select ip,ttl from hosts where oid=(select id from users where mail='" . $rq_user . "') and tag='" . $host . "';";
     $r = pg_fetch_object( $dbclient->exeq($q) );
     if ( $dbclient->lq_nresults() == 0 ) {
         die ("ERR: Ese host no esta registrado, confirme en http://" . $check . "." . $checkd );
@@ -94,7 +92,7 @@ else {
         $iip = ip2long($ip);
         $ttl = $r->ttl;
         // 2- UPDATE IF NECESSARY
-        $q="update hosts set ip='" . $iip . "', last_updated=now() where oid=(select id from users where mail='" . $user . "') and tag='" . $host . "';";
+        $q="update hosts set ip='" . $iip . "', last_updated=now() where oid=(select id from users where mail='" . $rq_user . "') and tag='" . $host . "';";
         $dbclient->exeq($q);
 
         // LAUNCH DNS UPDATER erase + add
