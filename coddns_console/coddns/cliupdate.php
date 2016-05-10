@@ -54,7 +54,7 @@ $rq_user = $dbclient->prepare($_POST["u"], "email");
 $rq_pass = base64_decode($_POST["p"]);
 $pass = hash ("sha512",$config["salt"] . $rq_pass);
 
-$phost = $dbclient->prepare($_POST["edith"], "url_get");
+$phost = $dbclient->prepare($_POST["h"], "url_get");
 $fields = explode(".", $phost,2);
 $host   = $fields[0];
 $domain = $fields[1];
