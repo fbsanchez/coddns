@@ -144,10 +144,9 @@ var html = { // Default values
         if(this.readyState == 4 &&this.status == 200){
           html.response = this.response;
           html.callback();
-          if(html.scroll){
+          if(html.scroll == true){
             window.scrollTo(0,0);
           }
-          html.scroll = true;
         }
       }
       this.xmlHttp.send( this.args );
@@ -164,6 +163,7 @@ var html = { // Default values
  function updateContent(id, url, query, rsc, myEvent, method) {
   html.url      = url;
   html.args     = query;
+  html.scroll   = false;
   if( method )
     html.method = method;
   else
@@ -182,7 +182,6 @@ var html = { // Default values
         myEvent();
     }
   };
-  html.scroll   = false;
   html.send();
   return false;
 }

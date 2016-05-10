@@ -33,8 +33,11 @@ function list_hosts($data){
 	global $config;
 
     $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+    $dbclient->connect() or die ($dbclient->lq_error());
 
     $limit = ITEMS_PER_PAGE;
+    $text_filter = null;
+    $ip_filter   = 0;
 
     if (isset ($data[0])) {
 		$sortby = $dbclient->prepare($data[0],"letters");
@@ -47,6 +50,10 @@ function list_hosts($data){
 	}
 	if (isset ($data[3])) {
 		$limit  = $dbclient->prepare($data[3],"number");
+	}
+	if (isset ($data[4])) {
+		$text_filter = $dbclient->prepare($data[4],"letters++");
+		$ip_filter   = ip2long($text_filter);
 	}
 
 	if ($page < 0) {
@@ -70,18 +77,39 @@ function list_hosts($data){
 	}
 
 
-	$dbclient->connect() or die ($dbclient->lq_error());
+	
 
 	// Get total host counter - unlimited
-	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r where h.rtype=r.id and h.gid in (select ug.gid from tusers_groups ug, users u where (ug.view=1 or ug.admin=1) and u.mail='" . $_SESSION["email"] . "')";
+	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r where h.rtype=r.id and h.gid in (select ug.gid\n from tusers_groups ug, users u \nwhere (ug.view=1 or ug.admin=1) and u.mail='" . $_SESSION["email"] . "') ";
+	if (isset($text_filter) && ($text_filter != "")){
+		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
+		if (isset($ip_filter) && $ip_filter > 0){
+			$q .= " OR h.ip = $ip_filter) ";
+		}
+		else {
+			$q .= ") \n";
+		}
+	}
+
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 	$nrows = $dbclient->lq_nresults();
 
-	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u where h.rtype=r.id and h.oid=u.id and h.gid in (select ug.gid from tusers_groups ug, users u where (ug.view=1 or ug.admin=1) and u.mail='" . $_SESSION["email"] . "') ORDER BY $sort_index LIMIT $limit OFFSET $offset";
+	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u where h.rtype=r.id and h.oid=u.id and h.gid in (select ug.gid from tusers_groups ug, users u where (ug.view=1 or ug.admin=1) and u.mail='" . $_SESSION["email"] . "') ";
+	if (isset($text_filter) && ($text_filter != "")){
+		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
+		if (isset($ip_filter) && $ip_filter > 0){
+			$q .= " OR h.ip = $ip_filter) ";
+		}
+		else {
+			$q .= ") \n";
+		}
+	}
+	$q .= " ORDER BY $sort_index LIMIT $limit OFFSET $offset";
+
+
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 	$del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax_message);return false;";
-
 	while ($row = $dbclient->fetch_array ($r)) {
 	?>
 	    <tr>
@@ -99,13 +127,14 @@ function list_hosts($data){
 	        <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["value"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
 	        <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {<?php echo $del_submit;?>}"></td>
 	    </tr>
-
+	    <?php
+		}
+		?>
 	    <script type="text/javascript">
 	    	item_count=<?php echo $nrows; ?>;
 	    	nrows.innerHTML=" (" + item_count + ")";
 	    </script>
 	<?php
-	}
 
 	$dbclient->disconnect();
 }

@@ -96,6 +96,7 @@ $text["de"]["reg_type"]      = "DNS record type";
     var sort_mode=0;
     var page=0;
     var item_count=0;
+    var filter_search="";
 
     function checkHostName(obj,z){
         if(/^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)/.test(obj.value))
@@ -163,8 +164,12 @@ $text["de"]["reg_type"]      = "DNS record type";
         }
         data[1] = sort_mode;
         data[2] = page;
+        // data[3] limit
+        data[4] = filter_search;
         updateContent("hosts_list", "ajax.php", "action=list_hosts&args="+JSON.stringify(data),true,reloadPaginator);
+        return false;
     }
+
     document.onload = sortHostsBy();
 </script>
 </head>
@@ -345,6 +350,10 @@ $text["de"]["reg_type"]      = "DNS record type";
 </form>
 <form id="del" action="#" onsubmit="return false;" method="POST">
     <input type="hidden" id="delh" name="delh" required/>
+</form>
+
+<form id="search" action="#" onsubmit="return false;">
+<input type="text" onkeyup="filter_search=this.value;sortHostsBy(sort_field); return false;" placeholder="search" />
 </form>
 <div id="paginator"></div>
 <table>

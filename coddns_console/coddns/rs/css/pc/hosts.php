@@ -146,3 +146,15 @@ div#myhosts table{
     width: 100%;
     margin: 20px auto;
 }
+
+form#search{
+    width: 150px;
+    margin: 0 auto;
+}
+form#search input{
+    width: 150px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+    text-indent: 10px;
+    height: 1.2em;
+}
