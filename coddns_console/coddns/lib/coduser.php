@@ -254,6 +254,53 @@ class CODUser {
 		}
 	}
 
+	function int_check_grants_over_item($grants="(ug.view=1 or ug.admin=1)", $item, $item_type="host"){
+		if (!$this->logged)
+			return false;
+
+		$dbclient = new DBClient($this->config["db_config"]);
+		switch ($item_type){
+			case "host":
+				$q = "select count(*) as n from hosts h, users u, tusers_groups ug where h.gid=ug.gid and u.id=ug.id and " . $grants . " and u.mail='" . $this->mail . "' and h.tag='" . $item . "'; ";
+				$result = $dbclient->get_sql_object($q);
+				if ($result->n >= 1){
+					return true;
+				}
+			break;
+			case "zone":
+				$q = "select count(*) as n from zones z, users u, tusers_groups ug where z.gid=ug.gid and u.id=ug.id and " . $grants . " and u.mail='" . $this->mail . "' and z.domain='" . $item . "';";
+				$result = $dbclient->get_sql_object($q);
+				if ($result->n >= 1){
+					return true;
+				}
+			break;
+			default:
+			break;
+		}
+
+		return false;
+	}
+
+	function check_grant_over_item($grants, $item,$item_type="host"){
+		if (!$this->logged)
+			return false;
+		switch ($grants){
+			case "read":
+				return $this->int_check_grants_over_item("(ug.view=1 or ug.admin=1)", $item, $item_type="host");
+			break;
+			case "write":
+				return $this->int_check_grants_over_item("(ug.edit=1 or ug.admin=1)", $item, $item_type="host");
+			break;
+			case "admin":
+				return $this->int_check_grants_over_item("(ug.admin=1)", $item, $item_type="host");
+			break;
+			default:
+			break;
+		}
+		return false;
+	}
+
+
 }
 
 

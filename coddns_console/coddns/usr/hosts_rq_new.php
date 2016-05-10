@@ -109,7 +109,8 @@ function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $priority 
 $error = 0;
 if (   (! isset ($_POST["h"])  )
     || (! isset ($_POST["ip"]) )
-    || (! isset ($_POST["rtype"]) )) {
+    || (! isset ($_POST["rtype"])
+    || (! isset ($_POST["zone"]) ) )) {
     $error = 1;
 }
 if (   ( $_POST["rtype"] == "A")
@@ -143,14 +144,43 @@ if ($error === 1) {
 }
 
 $dbclient = new DBClient($db_config);
-$host     = $dbclient->prepare($_POST["h"], "letters") . "." . $config["domainname"];
+$dbclient->connect() or die ($dbclient->lq_error());
+
+
+
+$zone     = $dbclient->prepare($_POST["zone"], "url_get");
+
+// check granted zones for the current user
+$q = "select z.id from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1) and z.domain='" . $zone . "';";
+$results  = $dbclient->exeq($q);
+$r = $dbclient->fetch_object($results);
+
+$zone_id = -1;
+if (isset ($r->id)){
+    $zone_id = $r->id;
+}
+else {
+    $error = 1;
+}
+
+$host     = $dbclient->prepare($_POST["h"], "letters") . "." . $zone;
 $rtype_p  = $dbclient->prepare($_POST["rtype"], "letters");
 $ttl      = $dbclient->prepare($_POST["ttl"], "number");
 if ($rtype_p != "A"){
     $rtag     = $dbclient->prepare($_POST["rtag_" . $rtype_p], "url_get");
 }
 
+if ($error === 1) {
+?>
+    <p><?php echo $text[$lan]["err_f"]; ?></p>
+    <a href="<?php echo $config["html_root"];?>/?lang=<?php echo $lan;?>"><?php echo $text[$lan]["back"];?></a>
+<?php
+    exit (1);
+}
+
+
 // INSERT THE REGISTER IN THE DB AND IN THE SELECTED ZONE
+
 switch ($rtype_p){
     case "A": {
         $check = ip2long($_POST["ip"]);
@@ -166,7 +196,6 @@ switch ($rtype_p){
             exit (1);
         }
 
-        $dbclient->connect() or die ($dbclient->lq_error());
         // INSERT NEW HOST IF NO ONE EXISTS
         $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
         $dbclient->exeq($q);
@@ -181,7 +210,7 @@ switch ($rtype_p){
             echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
         }
         else {
-            $q = "insert into hosts (oid, tag, ip, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'));";
+            $q = "insert into hosts (oid, tag, ip, ttl, rtype, zone_id) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'), $zone_id);";
             $dbclient->exeq($q) or die($dbclient->lq_error());
             echo $text[$lan]["ok"];
         ?>

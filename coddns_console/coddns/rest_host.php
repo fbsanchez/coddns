@@ -31,27 +31,26 @@ if (!isset($_SESSION["lan"])){
 $lan = $_SESSION["lan"];
 session_write_close();
 
-
-defined ("LENGTH_HOST_MIN") or define ("LENGTH_HOST_MIN", 1);
-defined ("LENGTH_HOST_MAX") or define ("LENGTH_HOST_MAX", 200);
-
 // devuelve la disponibilidad o no de una etiqueta host para un subdominio dado
-if (! isset ($_POST["h"] )){
+if (   (! isset ($_POST["h"] ))
+	|| (! isset ($_POST["z"] )) ){
     die("Unauthorized access");
 }
 
-$dbclient = new DBClient($db_config);
+if (   ( strlen ($_POST["h"]) < MIN_HOST_LENGTH )
+    || ( strlen ($_POST["h"]) > MAX_HOST_LENGTH )
+    || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/', $_POST["h"])) ) {
+    die ("<div class='r err'>No cumple los requisitos</div>");
+}
 
+$dbclient = new DBClient($db_config);
 $dbclient->connect() or die("ERR");
 
 $host = $dbclient->prepare($_POST["h"], "letters");
+$zone = $dbclient->prepare($_POST["z"], "url_get");
 
-if (   ( strlen ($host) < LENGTH_HOST_MIN )
-    || ( strlen ($host) > LENGTH_HOST_MAX )
-    || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/',$_POST["h"])) ) {
-    die ("<div class='r err'>No cumple los requisitos</div>");
-}
-$q = "select * from hosts where lower(tag)=lower('" . $host . "." . $config["domainname"] ."');";
+
+$q = "select * from hosts where lower(tag)=lower('" . $host . "." . $zone . "');";
 $dbclient->exeq($q);
 if ( $dbclient->lq_nresults() > 0 )
         echo "<div class='r err'>No disponible</div>";

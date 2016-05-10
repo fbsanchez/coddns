@@ -51,20 +51,16 @@ if ( $check < 0 || $check == FALSE ){
 $dbclient = new DBClient($db_config);
 $dbclient->connect() or die ("ERR");
 
-$host = strtok($_POST["edith"],".");
-$main = strtok(".");
-$dom  = strtok(".");
+$phost = $dbclient->prepare($_POST["edith"], "url_get");
+$fields = explode(".", $phost,2);
+$host   = $fields[0];
+$domain = $fields[1];
 
-$check  = $config["domainname"];
-$checkm = strtok($check,".");
-$checkd = strtok(".");
 
-if(    ( $main != $checkm )
-    || ( $dom  != $checkd  )
-    || ( strlen($host) < MIN_HOST_LENGTH )
+if(    ( strlen($host) < MIN_HOST_LENGTH )
     || ( strlen($host) > MAX_HOST_LENGTH ))
     die ("ERR: nombre de host no valido");
-$host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
+$host =  $dbclient->prepare($host, "letters") . "." . $domain;
 $ip   = $dbclient->prepare($_POST["nip"], "ip");
 
 if ($ip === FALSE){

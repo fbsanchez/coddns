@@ -46,21 +46,24 @@ if (  (!isset ($_POST["edith"])) || (! isset ($_POST["editip"]))  ){
 $dbclient= new DBClient($db_config);
 $dbclient->connect() or die ("ERR");
 
+$phost = $dbclient->prepare($_POST["edith"], "url_get");
+$fields = explode(".", $phost,2);
+$host   = $fields[0];
+$domain = $fields[1];
 
-$host = strtok($_POST["edith"],".");
-$main = strtok(".");
-$dom  = strtok(".");
 
-$check = $config["domainname"];
-$checkm = strtok ($check, ".");
-$checkd = strtok (".");
+// Check if user has grants to edit that host
+if (! $user->check_grant_over_item("read", $phost)){
+    die ("ERR: No grants over this item");
+}
 
-if(    ( $main != $checkm )
-    || ( $dom  != $checkd )
-    || ( strlen($host) < MIN_HOST_LENGTH )
-    || ( strlen($host) > MAX_HOST_LENGTH ))
+if(   ( strlen($host) < MIN_HOST_LENGTH )
+   || ( strlen($host) > MAX_HOST_LENGTH )){
+ 
     die ("ERR: nombre de host no valido");
-$host =  $dbclient->prepare($host, "letters") . "." . $config["domainname"];
+}
+
+$host =  $dbclient->prepare($host, "letters") . "." . $domain;
 
 $q   = "select ip from hosts where tag='$host';";
 $r   = $dbclient->exeq($q);
@@ -101,13 +104,13 @@ function select_my_ip(){
 <form id="modhost" onsubmit="return false;" method="POST" action="?m=usr&z=hosts" onsubmit="return false;">
     <ul>
         <li>
-            <label>Host:</label><input style="border: none; font-size: 1em;text-align: right;" type="text" readonly name="edith" value="<?php echo $host; ?>"></input>
+            <label>Host:</label><input style="width:50%; border: none; font-size: 1em;text-align: right;" type="text" readonly name="edith" value="<?php echo $host; ?>"></input>
         </li>
         <li>
             <label>IP actual: </label><span style="float: right;"><?php echo $ip?></span>
         </li>
         <li>
-            <label>Nueva IP: </label><input style="text-align: right;" type="text" name="nip" id="nip" value="<?php echo $current_value?>"></input>
+            <label>Nueva IP: </label><input style="width:50%; text-align: right;" type="text" name="nip" id="nip" value="<?php echo $current_value?>"></input>
         </li>
         </li>
             <a style="padding: 5px; font-size: 0.8em;" href="#" onclick="select_my_ip();return false;">Coger mi IP actual</a>

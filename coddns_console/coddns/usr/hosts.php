@@ -97,9 +97,9 @@ $text["de"]["reg_type"]      = "DNS record type";
     var page=0;
     var item_count=0;
 
-    function checkHostName(obj){
+    function checkHostName(obj,z){
         if(/^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)/.test(obj.value))
-            updateContent("rec_info", "rest_host.php", "h="+obj.value);
+            updateContent("rec_info", "rest_host.php", "h="+obj.value+"&z="+z.value);
         return false;
     }
     function select_my_ip(){
@@ -183,7 +183,25 @@ $text["de"]["reg_type"]      = "DNS record type";
             <label><?php echo $text[$lan]["label_tag"];?></label>
         </li>
         <li>
-            <div style="float:left;padding: 2px;"><input type="text" id="h" name="h" onchange="checkHostName(this);return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/><i class="extension">.<?php echo $config["domainname"]?></i></div>
+            <div style="float:left;padding: 2px;"><input type="text" id="h" name="h" onchange="checkHostName(this,document.getElementById('zone'));return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/>
+            <select style="margin-left: 15px; padding: 0 5px; min-width: 90px;" onchange="checkHostName(document.getElementById('h'), this);" name="zone" id="zone">
+            <?php
+                    // Retrieve all DNS Record types available from de DB
+
+                $dbclient = new DBClient($db_config) or die ($dbclient->lq_error());
+                $dbclient->connect() or die ($dbclient->lq_error());
+
+                $q = "select z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1);";
+                $results  = $dbclient->exeq($q);
+                while ($r = $dbclient->fetch_object($results)) {
+                ?>
+                    <option value="<?php echo $r->domain;?>">.<?php echo $r->domain;?></option>
+                <?php
+                }
+
+            ?>
+            </select>
+            </div>
 			<div style="float:right;">
 				<label><?php echo $text[$lan]["reg_type"];?>:</label> 
                 <script type="text/javascript">
@@ -201,11 +219,6 @@ $text["de"]["reg_type"]      = "DNS record type";
 				
                 <?php
                     // Retrieve all DNS Record types available from de DB
-
-                $dbclient = new DBClient($db_config) or die ($dbclient->lq_error());
-                $dbclient->connect() or die ($dbclient->lq_error());
-
-
                 $q = "select h.tag from hosts h, record_types r where oid=(select id from users where mail='" . $_SESSION["email"] . "') and r.id=h.rtype and r.tag='A';";
                 $r = $dbclient->exeq($q) or die ($dbclient->lq_error());
                 $tag_options = "";

@@ -37,6 +37,10 @@ function check_valid_conf($conf){
 }
 
 
+// Update local files 1st
+// Check if there's changes on files
+// Update server's files
+
 $config = secure_get("gconf_input", "base64");
 
 write_file($config,"/var/named/data/test.txt");

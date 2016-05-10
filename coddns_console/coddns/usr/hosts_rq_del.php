@@ -39,8 +39,12 @@ $dbclient = new DBClient($db_config);
 
 $dbclient->connect() or die("ERR");
 
-$host = strtok($_POST["delh"],".");
-$host = $dbclient->prepare($host, "letters") . "." . $config["domainname"];
+$phost = $dbclient->prepare($_POST["delh"], "url_get");
+$fields = explode(".", $phost,2);
+$host   = $fields[0];
+$domain = $fields[1];
+
+$host = $dbclient->prepare($host, "letters") . "." . $domain;
 
 $q = "delete from hosts where oid=(select id from users where lower(mail)=lower('" . $_SESSION["email"] . "')) and lower(tag)=lower('" . $host . "');";
 $dbclient->exeq($q);
