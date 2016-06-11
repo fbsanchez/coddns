@@ -77,10 +77,8 @@ function list_hosts($data){
 	}
 
 
-	
-
 	// Get total host counter - unlimited
-	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r where h.rtype=r.id and h.gid in (select ug.gid\n from tusers_groups ug, users u \nwhere (ug.view=1 or ug.admin=1) and u.mail='" . $_SESSION["email"] . "') ";
+	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r where h.rtype=r.id and h.gid in (select ug.gid\n from tusers_groups ug, users u \nwhere (ug.view=1 or ug.admin=1) and u.id=ug.oid and u.mail='" . $_SESSION["email"] . "') ";
 	if (isset($text_filter) && ($text_filter != "")){
 		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
 		if (isset($ip_filter) && $ip_filter > 0){
@@ -94,7 +92,7 @@ function list_hosts($data){
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 	$nrows = $dbclient->lq_nresults();
 
-	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u where h.rtype=r.id and h.oid=u.id and h.gid in (select ug.gid from tusers_groups ug, users u where (ug.view=1 or ug.admin=1) and u.mail='" . $_SESSION["email"] . "') ";
+	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u where h.rtype=r.id and h.oid=u.id and h.gid in (select ug.gid from tusers_groups ug, users u where (ug.view=1 or ug.admin=1) and u.id=ug.oid and u.mail='" . $_SESSION["email"] . "') ";
 	if (isset($text_filter) && ($text_filter != "")){
 		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
 		if (isset($ip_filter) && $ip_filter > 0){
