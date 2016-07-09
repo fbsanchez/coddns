@@ -1,8 +1,7 @@
 <?php
 
-
-include "include/config.php";
-include "lib/db.php";
+require_once "lib/db.php";
+require_once "include/config.php";
 ?>
 <head>
 </head>
@@ -23,6 +22,7 @@ if (isset ($_POST["text"])){
 ?>
 </textarea>
 
-<?php phpinfo();?>
+<?php //phpinfo();
+?>
 </body>
 </html>

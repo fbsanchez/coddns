@@ -182,6 +182,16 @@ $text["de"]["reg_type"]      = "DNS record type";
 </div>
 </section>
 <section class="uarea">
+    <?php
+    // Retrieve all DNS Record types available from de DB
+
+    $dbclient = new DBClient($db_config) or die ($dbclient->lq_error());
+    $dbclient->connect() or die ($dbclient->lq_error());
+
+    $q = "select z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1);";
+    $results  = $dbclient->exeq($q);
+    if ($dbclient->lq_nresults() > 0){ // Display formulary only if the user has grants to create new hosts on a domain
+    ?>
     <form id="newhost" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts_rq_new.php', true,raise_ajax_message);return false;">
     <ul>
         <li>
@@ -190,14 +200,7 @@ $text["de"]["reg_type"]      = "DNS record type";
         <li>
             <div style="float:left;padding: 2px;"><input type="text" id="h" name="h" onchange="checkHostName(this,document.getElementById('zone'));return false;" pattern="^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)" required/>
             <select style="margin-left: 15px; padding: 0 5px; min-width: 90px;" onchange="checkHostName(document.getElementById('h'), this);" name="zone" id="zone">
-            <?php
-                    // Retrieve all DNS Record types available from de DB
-
-                $dbclient = new DBClient($db_config) or die ($dbclient->lq_error());
-                $dbclient->connect() or die ($dbclient->lq_error());
-
-                $q = "select z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1);";
-                $results  = $dbclient->exeq($q);
+                <?php
                 while ($r = $dbclient->fetch_object($results)) {
                 ?>
                     <option value="<?php echo $r->domain;?>">.<?php echo $r->domain;?></option>
@@ -337,6 +340,12 @@ $text["de"]["reg_type"]      = "DNS record type";
         </li>
     </ul>
     </form>
+    <?php
+    }
+    else {
+        echo "<p>No tienes permisos para crear entradas. Por favor, contacta con el administrador.</p>";
+    }
+    ?>
 </section>
 
 
