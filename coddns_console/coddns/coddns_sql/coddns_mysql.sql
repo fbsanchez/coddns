@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS servers (
     id serial,
     tag varchar(200) NOT NULL default "default" UNIQUE,
     ip bigint,
+	port int default 22,
     gid bigint unsigned NOT NULL default 1,
     srv_user varchar(200) default "root",
     srv_password text,

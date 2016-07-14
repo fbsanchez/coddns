@@ -122,6 +122,7 @@ else { // SERVER CREDENTIALS ARE SET
 	$server_credentials["user"] = $server_info["user"];
 	$server_credentials["pass"] = $server_info["pass"];
 	$server_credentials["ip"]   = long2ip($r->ip);
+	$server_credentials["port"] = $r->port;
 	
 	$sshclient = new SSHClient($server_credentials);
 	//	$output = $sshclient->launch("cat /etc/named.conf");
