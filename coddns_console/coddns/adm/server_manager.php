@@ -37,6 +37,11 @@ $dbclient = new DBClient($db_config);
 $q = "Select count(*) as n from servers where tag='" . $servername . "' and srv_user != null and srv_password != null;";
 $r = $dbclient->get_sql_object($q);
 
+if (empty($r)){
+	echo "No hay servidores registrados con ese nombre.";
+	return 0;
+}
+
 session_start();
 if (!isset($_SESSION["servers"][$servername]["user"])){
 	$_SESSION["servers"][$servername]["user"] = secure_get("u");

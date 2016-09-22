@@ -39,6 +39,10 @@ if(!isset($servername)){
 $dbclient = new DBClient($db_config);
 $r = $dbclient->get_sql_object("Select * from servers where tag='$servername'");
 
+if (empty($r)){
+	echo "No hay servidores registrados con ese nombre.";
+	return 0;
+}
 ?>
 
 

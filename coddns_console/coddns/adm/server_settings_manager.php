@@ -58,6 +58,10 @@ $dbclient = new DBClient($db_config);
 $q = "Select * from servers where tag='" . $servername . "' ;";
 $r = $dbclient->get_sql_object($q);
 
+if (empty($r)){
+	echo "No hay servidores registrados con ese nombre.";
+	return 0;
+}
 
 // tried to get DB data
 $serverid = $r->id;
