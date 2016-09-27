@@ -79,8 +79,9 @@ class SSHClient {
 	/**
 	 * This function only connects to remote IP:port,
 	 * The user must authenticate after check fingerprint.
+	 * Native adaptation of the ssh library for php
 	 */
-	function connect(){
+	function _connect(){
 		if ($this->connected){
 			return $this->connected;
 		}
@@ -106,6 +107,23 @@ class SSHClient {
 		return $this->authenticated;
 	}
 
+	/**
+	 * Provides a valid connection with an active session
+	 * @return boolean true  connected & authenticated
+	 *                 false any other possibility
+	 */
+	function connect(){
+		if (!$this->connected){
+			$this->_connect();
+		}
+		if (!$this->authenticated){
+			$this->authenticate();
+		}
+		if (!$this->authenticated){
+			return false;
+		}
+		return true;
+	}
 
 	function exec($command){
 		if ($this->connected === false){
@@ -155,7 +173,7 @@ class SSHClient {
 
 	function launch($command){
 		if (!$this->connected){
-			$this->connect();
+			$this->_connect();
 		}
 		if (!$this->authenticated){
 			$this->authenticate();
@@ -181,7 +199,7 @@ class SSHClient {
 
 	function send_file($local_file, $remote_file){
 		if (!$this->connected){
-			$this->connect();
+			$this->_connect();
 		}
 		if (!$this->authenticated){
 			$this->authenticate();
@@ -198,7 +216,7 @@ class SSHClient {
 
 	function get_file($remote_file, $local_file) {
 		if (!$this->connected){
-			$this->connect();
+			$this->_connect();
 		}
 		if (!$this->authenticated){
 			$this->authenticate();

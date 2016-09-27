@@ -34,7 +34,7 @@ if(!isset($servername)){
 
 $dbclient = new DBClient($db_config);
 
-$q = "Select count(*) as n from servers where tag='" . $servername . "' and srv_user != null and srv_password != null;";
+$q = "Select * from servers where tag='" . $servername . "' ;";
 $r = $dbclient->get_sql_object($q);
 
 if (empty($r)){
@@ -124,15 +124,14 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		(isset($_SESSION["servers"][$servername]["user"])
 			&& (isset ($_SESSION["servers"][$servername]["pass"]))) 
 		)) {
+
+	// Credentials had been set, show navigation
 	?>
 	<form action="#settings_manager" method="POST">
 		<input type="hidden" value="1" name="forget"/>
 		<input type="submit" value="desconectar" />
 	</form>
-	
-	<?php
-	}
-	?>
+
 	<nav>
 		<a id="link_status" href="#status" class="" <?php echo $clickstatus; ?> >
 			Estado
@@ -154,8 +153,35 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		
 	</div>
 
-
-	<a class="return" href="<?php echo $config["html_root"];?>/?m=adm&z=service#servers">Volver</a>
+	<?php
+	}
+	else {
+		// No credentials provided to acces server.
+	?>
+	<form method="POST" action="#settings_manager" onsubmit="this.elements['p'].value = btoa(this.elements['p'].value);">
+	<p>&gt;&gt; No se han encontrado credenciales para acceder a <?php echo long2ip($r->ip);?></p>
+	<p>Indique una a continuaci&oacute;n:</p>
+	<ul>
+		<li>
+			<label>Usuario:</label>
+			<input type="text" name="u" placeholder="usuario"/>
+		</li>
+		<li>
+			<label>Contrase&ntilde;a:</label>
+			<input type="password" name="p" placeholder="password"/>
+		</li>
+		<li>
+			<label>Recordar contrase&ntilde;a</label><input type="checkbox" name="r"/>
+		</li>
+		<li>
+			<input type="submit" value="Conectar"/>
+		</li>
+	</ul>
+	</form>
+	<?php
+	}
+	?>
+	<a class="return" href="<?php echo $config["html_root"];?>/?m=adm&z=center#servers">Volver</a>
 	</section>
 </body>
 

@@ -53,10 +53,10 @@ $user->check_auth_level($auth_level_required);
 			</div>
 		</a>
 
-		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=service#service"?>">
+		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers"?>">
 			<div class="menu_button" style="background: #FEFCFF;">
-				<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Service Settings"/>
-				<p>Administrar el servicio</p>
+				<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Administation Center"/>
+				<p>Centro de administraci&oacute;n</p>
 			</div>
 		</a>
 	</nav>

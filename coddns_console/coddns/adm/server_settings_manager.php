@@ -95,28 +95,8 @@ session_write_close();
 
 <?php
 if ( (! isset ($server_info["user"]) ) || (! isset($server_info["pass"])) ) {
-?>
-	<form method="POST" action="#settings_manager" onsubmit="this.elements['p'].value = btoa(this.elements['p'].value);">
-	<p>&gt;&gt; No se han encontrado credenciales para acceder a <?php echo long2ip($r->ip);?></p>
-	<p>Indique una a continuaci&oacute;n:</p>
-	<ul>
-		<li>
-			<label>Usuario:</label>
-			<input type="text" name="u" placeholder="usuario"/>
-		</li>
-		<li>
-			<label>Contrase&ntilde;a:</label>
-			<input type="password" name="p" placeholder="password"/>
-		</li>
-		<li>
-			<label>Recordar contrase&ntilde;a</label><input type="checkbox" name="r"/>
-		</li>
-		<li>
-			<input type="submit" value="Conectar"/>
-		</li>
-	</ul>
-	</form>
-<?php
+	echo "No existen credenciales para acceder a este servidor.";
+	return 0;
 }
 else { // SERVER CREDENTIALS ARE SET
 
@@ -131,10 +111,15 @@ else { // SERVER CREDENTIALS ARE SET
 	$sshclient = new SSHClient($server_credentials);
 	//	$output = $sshclient->launch("cat /etc/named.conf");
 
+	$sshclient->connect();
 	/**
 	 * Check if we're connected & authenticated into the server
 	 * 
 	 */
+	if (! $sshclient->is_authenticated()){
+		echo "Datos de acceso no v&aacute;lidos";
+		return 0;
+	}
 
 	$localfile = transfer_conf_files($config, $sshclient, $serverid, $r->main_config_file);
 

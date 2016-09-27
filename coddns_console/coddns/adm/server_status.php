@@ -57,20 +57,6 @@ if (empty($r)){
 	<section>
 		<h3>Estado del servicio</h3>
 
-		<h4>Informaci&oacute;n del servidor</h4>
-	
-		<ul style="margin: 15px 0;">
-			<li>
-				<label>Nombre:</label><input type="text" value="<?php echo $servername;?>"/>
-			</li>
-			<li>
-				<label>IP:</label><input type="text" value="<?php echo long2ip($r->ip);?>"/>
-			</li>
-			<li>
-				<label>Estado:</label><input type="text" value="<?php echo $r->status;?>"/>
-			</li>
-		</ul>
-
 		<?php
 			// check named service:
 			exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);

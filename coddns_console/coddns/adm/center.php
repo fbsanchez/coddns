@@ -25,7 +25,7 @@ if (! defined("_VALID_ACCESS")) { // Avoid direct access
     exit (1);
 }
 
-$auth_level_required = get_required_auth_level('adm','service','');
+$auth_level_required = get_required_auth_level('adm','center','');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
