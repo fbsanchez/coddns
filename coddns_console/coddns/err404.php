@@ -19,7 +19,7 @@ require_once(dirname(__FILE__) . "/include/config.php");
   <span style="font-size: 4em;"> page not found</span></p>
   <img  style="display:block; margin: 25px auto;" src="<?php echo $config["html_root"]?>/rs/img/404.jpg" alt="not-found"/>
   <p><span style="font-size: 2em;"> We cannot find the page you're looking for</span></p>
-  <a style="text-decoration: none;" href ="/<?php echo $config["html_root"];?>">Go to main page</a>
+  <a style="text-decoration: none;" href ="<?php echo $config["html_root"];?>/">Go to main page</a>
 </section>
 
 </body>
