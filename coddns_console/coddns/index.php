@@ -18,15 +18,15 @@
 defined("_VALID_ACCESS") or define ("_VALID_ACCESS", 1);
 
 
-if (!file_exists(dirname(__FILE__) . "/include/config.php")){
+if (!file_exists(__DIR__ . "/include/config.php")){
     header("Location: install.php");
     exit(0);
 }
 
-require_once(dirname(__FILE__) . "/include/config.php");
-require_once(dirname(__FILE__) . "/lib/ipv4.php");
-require_once(dirname(__FILE__) . "/lib/util.php");
-require_once(dirname(__FILE__) . "/lib/coduser.php");
+require_once(__DIR__ . "/include/config.php");
+require_once(__DIR__ . "/lib/ipv4.php");
+require_once(__DIR__ . "/lib/util.php");
+require_once(__DIR__ . "/lib/coduser.php");
 
 /**
  * Language selector
@@ -245,10 +245,10 @@ echo "</div>";
 
 <?php
 if ($auth_level_required === null){
-    include (dirname(__FILE__) . DIRECTORY_SEPARATOR . "err404.html");
+    include (__DIR__ . DIRECTORY_SEPARATOR . "err404.html");
 }
 else {
-    include (dirname(__FILE__) . DIRECTORY_SEPARATOR . $url);
+    include (__DIR__ . DIRECTORY_SEPARATOR . $url);
 }
 ?>
 

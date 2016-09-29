@@ -15,8 +15,8 @@
  * <summary> </summary>
  */
 
-require_once (dirname(__FILE__) . "/myclient.php");
-require_once (dirname(__FILE__) . "/pgclient.php");
+require_once (__DIR__ . "/myclient.php");
+require_once (__DIR__ . "/pgclient.php");
 
 class DBClient {
   var $username;
@@ -30,11 +30,12 @@ class DBClient {
   var $nresutls   = null;
   var $error      = null;
   var $client;
+  var $config;
 
-  function DBClient($cfg){
-    if ($cfg === null){
-      return null; // Use as static library
-    }
+  function DBClient(){
+    $this->load_cfg();
+    $cfg = $this->config["dbconfig"];
+
     $this->engine = $cfg["engine"];
 
     if ($this->engine == "postgresql") {
@@ -211,6 +212,13 @@ class DBClient {
       return date("Y-m-d\TH:i:s\Z", $v);
     }
     return urldecode(str_replace("$", "%",($v)));
+  }
+
+  function load_cfg(){
+    if (empty ($this->config)) {
+      include (__DIR__ . "/../include/config.php");
+      $this->config = $config;
+    }
   }
 }
 

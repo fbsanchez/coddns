@@ -15,11 +15,11 @@
  * <summary> </summary>
  */
 
-require_once (dirname(__FILE__) . "/../include/config.php");
-require_once (dirname(__FILE__) . "/../lib/db.php");
-require_once (dirname(__FILE__) . "/../lib/ipv4.php");
-require_once (dirname(__FILE__) . "/../lib/util.php");
-require_once (dirname(__FILE__) . "/../lib/coduser.php");
+require_once (__DIR__ . "/../include/config.php");
+require_once (__DIR__ . "/../lib/db.php");
+require_once (__DIR__ . "/../lib/ipv4.php");
+require_once (__DIR__ . "/../lib/util.php");
+require_once (__DIR__ . "/../lib/coduser.php");
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
     header ("Location: " . $config["html_root"] . "/");

@@ -23,7 +23,7 @@ defined ("MIN_DB_LENGTH") or define ("MIN_DB_LENGTH", 2);
 
 session_start();
 
-require_once(dirname(__FILE__) . "/lib/db.php");
+require_once(__DIR__ . "/lib/db.php");
 
 function check_lib($item){
 	if (!extension_loaded($item)) {
@@ -157,7 +157,7 @@ exec ("which nmap | wc -l", $nmap_output, $return);
 if (($return == 0) && ($nmap_output[0] >= 1)) { $nmap_ok  = 1; }
 
 // Check if configuration directory is writable
-if (is_writable(dirname(__FILE__) . "/include")){
+if (is_writable(__DIR__ . "/include")){
 	$writable_config_ok = 1;
 }
 
@@ -358,10 +358,10 @@ elseif ($phase == 2) {
 
 	switch ($engine) {
 		case "mysql":
-			$sql_file = dirname(__FILE__) . "/coddns_sql/coddns_mysql.sql";
+			$sql_file = __DIR__ . "/coddns_sql/coddns_mysql.sql";
 			break;
 		case "postgresql":
-			$sql_file = dirname(__FILE__) . "/coddns_sql/coddns_pgsql.sql";
+			$sql_file = __DIR__ . "/coddns_sql/coddns_pgsql.sql";
 			break;
 		default:
 			$sql_file = "";
@@ -719,22 +719,22 @@ elseif ($phase == 3){
 	$str_config .= "defined (\"MAX_HOST_LENGTH\") or define (\"MAX_HOST_LENGTH\", 200);\n";
 	$str_config .= "defined (\"ITEMS_PER_PAGE\") or define (\"ITEMS_PER_PAGE\", 15);\n";
 	$str_config .= "\n";
-	$str_config .= "include_once (dirname(__FILE__) . \"/../lib/util.php\");\n";
+	$str_config .= "include_once (__DIR__ . \"/../lib/util.php\");\n";
 	$str_config .= "\$config = load_extra_config(\$config);\n";
 	$str_config .= "\n";
 	$str_config .= "?>\n";
 
-	$file = dirname(__FILE__) . "/include/config.php";
+	$file = __DIR__ . "/include/config.php";
 
-	if (! is_writable(dirname(__FILE__) . "/include")){
-		die("El directorio " . dirname(__FILE__) . "/include" . "no es accesible por el instalador, por favor verifique los requisitos");
+	if (! is_writable(__DIR__ . "/include")){
+		die("El directorio " . __DIR__ . "/include" . "no es accesible por el instalador, por favor verifique los requisitos");
 	}
 	file_put_contents($file, $str_config);
 
 
 	// FINAL STEP - create admin user using the configuration file
-	include_once (dirname(__FILE__) . "/include/config.php");
-	require_once (dirname(__FILE__) . "/lib/ipv4.php");
+	include_once (__DIR__ . "/include/config.php");
+	require_once (__DIR__ . "/lib/ipv4.php");
 
 	$dbclient = new DBClient($db_config);
 
@@ -776,7 +776,7 @@ elseif ($phase == 3){
 	$dbclient->disconnect();
 
 	// process login with new user.
-	require_once (dirname(__FILE__) . "/lib/coduser.php");
+	require_once (__DIR__ . "/lib/coduser.php");
 	$objUser = new CODUser();
 	if ($objUser->login($user, $rq_pass) == null ) {
 		die ("Problem loading user, please rerun the installation process.");

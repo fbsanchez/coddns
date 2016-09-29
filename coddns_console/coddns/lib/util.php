@@ -15,13 +15,13 @@
  * <summary> </summary>
  */
 
-require_once(dirname(__FILE__) . "/../include/config.php");
+require_once(__DIR__ . "/../include/config.php");
 
 /**
  * Read extra configuration from DB
  */
 function load_extra_config($cnf){
-    include_once (dirname(__FILE__) . "/db.php");
+    include_once (__DIR__ . "/db.php");
     $dbclient = new DBClient($cnf["db_config"]);
 
     $dbclient->connect() or die ($dbclient->lq_error());
@@ -185,7 +185,7 @@ function write_file($content, $filepath,$mode = "w"){
  * Securize an argument passed to the script
  */
 function secure_get($argument, $mode = "url_get"){
-    require_once(dirname(__FILE__) . "/db.php");
+    require_once(__DIR__ . "/db.php");
 
     $securizer = new DBClient(null);
 
@@ -200,8 +200,8 @@ function secure_get($argument, $mode = "url_get"){
  * Returns the required auth_level for a page
  */
 function get_required_auth_level($mode,$zone,$operation){
-    require_once(dirname(__FILE__) . "/db.php");
-    include(dirname(__FILE__) . "/../include/config.php");
+    require_once(__DIR__ . "/db.php");
+    include(__DIR__ . "/../include/config.php");
 
     $dbclient = new DBClient($db_config);
     $sm = $dbclient->prepare($mode, "url_get");

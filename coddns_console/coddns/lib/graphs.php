@@ -17,7 +17,7 @@
  * To use this script is required to link the Chart.js lib.
  */
 
-require_once(dirname(__FILE__) . "/../include/config.php");
+require_once(__DIR__ . "/../include/config.php");
 
 
 /**

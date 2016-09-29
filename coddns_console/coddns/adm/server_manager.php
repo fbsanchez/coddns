@@ -15,10 +15,11 @@
  * <summary> </summary>
  */
 
-require_once(dirname(__FILE__) . "/../include/config.php");
-require_once(dirname(__FILE__) . "/../lib/db.php");
-require_once(dirname(__FILE__) . "/../lib/util.php");
-require_once(dirname(__FILE__) . "/../lib/coduser.php");
+require_once(__DIR__ . "/../include/config.php");
+require_once(__DIR__ . "/../lib/db.php");
+require_once(__DIR__ . "/../lib/util.php");
+require_once(__DIR__ . "/../lib/coduser.php");
+require_once(__DIR__ . "/../lib/codserver.php");
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
     header ("Location: " . $config["html_root"] . "/");
@@ -41,8 +42,21 @@ if (empty($r)){
 	echo "No hay servidores registrados con ese nombre.";
 	return 0;
 }
+
 // Try to get credentials from the DB
+// Priority:
+//   1st DB
+//   2nd Form
 session_start();
+
+
+
+
+
+
+
+
+
 if (empty($_SESSION["servers"][$servername]["user"])){
 	if (isset ($r->srv_user)) {
 		$_SESSION["servers"][$servername]["user"] = $r->srv_user; 
@@ -70,7 +84,7 @@ if (empty($_SESSION["servers"][$servername]["port"])){
 	}
 }
 
-if (empty($_SESSION["servers"][$servername]["r"])){
+if (isset($_SESSION["servers"][$servername]["r"])){
 	$remember = secure_get("r","letters");
 	if ($remember == "on"){
 		if (isset($_SESSION["servers"][$servername]["user"])
@@ -79,6 +93,7 @@ if (empty($_SESSION["servers"][$servername]["r"])){
 			$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
 			$dbclient->do_sql("update servers set srv_password = '" . coddns_encrypt($_SESSION["servers"][$servername]["pass"])
 				. "', srv_user='" . $_SESSION["servers"][$servername]["user"]
+				. "', port='" . $_SESSION["servers"][$servername]["port"]
 				. "' where tag='" . $servername . "'");
 		}
 	}
@@ -91,6 +106,7 @@ if (empty($_SESSION["servers"][$servername]["forget"])){
 		$dbclient->do_sql("update servers set srv_password = null, srv_user = null where tag='" . $servername . "'");
 		unset ($_SESSION["servers"][$servername]["user"]);
 		unset ($_SESSION["servers"][$servername]["pass"]);
+		unset ($_SESSION["servers"][$servername]["port"]);
 
 	}
 }
@@ -144,8 +160,12 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		(isset($_SESSION["servers"][$servername]["user"])
 			&& (isset ($_SESSION["servers"][$servername]["pass"]))) 
 		)) {
+		// Credentials had been set, store them if needed
+		
+		
 
-	// Credentials had been set, show navigation
+
+		//  show navigation
 	?>
 	<form action="#settings_manager" method="POST">
 		<input type="hidden" value="1" name="forget"/>
@@ -184,7 +204,7 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	<ul>
 		<li>
 			<label>Usuario:</label>
-			<input type="text" name="u" placeholder="usuario"/>
+			<input type="text" name="u" placeholder="user" value="<?php echo $r->user; ?>"/>
 		</li>
 		<li>
 			<label>Contrase&ntilde;a:</label>
@@ -192,7 +212,7 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		</li>
 		<li>
 			<label>Puerto:</label>
-			<input type="number" name="port" value="22" />
+			<input type="number" name="port" value="<?php echo $r->port;?>" />
 		</li>
 		<li>
 			<label>Recordar contrase&ntilde;a</label><input type="checkbox" name="r"/>

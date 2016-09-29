@@ -15,10 +15,10 @@
  * <summary> </summary>
  */
 
-require_once (dirname(__FILE__) . "/../include/config.php");
-require_once (dirname(__FILE__) . "/../lib/db.php");
-require_once (dirname(__FILE__) . "/../lib/util.php");
-require_once (dirname(__FILE__) . "/../lib/coduser.php");
+require_once (__DIR__ . "/../include/config.php");
+require_once (__DIR__ . "/../lib/db.php");
+require_once (__DIR__ . "/../lib/util.php");
+require_once (__DIR__ . "/../lib/coduser.php");
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
     header ("Location: " . $config["html_root"] . "/");
@@ -85,7 +85,7 @@ $text["de"]["reg_type"]      = "DNS record type";
     <title>resultados</title>
     <style type="text/css"/>
 		<?php
-		include_once (dirname(__FILE__) . "/../rs/css/pc/hosts.php");
+		include_once (__DIR__ . "/../rs/css/pc/hosts.php");
 
 		?>
         

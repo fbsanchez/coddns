@@ -24,8 +24,8 @@
  * yum --enablerepo=remi install php-pecl-ssh2
  */
 
-require_once (dirname(__FILE__) . "/../lib/db.php");
-require_once (dirname(__FILE__) . "/../lib/ipv4.php");
+require_once (__DIR__ . "/../lib/db.php");
+require_once (__DIR__ . "/../lib/ipv4.php");
 
 // Defines CODUser class
 
@@ -64,7 +64,7 @@ class SSHClient {
 	}
 
 	function load_cfg(){
-		include (dirname(__FILE__) . "/../include/config.php");
+		include (__DIR__ . "/../include/config.php");
 		$this->config = $config;
 	}
 

@@ -15,8 +15,8 @@
  * <summary> </summary>
  */
 
-require_once (dirname(__FILE__) . "/../lib/db.php");
-require_once (dirname(__FILE__) . "/../lib/ipv4.php");
+require_once (__DIR__ . "/db.php");
+require_once (__DIR__ . "/ipv4.php");
 
 // Defines CODUser class
 
@@ -68,8 +68,10 @@ class CODUser {
 	}
 
 	function load_cfg(){
-		include (dirname(__FILE__) . "/../include/config.php");
-		$this->config = $config;
+		if (empty ($this->config)) {
+			include (__DIR__ . "/../include/config.php");
+			$this->config = $config;
+		}
 	}
 
 	function get_is_logged(){

@@ -15,8 +15,8 @@
  * <summary> </summary>
  */
 
-require_once (dirname(__FILE__) . "/include/config.php");
-require_once (dirname(__FILE__) . "/lib/coduser.php");
+require_once (__DIR__ . "/include/config.php");
+require_once (__DIR__ . "/lib/coduser.php");
 
 if (!defined("_VALID_ACCESS")){
     header("Location: " . $config["html_root"] . "/");
