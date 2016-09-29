@@ -54,7 +54,7 @@ if (empty($_SESSION["servers"][$servername]["user"])){
 
 if (empty($_SESSION["servers"][$servername]["pass"])){
 	if (isset ($r->srv_password)) {
-		$_SESSION["servers"][$servername]["pass"] = $r->srv_password; 
+		$_SESSION["servers"][$servername]["pass"] = coddns_decrypt($r->srv_password);
 	}
 	else {
 		$_SESSION["servers"][$servername]["pass"] = secure_get("p","base64");
