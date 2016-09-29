@@ -41,13 +41,24 @@ if (empty($r)){
 	echo "No hay servidores registrados con ese nombre.";
 	return 0;
 }
-
+// Try to get credentials from the DB
 session_start();
-if (!isset($_SESSION["servers"][$servername]["user"])){
-	$_SESSION["servers"][$servername]["user"] = secure_get("u");
+if (empty($_SESSION["servers"][$servername]["user"])){
+	if (isset ($r->srv_user)) {
+		$_SESSION["servers"][$servername]["user"] = $r->srv_user; 
+	}
+	else {
+		$_SESSION["servers"][$servername]["user"] = secure_get("u");
+	}
 }
-if (!isset($_SESSION["servers"][$servername]["pass"])){
-	$_SESSION["servers"][$servername]["pass"] = secure_get("p","base64");
+
+if (empty($_SESSION["servers"][$servername]["pass"])){
+	if (isset ($r->srv_password)) {
+		$_SESSION["servers"][$servername]["pass"] = $r->srv_password; 
+	}
+	else {
+		$_SESSION["servers"][$servername]["pass"] = secure_get("p","base64");
+	}
 }
 if (!isset($_SESSION["servers"][$servername]["r"])){
 	$remember = secure_get("r","letters");
