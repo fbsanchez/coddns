@@ -14,6 +14,10 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
+if (defined ("__MYCLIENT_PHP__")) {
+  return;
+}
+define ("__MYCLIENT_PHP__", 1);
 
 class MyClient{
   var $username;

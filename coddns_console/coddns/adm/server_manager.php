@@ -15,11 +15,11 @@
  * <summary> </summary>
  */
 
-require_once(__DIR__ . "/../include/config.php");
-require_once(__DIR__ . "/../lib/db.php");
-require_once(__DIR__ . "/../lib/util.php");
-require_once(__DIR__ . "/../lib/coduser.php");
-require_once(__DIR__ . "/../lib/codserver.php");
+require (__DIR__ . "/../include/config.php");
+require (__DIR__ . "/../lib/db.php");
+require (__DIR__ . "/../lib/util.php");
+require (__DIR__ . "/../lib/coduser.php");
+require (__DIR__ . "/../lib/codserver.php");
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
     header ("Location: " . $config["html_root"] . "/");
@@ -38,7 +38,11 @@ $dbclient = new DBClient($db_config);
 $q = "Select * from servers where tag='" . $servername . "' ;";
 $r = $dbclient->get_sql_object($q);
 
-if (empty($r)){
+
+session_start();
+
+$server = new CODServer($servername);
+if (empty($server->get_id())){
 	echo "No hay servidores registrados con ese nombre.";
 	return 0;
 }
@@ -47,10 +51,6 @@ if (empty($r)){
 // Priority:
 //   1st DB
 //   2nd Form
-session_start();
-
-
-
 
 
 

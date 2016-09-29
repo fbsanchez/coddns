@@ -14,6 +14,11 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
+if (defined ("__PGCLIENT_PHP__")) {
+  return;
+}
+define ("__PGCLIENT_PHP__", 1);
+
 
 class PgClient{
   var $username;

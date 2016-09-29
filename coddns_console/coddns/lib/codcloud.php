@@ -14,6 +14,11 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
+if (defined ("__CODCLOUD_PHP__")) {
+  return;
+}
+define ("__CODCLOUD_PHP__", 1);
+
 
 require_once (__DIR__ . "/../lib/db.php");
 require_once (__DIR__ . "/../lib/ipv4.php");

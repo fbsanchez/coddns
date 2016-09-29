@@ -14,9 +14,13 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
+if (defined ("__DB_PHP__")) {
+  return;
+}
+define ("__DB_PHP__", 1);
 
-require_once (__DIR__ . "/myclient.php");
-require_once (__DIR__ . "/pgclient.php");
+require (__DIR__ . "/myclient.php");
+require (__DIR__ . "/pgclient.php");
 
 class DBClient {
   var $username;
@@ -32,10 +36,10 @@ class DBClient {
   var $client;
   var $config;
 
-  function DBClient(){
-    $this->load_cfg();
-    $cfg = $this->config["dbconfig"];
-
+  function DBClient($cfg){
+    if ($cfg === null){
+      return null;
+    }
     $this->engine = $cfg["engine"];
 
     if ($this->engine == "postgresql") {
@@ -212,13 +216,6 @@ class DBClient {
       return date("Y-m-d\TH:i:s\Z", $v);
     }
     return urldecode(str_replace("$", "%",($v)));
-  }
-
-  function load_cfg(){
-    if (empty ($this->config)) {
-      include (__DIR__ . "/../include/config.php");
-      $this->config = $config;
-    }
   }
 }
 
