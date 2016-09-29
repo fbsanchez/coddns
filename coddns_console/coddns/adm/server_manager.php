@@ -60,7 +60,17 @@ if (empty($_SESSION["servers"][$servername]["pass"])){
 		$_SESSION["servers"][$servername]["pass"] = secure_get("p","base64");
 	}
 }
-if (!isset($_SESSION["servers"][$servername]["r"])){
+
+if (empty($_SESSION["servers"][$servername]["port"])){
+	if (isset ($r->port)) {
+		$_SESSION["servers"][$servername]["port"] = $r->port;
+	}
+	else {
+		$_SESSION["servers"][$servername]["port"] = secure_get("p","number");
+	}
+}
+
+if (empty($_SESSION["servers"][$servername]["r"])){
 	$remember = secure_get("r","letters");
 	if ($remember == "on"){
 		if (isset($_SESSION["servers"][$servername]["user"])
@@ -72,9 +82,8 @@ if (!isset($_SESSION["servers"][$servername]["r"])){
 				. "' where tag='" . $servername . "'");
 		}
 	}
-
 }
-if (!isset($_SESSION["servers"][$servername]["forget"])){
+if (empty($_SESSION["servers"][$servername]["forget"])){
 	$forget_flag = secure_get("forget","number");
 	if ($forget_flag == 1){
 		// remove password stored for the current server
@@ -180,6 +189,10 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		<li>
 			<label>Contrase&ntilde;a:</label>
 			<input type="password" name="p" placeholder="password"/>
+		</li>
+		<li>
+			<label>Puerto:</label>
+			<input type="number" name="port" value="22" />
 		</li>
 		<li>
 			<label>Recordar contrase&ntilde;a</label><input type="checkbox" name="r"/>
