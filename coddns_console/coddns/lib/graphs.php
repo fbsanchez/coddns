@@ -64,12 +64,17 @@ function print_graph_line($chart, $alsoPrint = 0){
     if (isset($chart["datasets"])) {
 	    foreach ($chart["datasets"] as $d) {
 		    $str .= "                      {\n";
-		    $str .= "                        label: ['" . $d["label"] . "'],\n";
-		    $str .= "                        data: [" . $d["data"] . "],\n";
-		    $str .= "                        pointBorderWidth: 1,\n";
-		    $str .= "                        pointHoverRadius: 5,\n";
-		    $str .= "                        backgroundColor: " . $d["backgroundColor"] . ",\n";
-		    $str .= "                        borderColor: " . $d["borderColor"] . "\n";
+            $str .= "                        label: ['" . $d["label"] . "'],\n";
+            $str .= "                        data: [" . $d["data"] . "],\n";
+            $str .= "                        pointBorderWidth: 0,\n";
+            $str .= "                        pointHoverRadius: 1,\n";
+            $str .= "                        pointRadius: 1,\n";
+            $str .= "                        lineTension: 0.1,\n";
+            $str .= "                        borderJoinStyle: 'mitter',\n";
+            $str .= "                        fill: false,\n";
+            $str .= "                        pointHitRadius: 10,\n";
+            $str .= "                        backgroundColor: " . $d["backgroundColor"] . ",\n";
+            $str .= "                        borderColor: " . $d["borderColor"] . "\n";
 		    $str .= "                      },\n";
 	    }
 	}
