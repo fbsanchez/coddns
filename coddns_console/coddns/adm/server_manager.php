@@ -39,7 +39,7 @@ if(!isset($servername)){
 session_start();
 
 $server = new CODServer($servername);
-if (empty($server)){
+if ((!method_exists($server, 'get_id')) || ($server->get_id() === null)){
 	echo "No hay servidores registrados con ese nombre.";
 	return 0;
 }
