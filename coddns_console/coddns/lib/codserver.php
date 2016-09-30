@@ -50,7 +50,7 @@ class CODServer {
 			$this->port   = $r->port;
 			$this->pass   = coddns_decrypt($r->srv_password);
 			$this->user   = $r->srv_user;
-			$this->pass   = $r->srv_password;
+			$this->pass   = coddns_decrypt($r->srv_password);
 			$this->status = $r->status;
 			$this->main_config_file = $r->main_config_file;
 			$this->fingerprint      = $r->fingerprint;
