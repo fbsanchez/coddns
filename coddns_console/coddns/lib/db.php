@@ -14,13 +14,8 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
-if (defined ("__DB_PHP__")) {
-  return;
-}
-define ("__DB_PHP__", 1);
-
-require (__DIR__ . "/myclient.php");
-require (__DIR__ . "/pgclient.php");
+require_once (__DIR__ . "/myclient.php");
+require_once (__DIR__ . "/pgclient.php");
 
 class DBClient {
   var $username;
@@ -29,7 +24,6 @@ class DBClient {
   var $schema;
   var $port;
   var $db;
-  var $link       = null;
   var $last_query = null;
   var $nresutls   = null;
   var $error      = null;
@@ -50,7 +44,13 @@ class DBClient {
     }
   }
 
+  function is_connected(){
+    return $this->client->is_connected();
+  }
   function connect(){
+    if($this->is_connected()){
+      return true;
+    }
     return $this->client->connect();
   }
   function exeq($query) {
@@ -141,6 +141,7 @@ class DBClient {
    * XXX: Needs a harder check...
    */
   function prepare($clsqlarg, $type){
+    
     switch($type){
       case "email":     return preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg);
       case "number":    return floatval($clsqlarg);

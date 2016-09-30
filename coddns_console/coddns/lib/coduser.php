@@ -14,7 +14,6 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
-
 require_once (__DIR__ . "/db.php");
 require_once (__DIR__ . "/ipv4.php");
 

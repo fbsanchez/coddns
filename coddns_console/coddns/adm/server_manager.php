@@ -15,16 +15,19 @@
  * <summary> </summary>
  */
 
+defined ("DEFAULT_SSH_PORT") or define("DEFAULT_SSH_PORT", 22);
+
 require (__DIR__ . "/../include/config.php");
-require (__DIR__ . "/../lib/db.php");
-require (__DIR__ . "/../lib/util.php");
-require (__DIR__ . "/../lib/coduser.php");
-require (__DIR__ . "/../lib/codserver.php");
+require_once (__DIR__ . "/../lib/db.php");
+require_once (__DIR__ . "/../lib/util.php");
+require_once (__DIR__ . "/../lib/coduser.php");
+require_once (__DIR__ . "/../lib/codserver.php");
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
     header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
+
 $auth_level_required = get_required_auth_level('adm','server','manager');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
@@ -32,12 +35,6 @@ $user->check_auth_level($auth_level_required);
 if(!isset($servername)){
 	$servername = secure_get("id");
 }
-
-$dbclient = new DBClient($db_config);
-
-$q = "Select * from servers where tag='" . $servername . "' ;";
-$r = $dbclient->get_sql_object($q);
-
 
 session_start();
 
@@ -49,61 +46,66 @@ if (empty($server->get_id())){
 
 // Try to get credentials from the DB
 // Priority:
-//   1st DB
-//   2nd Form
-
-
-
-
-
-
+//   1nd Form (form)
+//   2st DB (object server)
+$valid_credentials = 0;
 if (empty($_SESSION["servers"][$servername]["user"])){
-	if (isset ($r->srv_user)) {
-		$_SESSION["servers"][$servername]["user"] = $r->srv_user; 
-	}
-	else {
+	if (isset ($_REQUEST["u"])) {
 		$_SESSION["servers"][$servername]["user"] = secure_get("u");
+		$valid_credentials++;
+	}
+	elseif (! empty ($server->user)) {
+		$_SESSION["servers"][$servername]["user"] = $server->user;
+		$valid_credentials++;
 	}
 }
 
 if (empty($_SESSION["servers"][$servername]["pass"])){
-	if (isset ($r->srv_password)) {
-		$_SESSION["servers"][$servername]["pass"] = coddns_decrypt($r->srv_password);
-	}
-	else {
+	if (isset ($_REQUEST["p"])) {
 		$_SESSION["servers"][$servername]["pass"] = secure_get("p","base64");
+		$valid_credentials++;
+	}
+	elseif (! empty ($server->pass)) {
+		$_SESSION["servers"][$servername]["pass"] = $server->pass;
+		$valid_credentials++;
 	}
 }
 
 if (empty($_SESSION["servers"][$servername]["port"])){
-	if (isset ($r->port)) {
-		$_SESSION["servers"][$servername]["port"] = $r->port;
+	if (isset ($_REQUEST["port"])) {
+		$_SESSION["servers"][$servername]["port"] = secure_get("port","number");
+		$valid_credentials++;
+	}
+	elseif (! empty ($server->port)) {
+		$_SESSION["servers"][$servername]["port"] = $server->port;
+		$valid_credentials++;
 	}
 	else {
-		$_SESSION["servers"][$servername]["port"] = secure_get("p","number");
+		$_SESSION["servers"][$servername]["port"] = DEFAULT_SSH_PORT;
+		$valid_credentials++;
 	}
 }
 
-if (isset($_SESSION["servers"][$servername]["r"])){
-	$remember = secure_get("r","letters");
-	if ($remember == "on"){
-		if (isset($_SESSION["servers"][$servername]["user"])
-			&& (isset ($_SESSION["servers"][$servername]["pass"]))) {
-			// store password for the current server
-			$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-			$dbclient->do_sql("update servers set srv_password = '" . coddns_encrypt($_SESSION["servers"][$servername]["pass"])
-				. "', srv_user='" . $_SESSION["servers"][$servername]["user"]
-				. "', port='" . $_SESSION["servers"][$servername]["port"]
-				. "' where tag='" . $servername . "'");
-		}
+if ($valid_credentials == 3){
+	$server->set_credentials($_SESSION["servers"][$servername]["user"]
+							,$_SESSION["servers"][$servername]["pass"]
+							,$_SESSION["servers"][$servername]["port"]);
+}
+
+// should we remember the credentials?
+$remember = secure_get("r","letters");
+if ($remember == "on") {
+
+	// store password for the current server
+	if (!$server->save_credentials()) {
+		die ("cannot store credentials...");
 	}
 }
 if (empty($_SESSION["servers"][$servername]["forget"])){
 	$forget_flag = secure_get("forget","number");
 	if ($forget_flag == 1){
 		// remove password stored for the current server
-		$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-		$dbclient->do_sql("update servers set srv_password = null, srv_user = null where tag='" . $servername . "'");
+		$server->forgot_credentials();
 		unset ($_SESSION["servers"][$servername]["user"]);
 		unset ($_SESSION["servers"][$servername]["pass"]);
 		unset ($_SESSION["servers"][$servername]["port"]);
@@ -111,7 +113,8 @@ if (empty($_SESSION["servers"][$servername]["forget"])){
 	}
 }
 
-session_write_close();
+session_write_close();		
+
 ?>
 
 
@@ -156,15 +159,8 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	<section>
 	<h2>Administrar <i><?php echo $servername;?></i></h2>
 	<?php
-	if (($r->n == 1) || (
-		(isset($_SESSION["servers"][$servername]["user"])
-			&& (isset ($_SESSION["servers"][$servername]["pass"]))) 
-		)) {
-		// Credentials had been set, store them if needed
-		
-		
-
-
+	if($server->has_credentials()) {
+		// Credentials had been set
 		//  show navigation
 	?>
 	<form action="#settings_manager" method="POST">
@@ -194,17 +190,20 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	</div>
 
 	<?php
+		// End -- Allowed navigation panel
 	}
 	else {
 		// No credentials provided to acces server.
+
+
 	?>
 	<form method="POST" action="#settings_manager" onsubmit="this.elements['p'].value = btoa(this.elements['p'].value);">
-	<p>&gt;&gt; No se han encontrado credenciales para acceder a <?php echo long2ip($r->ip);?></p>
+	<p>&gt;&gt; No se han encontrado credenciales para acceder a <?php echo $server->ip;?></p>
 	<p>Indique una a continuaci&oacute;n:</p>
 	<ul>
 		<li>
 			<label>Usuario:</label>
-			<input type="text" name="u" placeholder="user" value="<?php echo $r->user; ?>"/>
+			<input type="text" name="u" placeholder="user"/>
 		</li>
 		<li>
 			<label>Contrase&ntilde;a:</label>
@@ -212,7 +211,7 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		</li>
 		<li>
 			<label>Puerto:</label>
-			<input type="number" name="port" value="<?php echo $r->port;?>" />
+			<input type="number" name="port" value="<?php echo $server->port;?>" />
 		</li>
 		<li>
 			<label>Recordar contrase&ntilde;a</label><input type="checkbox" name="r"/>
@@ -223,6 +222,7 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	</ul>
 	</form>
 	<?php
+		// End -- No available credentials
 	}
 	?>
 	<a class="return" href="<?php echo $config["html_root"];?>/?m=adm&z=center#servers">Volver</a>

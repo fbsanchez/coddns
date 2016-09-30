@@ -14,10 +14,6 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
-if (defined ("__UTIL_PHP__")) {
-  return;
-}
-define ("__UTIL_PHP__", 1);
 
 require (__DIR__ . "/../include/config.php");
 

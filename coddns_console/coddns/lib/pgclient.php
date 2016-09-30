@@ -14,11 +14,6 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
-if (defined ("__PGCLIENT_PHP__")) {
-  return;
-}
-define ("__PGCLIENT_PHP__", 1);
-
 
 class PgClient{
   var $username;
@@ -54,6 +49,13 @@ class PgClient{
     }
     $this->exeq("set search_path to '" . $this->schema . "'");
     return true;
+  }
+
+  function is_connected(){
+    if ($this->link) {
+      return pg_ping($this->link);
+    }
+    return false;
   }
 
   /**
