@@ -86,7 +86,11 @@ if (empty($_SESSION["servers"][$servername]["port"])){
 	}
 }
 
-if ($valid_credentials == 3){
+if (($valid_credentials == 3)
+	|| (	( isset($_SESSION["servers"][$servername]["port"] ))
+			&& (isset( $_SESSION["servers"][$servername]["pass"]))
+			&& (isset( $_SESSION["servers"][$servername]["user"]))
+	)) {    
 	$server->set_credentials($_SESSION["servers"][$servername]["user"]
 							,$_SESSION["servers"][$servername]["pass"]
 							,$_SESSION["servers"][$servername]["port"]);
