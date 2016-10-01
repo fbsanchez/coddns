@@ -275,6 +275,7 @@ INSERT INTO settings(field,value)
     ("slack_url", ""),
     ("installdir", "/opt/coddns/"),
     ("spooldir", "/opt/coddns/spool/"),
+    ("max_age", "7"),
     ("rndc_key", "/share/ddns/rndc.key");
 
 

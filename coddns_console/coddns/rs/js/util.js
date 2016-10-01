@@ -293,8 +293,9 @@ window.onmousemove = function (e){
 /**
  * Colors generation based on static array
  */
-var colors = ["#F5AB25", "#E69A4B","#40BB88","#41D1E8","#F92727","#2F97B9","#69A037","#E4D51A"];
-var shapes = ["rgba(245, 171, 37, 0.5)","rgba(230, 154, 75, 0.5)", "rgba(64,187,136,0.5)","rgba(65, 209, 232, 0.5)","rgba(249, 39, 39, 0.5)","rgba(47, 151, 185, 0.5)","rgba(105, 160, 55, 0.5)","rgba(228, 213, 26, 0.5)"];
+var colors = ["#F5AB25", "#FF0000","#00FF00","#0000FF","#0925b5","#9304ad","#69A037","#E4D51A"];
+var shapes = colors;
+//["rgba(245, 171, 37, 0.5)","rgba(255, 0, 0, 0.5)", "rgba(0,255,0,0.5)","rgba(65, 209, 232, 0.5)","rgba(249, 39, 39, 0.5)","rgba(47, 151, 185, 0.5)","rgba(105, 160, 55, 0.5)","rgba(228, 213, 26, 0.5)"];
 var color_index = -1;
 function getNextColor(){
   return colors[(color_index = (color_index+1)%colors.length)];

@@ -55,7 +55,7 @@ class CODServer {
 			$this->main_config_file = $r->main_config_file;
 			$this->fingerprint      = $r->fingerprint;
 		}
-		return $r;
+		return $this;
 	}
 
 	private function load_cfg(){
