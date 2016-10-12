@@ -17,6 +17,7 @@
 
 require_once (__DIR__ . "/include/config.php");
 require_once (__DIR__ . "/lib/db.php");
+require_once (__DIR__ . "/lib/htmlwriter.php");
 require_once (__DIR__ . "/lib/util.php");
 require_once (__DIR__ . "/lib/coduser.php");
 
