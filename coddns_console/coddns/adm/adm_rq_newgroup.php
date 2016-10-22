@@ -42,8 +42,9 @@ if(!$error){
 	$q = "insert into groups (tag, description) values ('" . $_POST["tag"] . "', '" . $_POST["description"] . "');";
 	$dbclient->exeq($q) or die($dbclient->lq_error());
 	$dbclient->disconnect();
+	//<script type="text/javascript">location.reload();</script>
 ?>
-	<script type="text/javascript">location.reload();</script>
+	
 <?php
 }
 ?>
