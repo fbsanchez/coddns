@@ -215,11 +215,13 @@ function list_groups($data) {
 	$q = "select * from groups;";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
+	$q = "select tag from groups;";
+	$s = $dbclient->exeq($q) or die ($dbclient->lq_error());
 	?>
 
 	<div>
-		<button class="button_users">Crear grupo</button>
-		<button class="button_users">Eliminar grupos</button>
+		<button class="button_users" onclick="toggleDisplay('form_create_group')">Crear grupo</button>
+		<button class="button_users" onclick="toggleDisplay('form_delete_group')">Eliminar grupos</button>
 	</div>
 
 	<table>

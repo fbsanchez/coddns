@@ -38,6 +38,9 @@ $r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 $l = "select tag from groups;";
 $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
+
+$m = "select * from groups;";
+$t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 ?>
 
 
@@ -192,6 +195,44 @@ $s = $dbclient->exeq($l) or die ($dbclient->lq_error());
 			</div>
 		</form>
 	</div>
+
+	<div id="form_create_group" class="pop_up_form" style="display:none;" draggable>
+		<form name="new_group" id="newgroup" method="POST" action="" onsubmit="fsgo('newgroup', 'ajax_message','adm/adm_rq_newgroup.php', true, raise_ajax_message);return false;">
+			<div class="pop_up_headers">
+				<h3>Crear Grupos</h3>
+				<button class="pop_up_headers_close" onclick="toggleDisplay('form_create_group')">X</button>
+			</div>
+			<div class="pop_up_body">
+				<ul>
+					<li>
+						<label for="group_name">Nombre</label>
+						<input type="text" id="group_name" name="tag" required="required"></input>
+					</li>
+					<li>
+						<label for="group_description">Descripci&oacuten</label>
+						<input type="text" id="group_description" name="description"></input>
+					</li>
+					<li>
+						<label for="group_parent">Padre</label>
+						<select id="group_parent" name="parent">
+							<option value=-1>None</option>
+							<?php
+							while ($row = $dbclient->fetch_array ($t)) {
+							?>
+								<option value=<?php echo "'" . $row['id'] . "'"; ?>><?php echo $row['tag']; ?></option>
+							<?php
+							}
+							?>
+						</select>
+					</li>
+				</ul>
+			</div>
+			<div class="pop_up_footer">
+				<input type="submit" name="Enviar"></input>
+			</div>
+		</form>
+	</div>
+
 	
 	<section id="adm_site_section">
 	
