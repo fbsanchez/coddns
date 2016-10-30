@@ -130,3 +130,7 @@ nav ul li a.selected > div {
     border-radius: 15px 0 15px 0px;
     box-shadow: 0 0 2px #ccc;
 }
+
+.message_error{
+    color:red;
+}

@@ -25,25 +25,40 @@ $auth_level_required = get_required_auth_level('adm','site','rq_new_group');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
-echo "<pre>";
-var_dump($_POST);
-var_dump('por queeeeeee');
-echo "</pre>";
 $error = 0;
-if (   (! isset ($_POST["tag"])  )
-    || (! isset ($_POST["description"]) )
-    || (! isset ($_POST["parent"]) )) {
+if (   (! isset ($_POST["tag"]) )   ) {
     $error = 1;
+}
+else{
+	$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+	$dbclient->connect() or die ($dbclient->lq_error());
+
+	$l = "select id from groups where tag ='" . $_POST["tag"] . "';";
+	$s = $dbclient->exeq($l) or die ($dbclient->lq_error());
+	$error = 0; 
+	if($dbclient->fetch_array ($s)){
+		$error = 1;
+		$message = $_POST["tag"];
+	}
 }
 
 if(!$error){
-	$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-	$dbclient->connect() or die ($dbclient->lq_error());
-	$q = "insert into groups (tag, description) values ('" . $_POST["tag"] . "', '" . $_POST["description"] . "');";
+	if ( ($_POST["parent"] == -1)){
+		$q = "insert into groups (tag, description) values ('" . $_POST["tag"] . "', '" . $_POST["description"] . "');";
+	}
+	else{
+		$q = "insert into groups (tag, description, parent) values ('" . $_POST["tag"] . "', '" . $_POST["description"] . "', '" . $_POST["parent"] . "');";
+	}
 	$dbclient->exeq($q) or die($dbclient->lq_error());
 	$dbclient->disconnect();
-?>
-	<script type="text/javascript">location.reload();</script>
-<?php
+	?>
+		<script type="text/javascript">location.reload();</script>
+	<?php
+}
+else{
+	$dbclient->disconnect();
+	if( isset($message) ){
+		echo "<h4 class='message_error'>El nombre '" . $message . "' ya existe en la bbdd por favor introduzca otro</h4>";
+	}
 }
 ?>

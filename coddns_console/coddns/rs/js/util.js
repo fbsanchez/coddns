@@ -242,6 +242,14 @@ function toggleDisplay(id){
   }
 }
 
+/**
+ * Send input hidden id for element to delete
+ */
+function addnametodelete(id){
+  var item = document.getElementById('delete-item');
+  item.value = id;
+}
+
 function raise_ajax_message(){
   ajax_message_wrapper.style['max-height'] = '200px';
 }

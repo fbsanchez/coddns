@@ -230,6 +230,7 @@ function list_groups($data) {
 				<td>Nombre</td>
 				<td>Descripci&oacuten</td>
 				<td>Miembros</td>
+				<td>Grupo Padre</td>
 				<td>Acciones</td>
 			</tr>
 		</thead>
@@ -255,8 +256,22 @@ function list_groups($data) {
 		        	?>
 		        </td>
 		        <td>
+		        	<?php
+		        		$m = "select tag from groups where id = '" . $row["parent"] . "';";
+						$t = $dbclient->exeq($m) or die ($dbclient->lq_error());
+						$u = $dbclient->exeq($m) or die ($dbclient->lq_error());
+						if($row2 = $dbclient->fetch_array ($u)){
+							while ($row2 = $dbclient->fetch_array ($t)){
+		        				echo $row2["tag"];
+		        			}
+		        		} else {
+		        			echo "none";
+		        		}
+		        	?>
+		        </td>
+		        <td>
 		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
-		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/></a>
+		        	<a href="#" onclick="toggleDisplay('form_delete_group'); add_id_to_delete(<?php echo $row["id"] ?>);"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/></a>
 		        	<input type="checkbox"/>
 		        </td>
 		    </tr>
@@ -334,7 +349,9 @@ switch ($action) {
 		break;
 	case 'list_acls':
 		list_acls($arguments);
-		break;	
+		break;
+	case 'exist_tag_groups':
+		exist_tag_groups($arguments);	
 	default:
 		print "Unknown action";
 		break;

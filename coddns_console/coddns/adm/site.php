@@ -52,7 +52,15 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 	<link rel="stylesheet" type="text/css" href="rs/css/pc/pop_up.css">
 </head>
 <script languague="javascript">
-	 function linkselected(id_elem){
+	var anchors = location.href.split('#');
+	window.onload = function (){
+		var tab= anchors[1];
+		if (document.getElementById(tab)){
+			document.getElementById(tab).onclick();
+		}
+	}
+	
+	function linkselected(id_elem){
 	 	var id = document.getElementById(id_elem);
 	 	
 	 	//diferents id links
@@ -86,11 +94,10 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 	 	} else {
 	 		id.childNodes[1].childNodes[1].setAttribute("src", "<?php echo $config["html_root"] . "/rs/img/people-2.png"; ?>");
 	 	}
-	 }
-	 /*
-		pass from multiselect other multiselect items ordered
-	 */
-	 function SelectMoveRows(SS1,SS2) {
+	}
+		
+	//pass from multiselect other multiselect items ordered
+	function SelectMoveRows(SS1,SS2) {
 	    var SelID='';
 	    var SelText='';
 	    for (i=SS1.options.length - 1; i>=0; i--) {
@@ -103,36 +110,33 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 	        }
 	    }
 	}
-
-	/*
-		end function multiselect
-	*/
 </script>
 <body onload="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_users');">
 	<section>
 		<h2>Panel de administraci&oacute;n del sitio</h2>
 		<nav
 >			<ul id="tabs">
-				<li><a href="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_users');" onclick="linkselected('link_users')" title="Usuarios" id="link_users">
+				<li><a href="#link_users" onclick="linkselected('link_users'); updateContent('adm_site_section', 'ajax.php', 'action=list_users');" title="Usuarios" id="link_users">
 				<div class="menu_button">
 				<img src="<?php echo $config["html_root"] . "/rs/img/teamwork-in-the-office.png"; ?>" alt="Service Settings"/><p>Usuarios</p></div></a></li>
-				<li><a href="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_groups');" onclick="linkselected('link_groups')" title="Grupos" id="link_groups">
+				<li><a href="#link_groups" onclick="linkselected('link_groups'); updateContent('adm_site_section', 'ajax.php', 'action=list_groups');" title="Grupos" id="link_groups">
 				<div class="menu_button">
 				<img src="<?php echo $config["html_root"] . "/rs/img/web-5.png"; ?>" alt="Service Settings"/><p>Grupos</p></div></a></li>
-				<li><a href="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_roles');" onclick="linkselected('link_roles')" title="Roles" id="link_roles">
+				<li><a href="#link_roles" onclick="linkselected('link_roles'); updateContent('adm_site_section', 'ajax.php', 'action=list_roles');" title="Roles" id="link_roles">
 				<div class="menu_button">
 				<img src="<?php echo $config["html_root"] . "/rs/img/group-of-businessmen.png"; ?>" alt="Roles"/><p>Roles</p></div></a></li>
-				<li><a href="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_acls');" onclick="linkselected('link_acls')" title="ACLs" id="link_acls">
+				<li><a href="#link_acls" onclick="linkselected('link_acls'); updateContent('adm_site_section', 'ajax.php', 'action=list_acls');" title="ACLs" id="link_acls">
 				<div class="menu_button">
 				<img src="<?php echo $config["html_root"] . "/rs/img/key-to-success.png"; ?>" alt="Service Settings"/><p>Acls</p></div></a></li>
 			</ul>
 		</nav>
 	</section>
+
 	<div id="form_create_users" class="pop_up_form" style="display:none;" draggable>
-		<form name="new_users" id="newusers" method="POST" action="" onsubmit="fsgo('newusers', 'ajax_message','adm/adm_rq_newuser.php', true, raise_ajax_message);return false;">
+		<form name="new_users" id="newusers" method="POST" action="" onsubmit="fsgo('newusers', 'ajax_message','adm/site_rq_new_user.php', true, raise_ajax_message);return false;">
 			<div class="pop_up_headers">
 				<h3>Crear Usuarios</h3>
-				<button class="pop_up_headers_close" onclick="toggleDisplay('form_create_users')">X</button>
+				<button class="pop_up_headers_close" type="button" onclick="toggleDisplay('form_create_users')">X</button>
 			</div>
 			<div class="pop_up_body">
 				<ul>
@@ -184,7 +188,7 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 		<form method="POST" action="">
 			<div class="pop_up_headers">
 				<h3>Borrar Usuarios</h3>
-				<button class="pop_up_headers_close" onclick="toggleDisplay('form_delete_users')">X</button>
+				<button class="pop_up_headers_close" type="button" onclick="toggleDisplay('form_delete_users')">X</button>
 			</div>
 			<div class="pop_up_body">
 				<p>¿Estas seguro de eliminar los usuarios seleccionados?</p>
@@ -197,10 +201,10 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 	</div>
 
 	<div id="form_create_group" class="pop_up_form" style="display:none;" draggable>
-		<form name="new_group" id="newgroup" method="POST" action="" onsubmit="fsgo('newgroup', 'ajax_message','adm/adm_rq_newgroup.php', true, raise_ajax_message);return false;">
+		<form name="new_group" id="newgroup" method="POST" action="" onsubmit="fsgo('newgroup', 'ajax_message','adm/site_rq_new_group.php', true, raise_ajax_message);return false;">
 			<div class="pop_up_headers">
 				<h3>Crear Grupos</h3>
-				<button class="pop_up_headers_close" onclick="toggleDisplay('form_create_group')">X</button>
+				<button class="pop_up_headers_close" type="button" onclick="toggleDisplay('form_create_group')">X</button>
 			</div>
 			<div class="pop_up_body">
 				<ul>
@@ -225,7 +229,26 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 							?>
 						</select>
 					</li>
+					<li>
+						<label id ="error_form_create_groups"> </label>
+					</li>
 				</ul>
+			</div>
+			<div class="pop_up_footer">
+				<input type="submit" name="Enviar"></input>
+			</div>
+		</form>
+	</div>
+
+	<div id="form_delete_group" class="pop_up_form" style="display:none;" draggable>
+		<form method="POST" action="">
+			<div class="pop_up_headers">
+				<h3>Borrar Grupo</h3>
+				<button class="pop_up_headers_close" type="button" onclick="toggleDisplay('form_delete_group')">X</button>
+			</div>
+			<div class="pop_up_body">
+				<p>¿Estas seguro de eliminar el grupo seleccionado?</p>
+				<input type="hidden" name="delete" value="" id="delete-item">
 			</div>
 			<div class="pop_up_footer">
 				<input type="submit" name="Enviar"></input>
