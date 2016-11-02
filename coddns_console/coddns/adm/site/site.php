@@ -110,6 +110,10 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 	        }
 	    }
 	}
+
+	function add_name_to_delete(id){
+		document.getElementById("hidden_name_group_delete").value = id;
+	}
 </script>
 <body onload="javascript:updateContent('adm_site_section', 'ajax.php', 'action=list_users');">
 	<section>
@@ -241,14 +245,14 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 	</div>
 
 	<div id="form_delete_group" class="pop_up_form" style="display:none;" draggable>
-		<form method="POST" action="">
+		<form name="delete_group" id="delete_group" method="POST" action="" onsubmit="fsgo('delete_group', 'ajax_message','adm/site/site_rq_delete_group.php', true, raise_ajax_message);return false;">
 			<div class="pop_up_headers">
 				<h3>Borrar Grupo</h3>
 				<button class="pop_up_headers_close" type="button" onclick="toggleDisplay('form_delete_group')">X</button>
 			</div>
 			<div class="pop_up_body">
 				<p>¿Estas seguro de eliminar el grupo seleccionado?</p>
-				<input type="hidden" name="delete" value="" id="delete-item">
+				<input type="hidden" id="hidden_name_group_delete" name="tag" required/>
 			</div>
 			<div class="pop_up_footer">
 				<input type="submit" name="Enviar"></input>
@@ -256,7 +260,6 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 		</form>
 	</div>
 
-	
 	<section id="adm_site_section">
 	
 	</section>

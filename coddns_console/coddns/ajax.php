@@ -286,7 +286,9 @@ function list_groups($data) {
 		        </td>
 		        <td>
 		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
-		        	<a href="#" onclick="toggleDisplay('form_delete_group'); add_id_to_delete(<?php echo $row["id"] ?>);"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/></a>
+		        	<a href="#" onclick="toggleDisplay('form_delete_group'); add_name_to_delete('<?php echo $row["tag"];?>');">
+		        		<img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/>
+		        	</a>
 		        	<input type="checkbox"/>
 		        </td>
 		    </tr>
