@@ -38,11 +38,13 @@ function transfer_conf_files($config, $sshclient, $serverid, $remote_configfile)
 	$localfolder = dirname($localfile);
 
 	// create local folder
-	mkdir ($localfolder, 0770,true);
+	if (!is_dir($localfolder)) {
+		mkdir ($localfolder, 0770,true);
+	}
 
 	// retrieve remote file
 	if ($sshclient->get_file($remote_configfile, $localfile)) {
-		error_log("File " . $remote_configfile . " copied to " . $localfolder);
+		//error_log("File " . $remote_configfile . " copied to " . $localfolder);
 		return $localfile;
 	}
 	else {
@@ -75,7 +77,7 @@ if (   (isset($_SESSION["servers"][$servername]["user"]))
 	&& (isset($_SESSION["servers"][$servername]["pass"])) ) {
 	$server_info = $_SESSION["servers"][$servername];
 }
-session_write_close();
+
 
 ?>
 
@@ -102,6 +104,8 @@ else { // SERVER CREDENTIALS ARE SET
 
 	require_once(__DIR__ . "/../../lib/sshclient.php");
 
+	$file_manager = array();
+
 	// initialize ssh client
 	$server_credentials["user"] = $server_info["user"];
 	$server_credentials["pass"] = $server_info["pass"];
@@ -123,28 +127,39 @@ else { // SERVER CREDENTIALS ARE SET
 
 	$localfile = transfer_conf_files($config, $sshclient, $serverid, $r->main_config_file);
 
+	$id=0;
+	$file_manager[$id]["local"]  = $localfile;
+	$file_manager[$id]["remote"] = $r->main_config_file;
+	$file_manager[$id]["target"] = "gconf_input_" . $id;
+
 	// load files
 ?>
 
-	<form id="update_config" method="POST" onsubmit="copyContent('gconf','gconf_input');fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server/server_rq_settings_manager.php', true);return false;">
-	<input id="gconf_input" name="gconf_input" type="hidden" />
+	<form id="update_config" method="POST" onsubmit="fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server/server_rq_settings_manager.php', true);return false;">
+	<input name="id" value="<?php echo $servername;?>" type="hidden" />
+	<input id="gconf_input_<?php echo $id;?>" name="gconf_input_<?php echo $id;?>" type="hidden" />
 
 	<?php echo "<p>Content of " . $r->main_config_file . "</p>"; ?>
-	<textarea id="gconf" onclick="grow(this);" onkeydown="grow(this);"><?php
+	<textarea id="gconf_<?php echo $id;?>" onclick="grow(this);" onkeydown="grow(this);" onchange="copyContent('gconf_<?php echo $id;?>','gconf_input_<?php echo $id;?>');"><?php
 
 
 	$includes_array = read_file($localfile);
 
 	?></textarea>
 	<?php
-	$id=0;
+	$id++;
 	foreach ($includes_array as $fin){
 		$local_fin = transfer_conf_files($config, $sshclient, $serverid, $fin);
 
 		if (isset($local_fin)) {
-			echo "<input type='hidden' name='gconf_extra_" . $id . "' value='" . $local_fin . "'/>";
+			$file_manager[$id]["local"]  = $local_fin;
+			$file_manager[$id]["remote"] = $fin;
+			$file_manager[$id]["target"] = "gconf_input_" . $id;
+
+			echo "<input type='hidden' name='gconf_input_" . $id . "' id='gconf_input_" . $id . "' />";
 			echo "<p>Content of " . $fin . "</p>";
-			echo "<textarea id='gconf_extra_" . ($id++) . "_content'  onclick='grow(this);' onkeydown='grow(this);'>";
+			echo "<textarea id='gconf_" . $id . "'  onclick='grow(this);' onkeydown='grow(this);' onchange=\"copyContent('gconf_" . $id . "','gconf_input_" . $id . "');\">";
+			$id++;
 			array_push($includes_array, read_file($local_fin));
 			echo "</textarea>";
 		}
@@ -158,7 +173,9 @@ else { // SERVER CREDENTIALS ARE SET
 	</form>
 
 <?php
+	$_SESSION["settings_manager"] = $file_manager;
 }
+session_write_close();
 ?>
 	</section>
 </body>

@@ -138,10 +138,13 @@ class SSHClient {
 			return null;
 		}
 
-		$this->stream = ssh2_exec($this->connection, $command);
+		$this->stream      = ssh2_exec($this->connection, $command);
 		$this->errorStream = ssh2_fetch_stream($this->stream, SSH2_STREAM_STDERR);
 
-		return $this->stream;
+		$return["stdout"] = $this->stream;
+		$return["stderr"] = $this->errorStream;
+
+		return $return;
 	}
 
 	function get_output(){

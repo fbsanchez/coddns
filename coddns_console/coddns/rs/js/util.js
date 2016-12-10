@@ -261,9 +261,9 @@ function raise_ajax_message(){
  **/
  var item=null;
  window.onmousedown = function (e){
-  if(e.target.id){
+  if ( (e) && (e.target) && (e.target.id) ) {
     t =  document.getElementById(e.target.id);
-    if(t.attributes.draggable){
+    if( (t) && (t.attributes) && (t.attributes.draggable)) {
       item = t;
       document.body.style["user-select"]= "none";
       document.body.style["-webkit-user-select"]="none";
@@ -326,11 +326,6 @@ function nextColor(){
  * Grow a text area based on it's size
  */
 function grow(item){
-
-  console.log("client-height: " + item.clientHeight);
-  console.log("scrollheight: " + item.scrollHeight);
-  console.log("height: " + item.height);
-  
 
   if(item.scrollHeight > item.clientHeight) {
     item.style["height"] = (item.scrollHeight + 10) + "px";
