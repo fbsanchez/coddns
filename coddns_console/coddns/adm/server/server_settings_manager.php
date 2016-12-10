@@ -137,22 +137,18 @@ else { // SERVER CREDENTIALS ARE SET
 
 	?></textarea>
 	<?php
-	echo "<pre>";
-	var_dump ($includes_array);
-	echo "</pre>";
+	$id=0;
+	foreach ($includes_array as $fin){
+		$local_fin = transfer_conf_files($config, $sshclient, $serverid, $fin);
 
-		$id=0;
-		foreach ($includes_array as $fin){
-			$local_fin = transfer_conf_files($config, $sshclient, $serverid, $fin);
-
-			if (isset($local_fin)) {
-				echo "<input type='hidden' name='gconf_extra_" . $id . "' value='" . $local_fin . "'/>";
-				echo "<p>Content of " . $local_fin . "</p>";
-				echo "<textarea id='gconf_extra_" . ($id++) . "_content'  onclick='grow(this);' onkeydown='grow(this);'>";
-				array_push($includes_array, read_file($local_fin));
-				echo "</textarea>";
-			}
+		if (isset($local_fin)) {
+			echo "<input type='hidden' name='gconf_extra_" . $id . "' value='" . $local_fin . "'/>";
+			echo "<p>Content of " . $fin . "</p>";
+			echo "<textarea id='gconf_extra_" . ($id++) . "_content'  onclick='grow(this);' onkeydown='grow(this);'>";
+			array_push($includes_array, read_file($local_fin));
+			echo "</textarea>";
 		}
+	}
 	?>	
 	<ul>
 		<li>
