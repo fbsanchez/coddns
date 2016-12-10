@@ -92,9 +92,15 @@ class DBClient {
 
   function get_sql_array($query){
     $this->connect() or die($this->lq_error());
-    $r   = $this->exeq($query) or error_log($this->lq_error());
-    $out = $this->fetch_array($r);
+    $r      = $this->exeq($query) or error_log($this->lq_error());
     $nitems = $this->lq_nresults();
+    $out    = array();
+
+    // Retrieve all items
+    while($tmp = $this->fetch_array($r)) {
+      array_push($out, $tmp);
+    }
+    
     $this->disconnect();
     return array( "nitems" => $nitems, "data" => $out);
   }

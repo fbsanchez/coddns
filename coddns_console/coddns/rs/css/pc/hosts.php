@@ -80,10 +80,10 @@ thead td {
 tbody *{
     padding: 5px;
 }
-td:nth-child(1), td:nth-child(3) {
+td:nth-child(1), td:nth-child(4) {
 	width: 44%;
 }
-td:nth-child(2), td:nth-child(4) {
+td:nth-child(2), td:nth-child(3) {
 	text-align: center;
 }
 td {

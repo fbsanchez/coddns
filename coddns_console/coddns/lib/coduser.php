@@ -81,15 +81,9 @@ class CODUser {
 	 * Return all available groups for current user with RR grant or higher
 	 */
 	function get_read_groups(){
-		if ($this->logged){
-			return null;
-		}
-
 		$dbclient = new DBClient($this->config["db_config"]);
-		$q = "select gid,tag from tusers_groups ug, users u where u.mail='" . $this->mail . "' and (ug.read=1 or ug.admin=1);";
-
-		// TODO
-		return undef;
+		$q = "select g.id, g.tag from groups g, tusers_groups ug, users u where ug.oid=u.id and ug.gid=g.id and u.mail='" . $this->mail . "' and (ug.view=1 or ug.admin=1);";
+		return $dbclient->get_sql_array($q);
 	}
 
 	function get_mail(){

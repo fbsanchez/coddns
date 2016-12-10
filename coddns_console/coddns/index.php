@@ -215,10 +215,10 @@ if (! isset ($zone)){
     }
 }
 elseif (! isset($operation)){
-    $url .= $zone . ".php";
+    $url .= $zone . "/" . $zone . ".php";
 }
 else {
-    $url .= $zone . "_" . $operation . ".php";
+    $url .= $zone . DIRECTORY_SEPARATOR . $zone . "_" . $operation . ".php";
 }
 
 $auth_level_required = get_required_auth_level($mode,$zone,$operation);

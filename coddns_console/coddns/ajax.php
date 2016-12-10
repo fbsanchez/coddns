@@ -66,20 +66,23 @@ function list_hosts($data){
 	$offset = $page * $limit;
 
 	switch ($sortby){
-		case "tag":   $sort_index = 1;break;
-		case "value": $sort_index = 2;break;
-		case "rr":    $sort_index = 3;break;
-		case "ttl":   $sort_index = 4;break;
-		default: $sort_index=3;
+		case "group": $sort_index = 1;break;
+		case "tag":   $sort_index = 2;break;
+		case "value": $sort_index = 3;break;
+		case "rr":    $sort_index = 4;break;
+		case "ttl":   $sort_index = 5;break;
+		default: $sort_index=2;
 	}
 
 	if ("$sort_m" == "invert"){
 		$sort_index .= " desc ";
 	}
 
-
+/*
+select g.tag, h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='elb0rx@gmail.com'
+ */
 	// Get total host counter - unlimited
-	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r where h.rtype=r.id and h.gid in (select ug.gid\n from tusers_groups ug, users u \nwhere (ug.view=1 or ug.admin=1) and u.id=ug.oid and u.mail='" . $_SESSION["email"] . "') ";
+	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='" . $_SESSION["email"] . "' ";
 	if (isset($text_filter) && ($text_filter != "")){
 		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
 		if (isset($ip_filter) && $ip_filter > 0){
@@ -93,7 +96,7 @@ function list_hosts($data){
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 	$nrows = $dbclient->lq_nresults();
 
-	$q = "select h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u where h.rtype=r.id and h.oid=u.id and h.gid in (select ug.gid from tusers_groups ug, users u where (ug.view=1 or ug.admin=1) and u.id=ug.oid and u.mail='" . $_SESSION["email"] . "') ";
+	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='" . $_SESSION["email"] . "' ";
 	if (isset($text_filter) && ($text_filter != "")){
 		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
 		if (isset($ip_filter) && $ip_filter > 0){
@@ -108,11 +111,12 @@ function list_hosts($data){
 
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
-	$del_submit= "fsgo('del', 'ajax_message','usr/hosts_rq_del.php', true,raise_ajax_message);return false;";
+	$del_submit= "fsgo('del', 'ajax_message','usr/hosts/hosts_rq_del.php', true,raise_ajax_message);return false;";
 	while ($row = $dbclient->fetch_array ($r)) {
 	?>
 	    <tr>
 	        <td><?php echo $row["tag"];?></td>
+	        <td><?php echo $row["group"];?></td>
 	        <td><?php echo $row["record"];?></td>
 	        <td><?php
 	            if($row["record"] == "A"){
