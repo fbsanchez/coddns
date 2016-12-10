@@ -75,7 +75,8 @@ thead{
     color: white;
 }
 thead td {
-    padding: 5px;
+    padding: 10px 20px;
+    font-size: 0.9em;
 }
 tbody *{
     padding: 5px;
