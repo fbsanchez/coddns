@@ -102,7 +102,7 @@ $dbclient->disconnect();
 
 
 /**
- * 2nd GRAPH: zone general statistics (require coddns_core)
+ * 2nd GRAPH: zone general statistics (requires coddns_core)
  */
 $dbclient->connect() or die($dbclient->lq_error());
 // Build data for linear graph

@@ -62,7 +62,7 @@ $text["en"]["title"]  ="Forgotten password";
     <h1><?php echo $text[$lan]["title"];?></h1>
     <br>
     <?php echo $text[$lan]["message"]; ?>
-    <form id="remember" onsubmit="fsgo('remember', 'response', '<?php echo $config["html_root"]; ?>/usr/users/sendtoken.php');return false;">
+    <form id="remember" onsubmit="fsgo('remember', 'response', '<?php echo $config["html_root"]; ?>/usr/users/users_sendtoken.php');return false;">
     <ul>
         <li>
             <input style="float:none;" type="email" name="u" required placeholder="<?php echo $text[$lan]["mail"];?>"/>

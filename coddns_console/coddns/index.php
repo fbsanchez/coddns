@@ -187,7 +187,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
  * op = file tail
  *
  * In example: coddns.org/index.php?m=usr&z=hosts&op=mod
- * Results in file include: usr/hosts_mod.php
+ * Results in file include: usr/hosts/hosts_mod.php
  *
  */
 

@@ -15,16 +15,16 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/include/config.php");
-require_once (__DIR__ . "/lib/util.php");
-require_once (__DIR__ . "/lib/coduser.php");
+require_once (__DIR__ . "/../../include/config.php");
+require_once (__DIR__ . "/../../lib/util.php");
+require_once (__DIR__ . "/../../lib/coduser.php");
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
     header ("Location: " . $config["html_root"] . "/");
     exit (1);
 }
 
-$auth_level_required = get_required_auth_level('','logout','');
+$auth_level_required = get_required_auth_level('usr','users','logout');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 

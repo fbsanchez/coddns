@@ -62,7 +62,7 @@ $text["en"]["ph_cpass"] = "confirm password";
 <br>
 <p><?php echo $text[$lan]["message"];?></p>
 
-<form name="changepass" method="POST" onsubmit="fsgo('changepass','response','/usr/users/rq_newpass.php');return false;">
+<form name="changepass" method="POST" onsubmit="fsgo('changepass','response','/usr/users/users_rq_resetpass.php');return false;">
     <input name="t" style="float: none;color:#888;text-indent:0;" type="hidden" value="<?php echo $_GET["token"];?>" readonly required/>
     <ul>
         <li style="text-align: center;">

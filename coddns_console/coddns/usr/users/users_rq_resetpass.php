@@ -73,12 +73,12 @@ if ($_POST["p"] != $_POST["cp"]){
 }
 
 $dbclient = new DBClient($db_config);
+$dbclient->connect() or die ($text[$lan]["dberror"]);
 
 $user  = $dbclient->prepare($_POST["u"], "email");
-$pass  = hash ("sha512",$salt . $rq_npass);
+$pass  = hash ("sha512",$config["salt"] . $rq_npass);
 $token = $dbclient->prepare($_POST["t"], "text");
 
-$dbclient->connect() or die ($text[$lan]["dberror"]);
 
 $q = "Select * from users where lower(mail)=lower('" . $user . "') and hash='" . $token . "' and now() < max_time_valid_hash;";
 $dbclient->exeq($q);
