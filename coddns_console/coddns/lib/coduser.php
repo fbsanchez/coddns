@@ -270,14 +270,14 @@ class CODUser {
 		$dbclient = new DBClient($this->config["db_config"]);
 		switch ($item_type){
 			case "host":
-				$q = "select count(*) as n from hosts h, users u, tusers_groups ug where h.gid=ug.gid and u.id=ug.oid and " . $grants . " and u.mail='" . $this->mail . "' and h.tag='" . $item . "'; ";
+				$q = "select count(tag) as n from hosts where ((oid=(select id from users where lower(mail)=lower('" . $this->mail . "')) and gid=(select id from groups where tag='private')) or (gid in (select g.id from groups g, tusers_groups ug, users u where u.id=ug.oid and g.id=ug.gid and " . $grants ." and lower(u.mail)=lower('" . $this->mail . "')))) and lower(tag)=lower('" . $item . "');";
 				$result = $dbclient->get_sql_object($q);
 				if ($result->n >= 1){
 					return true;
 				}
 			break;
 			case "zone":
-				$q = "select count(*) as n from zones z, users u, tusers_groups ug where z.gid=ug.gid and u.id=ug.oid and " . $grants . " and u.mail='" . $this->mail . "' and z.domain='" . $item . "';";
+			$q = "select count(*) as n from (select z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $this->mail . "' and " . $grants . " and lower(z.domain)=lower('" . $item . "')) UNION (select z.domain from zones z, tusers_groups ug, users u where z.is_public=1) t";
 				$result = $dbclient->get_sql_object($q);
 				if ($result->n >= 1){
 					return true;
@@ -293,6 +293,11 @@ class CODUser {
 	function check_grant_over_item($grants, $item,$item_type="host"){
 		if (!$this->logged)
 			return false;
+
+		if ($this->is_global_admin()) {
+			return true;
+		}
+
 		switch ($grants){
 			case "read":
 				return $this->int_check_grants_over_item("(ug.view=1 or ug.admin=1)", $item, $item_type="host");

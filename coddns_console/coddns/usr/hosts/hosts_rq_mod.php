@@ -68,8 +68,14 @@ if ($ip === FALSE){
     exit (1);
 }
 
-// UPDATE ONLY AN EXISTENT HOST
-$q = "select count(tag) from hosts where lower(tag)=lower('" . $host . "') and oid=(select id from users where lower(mail)=lower('" . $dbclient->prepare($_SESSION["email"],"email") . "'));";
+// UPDATE ONLY AN EXISTENT HOST WHERE THE USER HAS GRANTS TO MAKE CHANGES
+
+if($user->is_global_admin()) {
+    $q = "select count(tag) from hosts where lower(tag)=lower('" . $host . "');";
+}
+else {
+    $q = "select count(tag) from hosts where ((oid=(select id from users where lower(mail)=lower('" . $_SESSION["email"] . "')) and gid=(select id from groups where tag='private')) or (gid in (select g.id from groups g, tusers_groups ug, users u where u.id=ug.oid and g.id=ug.gid and (ug.edit=1 or ug.admin=1) and lower(u.mail)=lower('" . $_SESSION["email"] . "')))) and lower(tag)=lower('" . $host . "');";
+}
 $dbclient->exeq($q);
 
 if( $dbclient->lq_nresults() == 1 ){
