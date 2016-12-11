@@ -33,6 +33,10 @@ $user->check_auth_level($auth_level_required);
 function list_hosts($data){
 	global $config;
 
+	$auth_level_required = get_required_auth_level('','ajax','');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+
     $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
     $dbclient->connect() or die ($dbclient->lq_error());
 
@@ -71,6 +75,7 @@ function list_hosts($data){
 		case "value": $sort_index = 3;break;
 		case "rr":    $sort_index = 4;break;
 		case "ttl":   $sort_index = 5;break;
+		case "owner": $sort_index = 6;break;
 		default: $sort_index=2;
 	}
 
@@ -82,7 +87,7 @@ function list_hosts($data){
 select g.tag, h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='elb0rx@gmail.com'
  */
 	// Get total host counter - unlimited
-	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='" . $_SESSION["email"] . "' ";
+	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl, (select mail from users where id=h.oid) as mail from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.edit=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='" . $_SESSION["email"] . "' ";
 	if (isset($text_filter) && ($text_filter != "")){
 		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
 		if (isset($ip_filter) && $ip_filter > 0){
@@ -96,7 +101,7 @@ select g.tag, h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 	$nrows = $dbclient->lq_nresults();
 
-	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='" . $_SESSION["email"] . "' ";
+	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl, (select mail from users where id=h.oid) as mail from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.edit=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='" . $_SESSION["email"] . "' ";
 	if (isset($text_filter) && ($text_filter != "")){
 		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
 		if (isset($ip_filter) && $ip_filter > 0){
@@ -126,6 +131,12 @@ select g.tag, h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.
 	                echo $row["value"];
 	            }
 	            ?></td>
+	        <?php
+	        	// if user is administrator, show the owner of the "private" hosts
+                if($user->is_global_admin()){
+                    echo "<td>" . $row["mail"] . "</td>";
+                }
+	        ?>
 	        <td><?php echo $row["ttl"];?></td>
 	        <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["value"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
 	        <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {<?php echo $del_submit;?>}"></td>

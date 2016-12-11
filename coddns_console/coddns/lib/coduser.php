@@ -59,8 +59,9 @@ class CODUser {
 		if ($checks == 5){
 			$this->logged = true;
 		}
-
-		session_write_close();
+		if (session_status() != PHP_SESSION_NONE){
+			session_write_close();
+		}
 		
 		// reload auth level
 		$this->auth_level = $this->load_auth_level();
@@ -82,7 +83,7 @@ class CODUser {
 	 */
 	function get_read_groups(){
 		$dbclient = new DBClient($this->config["db_config"]);
-		$q = "select g.id, g.tag from groups g, tusers_groups ug, users u where ug.oid=u.id and ug.gid=g.id and u.mail='" . $this->mail . "' and (ug.view=1 or ug.admin=1);";
+		$q = "select g.id, g.tag from groups g, tusers_groups ug, users u where ug.oid=u.id and ug.gid=g.id and u.mail='" . $this->mail . "' and (ug.view=1 or ug.edit=1 or ug.admin=1);";
 		return $dbclient->get_sql_array($q);
 	}
 
@@ -129,11 +130,11 @@ class CODUser {
 		$this->time = $_SESSION["time"];
 		$this->oid  = $r->id;
 
-		session_write_close();
 
 		$this->logged = true;
 		$this->load_auth_level();
 
+		session_write_close();
 		return $r;
 
 	}
@@ -161,6 +162,10 @@ class CODUser {
 		    $q = "insert into users (mail,pass, ip_last_login, first_login,rol) "
 		    	 . " values (lower('" . $user . "'),'" . $pass . "', '" . $dbclient->prepare(_ip(),"ip") . "', now(),(select id from roles where tag='standar'));";
 		    $dbclient->exeq($q) or die ($dbclient->lq_error());
+		    // Add user to "private" group
+		    $q = "insert into tusers_groups (gid,oid,edit)  values ((select id from groups where tag='private'), (select id from users where lower(mail)=lower('" . $user . "')),1 );";
+		    $dbclient->exeq($q) or die ($dbclient->lq_error());
+
 		    $dbclient->disconnect();
 
 		    $q = "Select * from users where lower(mail)=lower('" . $user . "') and pass='" . $pass . "';";
@@ -210,12 +215,8 @@ class CODUser {
 		$this->rol        = $result->rol;
 		$this->auth_level = $result->auth_level;
 
-		if (session_status() == PHP_SESSION_NONE){
-			session_start();
-		}
 		$_SESSION["rol"]        = $this->rol;
 		$_SESSION["auth_level"] = $this->auth_level;
-		session_write_close();
 
 		return $this->auth_level;
 	}
@@ -241,6 +242,20 @@ class CODUser {
 			/// redirect ($this->config["html_root"] . "/");
 			exit(0);
 		}
+	}
+
+	function is_global_admin() {
+		if (!$this->logged)
+			return false;
+		$dbclient = new DBClient($this->config["db_config"]);
+		$q = "select auth_level from roles where tag='admin'";
+		$r = $dbclient->get_sql_object($q);
+		if(isset($r->auth_level)) {
+			if($r->auth_level <= $this->load_auth_level()){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	function check_auth_level_msg($level=0){

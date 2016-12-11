@@ -68,7 +68,12 @@ class PgClient{
       $this->error = pg_last_error($this->link);
       return null;
     }
-    $this->nresults = pg_num_rows($pgq_ex);
+    if ($pgq_ex === true) {
+      $this->nresults = pg_affected_rows($pgq_ex);
+    }
+    else {
+      $this->nresults = pg_num_rows($pgq_ex);
+    }
     return $pgq_ex;
   }
 

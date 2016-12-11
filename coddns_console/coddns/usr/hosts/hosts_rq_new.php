@@ -53,7 +53,7 @@ $text["en"]["err_i"] = "Internal error, please check the messages and the config
 $text["en"]["ok"]    = "Succesfully added<script>r();</script>";
 
 
-function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $priority = 10, $gid = 0){
+function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl,  $gid = 0, $priority = 10){
     global $text,$lan;
 
     $dbclient->connect() or die ($dbclient->lq_error());
@@ -84,7 +84,7 @@ function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $priority 
         echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
     }
     else {
-        $q = "insert into hosts (oid, tag, rid, ttl, rtype) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), (select id from hosts h where lower(tag)=lower('" . $rtag . "')), $ttl, (select id from record_types where tag ='". $rtype_p ."'));";
+        $q = "insert into hosts (oid, tag, rid, ttl, rtype, gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), (select id from hosts h where lower(tag)=lower('" . $rtag . "')), $ttl, (select id from record_types where tag ='". $rtype_p ."'), $gid);";
         $dbclient->exeq($q) or die($dbclient->lq_error());
         echo $text[$lan]["ok"];
     ?>
@@ -151,7 +151,9 @@ $dbclient->connect() or die ($dbclient->lq_error());
 $zone     = $dbclient->prepare($_POST["zone"], "url_get");
 
 // check granted zones for the current user
-$q = "select z.id from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1) and z.domain='" . $zone . "';";
+$q = "select t.id, t.domain from ((select z.id, z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1))"
+        . "UNION (select z.id, z.domain from zones z, tusers_groups ug, users u where z.is_public=1)) t where t.domain='" . $zone . "';";
+
 $results  = $dbclient->exeq($q);
 $r = $dbclient->fetch_object($results);
 
@@ -183,6 +185,14 @@ if ($error === 1) {
 
 // INSERT THE REGISTER IN THE DB AND IN THE SELECTED ZONE
 
+// Check received group
+$q = "select id from groups where lower(tag)=lower('" . $group . "');";
+$rs = $dbclient->exeq($q);
+if( $dbclient->lq_nresults() <= 0 ) 
+    die ("Ese grupo no est&aacute; disponible.");
+$r = $dbclient->fetch_object($rs);
+$gid = $r->id;
+
 switch ($rtype_p){
     case "A": {
         $check = ip2long($_POST["ip"]);
@@ -197,14 +207,7 @@ switch ($rtype_p){
             echo $text["en"]["ip_f"];
             exit (1);
         }
-        // Check received group
-        $q = "select id from groups where lower(tag)=lower('" . $group . "');";
-        $rs = $dbclient->exeq($q);
-        if( $dbclient->lq_nresults() <= 0 ) 
-            die ("Ese grupo no est&aacute; disponible.");
-        $r = $dbclient->fetch_object($rs);
-        $gid = $r->id;
-
+        
         // INSERT NEW HOST IF NO ONE EXISTS
         $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
         $dbclient->exeq($q);
@@ -219,7 +222,7 @@ switch ($rtype_p){
             echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
         }
         else {
-            $q = "insert into hosts (oid, tag, ip, ttl, rtype, zone_id,gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'), $zone_id, $gid);";
+            $q = "insert into hosts (oid, tag, ip, ttl, rtype, zone_id, gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'), $zone_id, $gid);";
             $dbclient->exeq($q) or die($dbclient->lq_error());
             echo $text[$lan]["ok"];
         ?>
@@ -233,18 +236,18 @@ switch ($rtype_p){
     }
     case "CNAME":{
         echo "Inserting $host as CNAME of $rtag";
-        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl);
+        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $gid);
 
         break;
     }
     case "NS":{
         echo "inserting NS";
-        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl);
+        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $gid);
         break;
     }
     case "MX":{
         echo "inserting MX";
-        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl);
+        add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $gid);
         break;
     }
     default:{

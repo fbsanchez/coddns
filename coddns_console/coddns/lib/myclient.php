@@ -71,7 +71,7 @@ class MyClient{
       return null;
     }
     if ($result === true) { // UPDATE / DELETE queries
-      $this->nresults = 1;
+      $this->nresults = mysqli_affected_rows($this->link);
     }
     else {
       $this->nresults = mysqli_num_rows($result);

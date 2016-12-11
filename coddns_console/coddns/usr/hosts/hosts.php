@@ -125,6 +125,13 @@ $text["de"]["reg_type"]      = "DNS record type";
             document.getElementById("td_rr").className    = "filter";
             document.getElementById("td_value").className = "filter";
             document.getElementById("td_ttl").className   = "filter";
+            <?php
+                if ($user->is_global_admin()){
+                ?>
+            document.getElementById("td_owner").className   = "filter";
+                <?php
+                }
+            ?>
             
             document.getElementById("td_" + field).className += " selected";
         }
@@ -190,7 +197,8 @@ $text["de"]["reg_type"]      = "DNS record type";
     $dbclient = new DBClient($db_config) or die ($dbclient->lq_error());
     $dbclient->connect() or die ($dbclient->lq_error());
 
-    $q = "select z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1);";
+    $q = "(select z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1))"
+        . "UNION (select z.domain from zones z, tusers_groups ug, users u where z.is_public=1)";
     $results  = $dbclient->exeq($q);
     if ($dbclient->lq_nresults() > 0){ // Display formulary only if the user has grants to create new hosts on a domain
     ?>
@@ -375,11 +383,20 @@ $text["de"]["reg_type"]      = "DNS record type";
             <td id="td_group" class="filter" onclick="sortHostsBy('group');" title="group">Group</td>
             <td id="td_rr"    class="filter" onclick="sortHostsBy('rr');" title="record type">RR</td>
             <td id="td_value" class="filter" onclick="sortHostsBy('value');">IP/ VALUE</td>
+            <?php
+                // if user is administrator, show the owner of the "private" hosts
+                if($user->is_global_admin()){
+                    ?>
+                    <td id="td_owner"   class="filter" onclick="sortHostsBy('owner');">Owner</td>
+                    <?php
+                }
+            ?>
             <td id="td_ttl"   class="filter" onclick="sortHostsBy('ttl');">TTL</td>
             <td colspan="2">Ops.</td>
         </tr>
     </thead>
     <tbody id="hosts_list">
+    <tr><td style="border:none;">Loading...</td></tr>
     <!-- Filled by AJAX ~ onload sortHostsBy() -->
     </tbody>
 </table>

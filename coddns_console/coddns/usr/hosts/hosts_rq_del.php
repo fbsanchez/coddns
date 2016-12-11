@@ -46,33 +46,47 @@ $domain = $fields[1];
 
 $host = $dbclient->prepare($host, "letters") . "." . $domain;
 
-$q = "delete from hosts where oid=(select id from users where lower(mail)=lower('" . $_SESSION["email"] . "')) and lower(tag)=lower('" . $host . "');";
-$dbclient->exeq($q);
-
-
-// LAUNCH DNS UPDATER
-$out = shell_exec("dnsmgr d " . $host . " A");
-
-$dbclient->disconnect();
-
-?>
-
-<?php
-if (! strlen($out) > 0) {
-?>
-<div>
-	<p>Error eliminando <?php echo $host;?>: $out<p>
-</div>
-
-<?php
+if($user->is_global_admin()) {
+	$q = "delete from hosts where lower(tag)=lower('" . $host . "');";
 }
 else {
-?>
-<div>
-	<p>Se ha eliminado <?php echo $host;?> correctamente<p>
-</div>
-<script type="text/javascript">location.reload();</script>
-<?php
+	$q = "delete from hosts where ((oid=(select id from users where lower(mail)=lower('" . $_SESSION["email"] . "')) and gid=(select id from groups where tag='private')) or (gid in (select g.id from groups g, tusers_groups ug, users u where u.id=ug.oid and g.id=ug.gid and (ug.admin=1) and lower(u.mail)=lower('" . $_SESSION["email"] . "')))) and lower(tag)=lower('" . $host . "');";
+}
+
+$r = $dbclient->exeq($q);
+
+if ($dbclient->lq_nresults() > 0) {
+	// LAUNCH DNS UPDATER
+	$out = shell_exec("dnsmgr d " . $host . " A");
+
+	$dbclient->disconnect();
+
+	?>
+
+	<?php
+	if (! strlen($out) > 0) {
+	?>
+	<div>
+		<p>Error eliminando <?php echo $host;?>: $out<p>
+	</div>
+
+	<?php
+	}
+	else {
+	?>
+	<div>
+		<p>Se ha eliminado <?php echo $host;?> correctamente<p>
+	</div>
+	<script type="text/javascript">location.reload();</script>
+	<?php
+	}
+}
+else {
+	?>
+	<div>
+		<p>No tiene permiso para eliminar <?php echo $host;?><p>
+	</div>
+	<?php
 }
 ?>
 </body>

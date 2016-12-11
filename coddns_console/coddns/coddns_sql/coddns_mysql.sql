@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS zones (
     domain varchar(255) NOT NULL,
     config text,
     gid bigint unsigned NOT NULL default 1,
+    is_public int(1) unsigned NOT NULL default 0,
     status int,
     server_id bigint unsigned NOT NULL, 
     master_id bigint unsigned NOT NULL,
@@ -211,7 +212,8 @@ INSERT INTO roles (tag,auth_level,description)
 -- GROUPS
 INSERT INTO groups (tag,description)
  values
-    ('all', 'DEFAULT group');
+    ('all', 'Global group'),
+    ('private', 'DEFAULT group');
 
 
 -- DEFAULT SITE_ACL
