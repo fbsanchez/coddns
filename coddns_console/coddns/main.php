@@ -211,9 +211,15 @@ if(isset($d)){
 
         <div class="mtr_like">
             <a href="<?php echo $config["html_root"] . "/?m=usr&z=hosts"; ?>">Gestionar hosts</a>
+            <?php
+            if ($user->is_global_admin()) {
+            ?>
             <a href="<?php echo $config["html_root"] . "/?m=adm&z=center#service"; ?>">Admininistrar el servicio</a>
             <a href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers"; ?>">Admininistrar servidores</a>
             <a href="<?php echo $config["html_root"] . "/?m=adm&z=site"; ?>">Admininistrar el sitio</a>
+            <?php
+            }
+            ?>
             
         </div>
         
