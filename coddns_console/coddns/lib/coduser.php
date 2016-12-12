@@ -184,10 +184,10 @@ class CODUser {
 			$this->time = $_SESSION["time"];
 			$this->oid  = $r->id;
 
-			session_write_close();
-
 			$this->logged = true;
 			$this->load_auth_level();
+
+			session_write_close();
 
 			return $r;
 		}
