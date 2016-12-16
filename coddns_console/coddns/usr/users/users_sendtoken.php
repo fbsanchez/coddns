@@ -95,7 +95,7 @@ else {
 	$url = "http://";
 }
 
-$url .= $_SERVER["HTTP_HOST"];
+$url .= $_SERVER["HTTP_HOST"] . $config["html_root"];
 
 /* ----------------------------- */
 /* CASTELLANO */
