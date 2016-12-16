@@ -107,7 +107,7 @@ $text["es"]["mailbody"]= "
 <p>En caso de que realmente quieras cambiar tus datos de acceso, por favor, sigue el siguiente enlace:</p>
 <a href='" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
 <p> Si el enlace no funciona copia el siguiente texto en el navegador para acceder.</p>
-http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
+" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
 <p>Gracias!</p>
 <p>Saludos,</p>
 <p>CODDNS</p>
@@ -121,7 +121,7 @@ $text["en"]["mailbody"]= "
 <p>We'd received a request to change your password from " . _ip() . "</p>
 <p>if you have not initiated any action need not do anything.</p>
 <p>If you really want to change your password, please follow next link:</p>
-<a href='http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
+<a href='" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
 <p> If the link does not work, please copy, paste and go.</p>
 " . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
 <p>Thank you!</p>
