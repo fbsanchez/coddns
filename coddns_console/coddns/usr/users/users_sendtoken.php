@@ -95,7 +95,7 @@ else {
 	$url = "http://";
 }
 
-$url .= $_SERVER["HTTP_HOST"] . "/";
+$url .= $_SERVER["HTTP_HOST"];
 
 /* ----------------------------- */
 /* CASTELLANO */
@@ -105,7 +105,7 @@ $text["es"]["mailbody"]= "
 <p>Hemos recibido una solicitud de cambio de contrase&ntilde;a desde " . _ip() . "</p>
 <p>Si no has iniciado ninguna acci&oacute;n no es necesario que hagas nada.</p>
 <p>En caso de que realmente quieras cambiar tus datos de acceso, por favor, sigue el siguiente enlace:</p>
-<a href='http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
+<a href='" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
 <p> Si el enlace no funciona copia el siguiente texto en el navegador para acceder.</p>
 http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
 <p>Gracias!</p>
@@ -123,7 +123,7 @@ $text["en"]["mailbody"]= "
 <p>If you really want to change your password, please follow next link:</p>
 <a href='http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
 <p> If the link does not work, please copy, paste and go.</p>
-http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
+" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
 <p>Thank you!</p>
 <p>Regards,</p>
 <p>CODDNS</p>
