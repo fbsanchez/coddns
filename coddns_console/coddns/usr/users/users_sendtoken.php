@@ -86,6 +86,16 @@ if ($dbclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
 $strenght = 4;
 $hash = hash ("sha256",$config["salt"] . openssl_random_pseudo_bytes($strenght) . rand());
 
+$url = "";
+
+if (isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) {
+	$url = "https://";
+}
+else {
+	$url = "http://";
+}
+
+$url .= $_SERVER["HTTP_HOST"] . "/";
 
 /* ----------------------------- */
 /* CASTELLANO */
@@ -95,9 +105,9 @@ $text["es"]["mailbody"]= "
 <p>Hemos recibido una solicitud de cambio de contrase&ntilde;a desde " . _ip() . "</p>
 <p>Si no has iniciado ninguna acci&oacute;n no es necesario que hagas nada.</p>
 <p>En caso de que realmente quieras cambiar tus datos de acceso, por favor, sigue el siguiente enlace:</p>
-<a href='http://" . $config["domainname"] . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
+<a href='http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
 <p> Si el enlace no funciona copia el siguiente texto en el navegador para acceder.</p>
-http://" . $config["domainname"] . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
+http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
 <p>Gracias!</p>
 <p>Saludos,</p>
 <p>CODDNS</p>
@@ -111,9 +121,9 @@ $text["en"]["mailbody"]= "
 <p>We'd received a request to change your password from " . _ip() . "</p>
 <p>if you have not initiated any action need not do anything.</p>
 <p>If you really want to change your password, please follow next link:</p>
-<a href='http://" . $config["domainname"] . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
+<a href='http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "'>Cambiar mi contrase&ntilde;a</a>
 <p> If the link does not work, please copy, paste and go.</p>
-http://" . $config["domainname"] . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
+http://" . $url . "/?m=usr&z=users&op=resetpass&token=" . $hash . "
 <p>Thank you!</p>
 <p>Regards,</p>
 <p>CODDNS</p>
