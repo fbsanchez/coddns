@@ -31,12 +31,23 @@ if (!isset($_SESSION["lan"])){
 $lan = $_SESSION["lan"];
 session_write_close();
 
+
+if (isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) {
+    $url = "https://";
+}
+else {
+    $url = "http://";
+}
+
+$url .= $_SERVER["HTTP_HOST"] . $config["html_root"];
+
+
 /* CASTELLANO */
 $text["es"]["err1"] = "<div class='err'>Es necesario que facilite todos los datos</div>";
 $text["es"]["err2"] = "<div class='err'>No cumple las longitudes minimas</div>";
 $text["es"]["err3"] = "<div class='err'>La confirmaci&oacute;n de contrase&ntilde;a no coincide</div>";
 $text["es"]["err4"] = "<div class='err'>El token no es v&aacute;lido o ha caducado</div>";
-$text["es"]["ok"]   = "<div class='ok'>Su contrase&ntilde;a se ha cambiado correctamente</div><a href='/" . $config["html_root"] . "/?lang=$lan'>Ir a la p&aacute;gina principal</a>";
+$text["es"]["ok"]   = "<div class='ok'>Su contrase&ntilde;a se ha cambiado correctamente</div><a href='" . $url . "/?lang=$lan'>Ir a la p&aacute;gina principal</a>";
 $text["es"]["dberror"] = "<div class='err'>Woooops, contacte con el administrador del sitio.</div>";
 
 /* ENGLISH */
@@ -44,7 +55,7 @@ $text["en"]["err1"] = "<div class='err'>You need to provide all data.</div>";
 $text["en"]["err2"] = "<div class='err'>Data provided doesn't reach minimal lenght</div>";
 $text["en"]["err3"] = "<div class='err'>The password check doesn't match the given password.</div>";
 $text["en"]["err4"] = "<div class='err'>The token provided is not valid</div>";
-$text["en"]["ok"]   = "<div class='ok'>Your password have been correctly changed</div><a href='/" . $config["html_root"] . "/?lang=$lan'>Go to main page</a>";
+$text["en"]["ok"]   = "<div class='ok'>Your password have been correctly changed</div><a href='/" . $url . "/?lang=$lan'>Go to main page</a>";
 $text["en"]["dberror"] = "<div class='err'>Woooops, we have a problem! please contact the site administrator.</div>";
 
 /* DEUTSCH */
