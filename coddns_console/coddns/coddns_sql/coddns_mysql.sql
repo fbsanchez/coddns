@@ -90,6 +90,9 @@ CREATE TABLE IF NOT EXISTS servers (
     main_config_file varchar(255) default "/etc/named.conf",
     fingerprint text,
     status int DEFAULT 0,
+    pub_key_file varchar(255) default NULL,
+    priv_key_file varchar(255) default NULL,
+    last_update timestamp,
     CONSTRAINT pkey_servers PRIMARY KEY (id),
     CONSTRAINT fkey_servers_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
 ) engine=InnoDB;
