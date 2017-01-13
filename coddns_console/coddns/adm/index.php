@@ -45,7 +45,7 @@ $user->check_auth_level($auth_level_required);
 		<h2>Panel de administraci&oacute;n</h2>
 	</section>
 	<nav>
-		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=site#link_users"?>">
+		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=site#users"?>">
 			<div class="menu_button" style="background: #FCFEFF;">
 			
 				<img src="<?php echo $config["html_root"] . "/rs/img/site_options2_gray.png"; ?>" alt="Site Settings"/>

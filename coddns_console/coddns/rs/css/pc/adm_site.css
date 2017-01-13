@@ -8,6 +8,7 @@ nav {
 	width: 90%;
     min-width: 450px;
     margin: 15px auto;
+    margin-bottom: 0px;
     font-size: 1em;
 }
 
@@ -91,7 +92,6 @@ img.add {
 
 #adm_site_section{
     width: 100%;
-    margin-top: 40px;
 }
 .button_return {
     width: 100px;

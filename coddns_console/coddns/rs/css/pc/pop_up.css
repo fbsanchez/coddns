@@ -45,6 +45,10 @@
     float: right;
 }
 
+.pop_up_body ul {
+    width: 99%;
+    padding: 10px;
+}
 
 .pop_up_body ul li > select{
     width: 40%;
