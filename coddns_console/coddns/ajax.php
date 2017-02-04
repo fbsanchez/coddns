@@ -236,7 +236,7 @@ function list_groups($data) {
 
 	<div>
 		<button class="button_users" onclick="toggleDisplay('form_create_group')">Crear grupo</button>
-		<button class="button_users" onclick="toggleDisplay('form_delete_group')">Eliminar grupos</button>
+		<button class="button_users" onclick="delete_all_groups();toggleDisplay('form_delete_all_group'); ">Eliminar grupos</button>
 	</div>
 
 	<table>
@@ -285,11 +285,19 @@ function list_groups($data) {
 		        	?>
 		        </td>
 		        <td>
-		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
-		        	<a href="#" onclick="toggleDisplay('form_delete_group'); add_name_to_delete('<?php echo $row["tag"];?>');">
-		        		<img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/>
-		        	</a>
-		        	<input type="checkbox"/>
+		        	<ul class= "actions_form">
+		        		<li>
+		        			<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
+		        		</li>
+		        		<li>
+		        			<a href="#" onclick="toggleDisplay('form_delete_group'); add_name_to_delete('<?php echo $row["tag"];?>');">
+		        				<img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/>
+		        			</a>
+		        		</li>
+		        		<li>
+		        			<input id ="delete_<?php echo $row["tag"];?>" class="delete_checkbox" type="checkbox"/>
+		        		</li>
+		        	</ul>
 		        </td>
 		    </tr>
 	    </tbody>

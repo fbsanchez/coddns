@@ -87,6 +87,24 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 	function add_name_to_delete(id){
 		document.getElementById("hidden_name_group_delete").value = id;
 	}
+
+	//function for delete all groups selected
+	function delete_all_groups(){
+		var name_delete = [];
+		//select all checkbox
+		var inputs = document.getElementsByClassName('delete_checkbox');
+		for(var i = 0, length_inputs = inputs.length; i < length_inputs; ++i){
+			if(inputs[i].checked){
+				//select checbox checked and replace name id for name group
+				name_delete.push(inputs[i].id.replace("delete_", ""));
+			}
+		}
+		//convert array to string
+		var name_delete_string = name_delete.toString();
+		//add name groups to input hidden for delete
+		document.getElementById('hidden_name_all_group_delete').value = name_delete_string;
+	}
+
 </script>
 
 <?php
@@ -242,11 +260,27 @@ $clickacls   = "onclick=\"mark(this);updateContent('adm_site_section', 'ajax.php
 		</form>
 	</div>
 
-	
-		<div id="adm_site_section" class="content">
-			
-		</div>
-	
+	<div id="form_delete_all_group" class="pop_up_form" style="display:none;" draggable>
+		<form name="delete_all_group" id="delete_all_group" method="POST" action="" onsubmit="fsgo('delete_all_group', 'ajax_message','adm/site/site_rq_delete_group.php', true, raise_ajax_message);return false;">
+			<div class="pop_up_headers">
+				<h3>Borrar todos los grupos</h3>
+				<button class="pop_up_headers_close" type="button" onclick="toggleDisplay('form_delete_all_group')">X</button>
+			</div>
+			<div class="pop_up_body">
+				<p>¿Estas seguro de eliminar el/los grupos seleccionados?</p>
+				<input type="hidden" id="hidden_name_all_group_delete" name="tag" required/>
+				<input type="hidden" name="delete_all" value="1" required/>
+			</div>
+			<div class="pop_up_footer">
+				<input type="submit" name="Enviar"></input>
+			</div>
+		</form>
+	</div>
+
+	<div id="adm_site_section" class="content">
+		
+	</div>
+
 	<a href="<?php echo $config["html_root"] . "/?m=adm" ?>" title="Return" class="button_return">
 	<img src="<?php echo $config["html_root"] . "/rs/img/web-7.png"; ?>" alt="Service Settings"/></a>
 </body>

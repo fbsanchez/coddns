@@ -134,3 +134,16 @@ nav ul li a.selected > div {
 .message_error{
     color:red;
 }
+
+table tbody tr td a {
+    text-decoration: none;
+}
+
+.actions_form li{
+    display: inline-block;
+}
+
+.actions_form {
+    margin: 0 auto;
+    width: inherit;
+}
