@@ -46,17 +46,17 @@ class SSHClient {
 	function SSHClient($ssh_config){
 		$this->load_cfg();
 
-		if (   (!isset($ssh_config["ip"]))
-			|| (!isset($ssh_config["user"]))
-			|| (!isset($ssh_config["pass"])) ){
+		if (   (!isset($ssh_config->ip))
+			|| (!isset($ssh_config->user))
+			|| (!isset($ssh_config->pass)) ){
 			return null;
 		}
 
-		$this->ip   = $ssh_config["ip"];
-		$this->user = $ssh_config["user"];
-		$this->pass = $ssh_config["pass"];
-		if (isset($ssh_config["port"])){
-			$this->port = $ssh_config["port"];
+		$this->ip   = $ssh_config->ip;
+		$this->user = $ssh_config->user;
+		$this->pass = $ssh_config->pass;
+		if (isset($ssh_config->port)){
+			$this->port = $ssh_config->port;
 		}
 
 		return $this;
@@ -190,8 +190,8 @@ class SSHClient {
 		stream_set_blocking($this->errorStream, true);
 		stream_set_blocking($this->stream, true);
 
-		$out[0] = $this->get_output();
-		$out[1] = $this->get_stderr();
+		$out[0] = rtrim($this->get_output(), "\n\r");
+		$out[1] = rtrim($this->get_stderr(), "\n\r");
 
 		fclose($this->errorStream);
 		fclose($this->stream);

@@ -32,52 +32,13 @@ else {
 }
 
 
-function transfer_conf_files($config, $sshclient, $serverid, $remote_configfile){
-	// get folder name
-	$localfile   = $config["spooldir"] . $serverid . $remote_configfile;
-	$localfolder = dirname($localfile);
+require_once(__DIR__ . "/../../include/functions_server.php");
+require_once(__DIR__ . "/../../lib/sshclient.php");
 
-	// create local folder
-	if (!is_dir($localfolder)) {
-		mkdir ($localfolder, 0770,true);
-	}
+$file_manager = array();
 
-	// retrieve remote file
-	if ($sshclient->get_file($remote_configfile, $localfile)) {
-		//error_log("File " . $remote_configfile . " copied to " . $localfolder);
-		return $localfile;
-	}
-	else {
-		error_log("Failed to copy file " . $remote_configfile . " copied to " . $localfolder);
-	}
-	return undef;
-}
-
-// retrieve credentials from DB
-
-$dbclient = new DBClient($db_config);
-
-$q = "Select * from servers where tag='" . $servername . "' ;";
-$r = $dbclient->get_sql_object($q);
-
-if (empty($r)){
-	echo "No hay servidores registrados con ese nombre.";
-	return 0;
-}
-
-// tried to get DB data
-$serverid = $r->id;
-$server_info["user"] = $r->srv_user;
-$server_info["pass"] = coddns_decrypt($r->srv_password);
-
-
-// also tried to get user specifications (form), if defined.
-session_start();
-if (   (isset($_SESSION["servers"][$servername]["user"]))
-	&& (isset($_SESSION["servers"][$servername]["pass"])) ) {
-	$server_info = $_SESSION["servers"][$servername];
-}
-
+// Retrieve server credentials
+$server = get_server_data($db_config, $servername);
 
 ?>
 
@@ -92,11 +53,11 @@ if (   (isset($_SESSION["servers"][$servername]["user"]))
 
 <body>
 	<section>
-	<h4>Configuraci&oacute;n del servidor: <i><?php echo $r->tag;?></i></h4>
+	<h4>Configuraci&oacute;n del servidor: <i><?php echo $server->tag;?></i></h4>
 
 
 <?php
-if ( (! isset ($server_info["user"]) ) || (! isset($server_info["pass"])) ) {
+if ( $server === false ) {
 	echo "No existen credenciales para acceder a este servidor.";
 	return 0;
 }
@@ -107,29 +68,21 @@ else { // SERVER CREDENTIALS ARE SET
 	$file_manager = array();
 
 	// initialize ssh client
-	$server_credentials["user"] = $server_info["user"];
-	$server_credentials["pass"] = $server_info["pass"];
-	$server_credentials["ip"]   = long2ip($r->ip);
-	$server_credentials["port"] = $r->port;
-	
-	$sshclient = new SSHClient($server_credentials);
-	//	$output = $sshclient->launch("cat /etc/named.conf");
+	$sshclient = new SSHClient($server);
 
 	$sshclient->connect();
-	/**
-	 * Check if we're connected & authenticated into the server
-	 * 
-	 */
+
+	// Check if we're connected & authenticated into the server
 	if (! $sshclient->is_authenticated()){
 		echo "Datos de acceso no v&aacute;lidos";
 		return 0;
 	}
 
-	$localfile = transfer_conf_files($config, $sshclient, $serverid, $r->main_config_file);
+	$localfile = transfer_conf_files($config, $sshclient, $server->id, $server->main_config_file);
 
 	$id=0;
 	$file_manager[$id]["local"]  = $localfile;
-	$file_manager[$id]["remote"] = $r->main_config_file;
+	$file_manager[$id]["remote"] = $server->main_config_file;
 	$file_manager[$id]["target"] = "gconf_input_" . $id;
 
 	// load files
@@ -139,7 +92,7 @@ else { // SERVER CREDENTIALS ARE SET
 	<input name="id" value="<?php echo $servername;?>" type="hidden" />
 	<input id="gconf_input_<?php echo $id;?>" name="gconf_input_<?php echo $id;?>" type="hidden" />
 
-	<?php echo "<p>Content of " . $r->main_config_file . "</p>"; ?>
+	<?php echo "<p>Content of " . $server->main_config_file . "</p>"; ?>
 	<textarea id="gconf_<?php echo $id;?>" onclick="grow(this);" onkeydown="grow(this);" onchange="copyContent('gconf_<?php echo $id;?>','gconf_input_<?php echo $id;?>');"><?php
 
 
@@ -149,7 +102,7 @@ else { // SERVER CREDENTIALS ARE SET
 	<?php
 	$id++;
 	foreach ($includes_array as $fin){
-		$local_fin = transfer_conf_files($config, $sshclient, $serverid, $fin);
+		$local_fin = transfer_conf_files($config, $sshclient, $server->id, $fin);
 
 		if (isset($local_fin)) {
 			$file_manager[$id]["local"]  = $local_fin;

@@ -22,19 +22,31 @@ require_once (__DIR__ . "/util.php");
 
 class CODServer {
 	var $ip;
+	var $tag;
 	var $port;
 	var $pass;
 	var $user;
 	var $status;
 	var $config;
+	var $main_config_file;
 
 	/**
 	 * Initializes a CODServer object based on
 	 * 	the name of the server
-	 * @param [type] $server_name [description]
+	 * @param server_name $server_name 
 	 * @return Int returns the ID of the server (if any)
 	 */
-	public function CODServer($server_name) {
+	public function CODServer($server_name = false) {
+
+		if ($server_name === false) {
+			return $this;
+		}
+		
+		return $this->load_server($server_name);
+	}
+
+
+	public function load_server($server_name) {
 		$this->load_cfg();
 		$dbclient = new DBClient($this->config["db_config"]);
 		$dbclient->connect();
@@ -57,6 +69,7 @@ class CODServer {
 		}
 		return $this;
 	}
+
 
 	private function load_cfg(){
 		if (empty($this->config)){

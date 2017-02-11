@@ -24,25 +24,42 @@ $auth_level_required = get_required_auth_level('adm','server','status');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
-
 $servername = secure_get("id");
 
-if(!isset($servername)){
-	echo "<pre>";
-	var_dump($_REQUEST);
-	echo "</pre>";
-	die ("Please specify a server");
+if (!isset ($servername)){
+	custom_die("Unauthorized to access this content.");
+}
+
+require_once(__DIR__ . "/../../include/functions_server.php");
+require_once(__DIR__ . "/../../lib/sshclient.php");
+
+
+// Retrieve server credentials
+$server = get_server_data($db_config, $servername);
+
+if ($server === false) {
+	custom_die("No existen credenciales para acceder a este servidor.");
 }
 
 
-
-$dbclient = new DBClient($db_config);
-$r = $dbclient->get_sql_object("Select * from servers where tag='$servername'");
-
-if (empty($r)){
+if (empty($server->tag)){
 	echo "No hay servidores registrados con ese nombre.";
 	return 0;
 }
+
+// initialize ssh client
+$sshclient = new SSHClient($server);
+
+$sshclient->connect();
+
+// Check if we're connected & authenticated into the server
+if (! $sshclient->is_authenticated()){
+	echo "Datos de acceso no v&aacute;lidos";
+	return 0;
+}
+
+$dbclient = new DBClient($db_config);
+
 ?>
 
 
@@ -59,56 +76,41 @@ if (empty($r)){
 
 		<?php
 			// check named service:
-			exec ("ps aux | grep named | grep -v grep | wc -l", $out, $return);
-			if (($return == 0) && ($out[0] >= 1)) { $named_ok  = 1; }
+			$result = $sshclient->launch ("ps aux | grep named | grep -v grep | wc -l");
+
+			if ( ($result[0] >= 1) && ($result[1] == 0) ) { $named_ok  = 1; }
 
 			
 			if ($named_ok) {
-				exec ("ps axo pcpu,pmem,command | grep named | grep -v grep | awk 'BEGIN {sum=0}{sum+=$1}{print sum}'"
-					,$cpu_usage
-					,$return);
+				$cpu_usage = $sshclient->launch ("ps axo pcpu,pmem,command | grep named | grep -v grep | awk 'BEGIN {sum=0}{sum+=$1}{print sum}'");
 
-				exec ("ps axo pcpu,pmem,command | grep named | grep -v grep | awk 'BEGIN {sum=0}{sum+=$2}{print sum}'"
-					,$ram_usage
-					,$return);
+				$ram_usage = $sshclient->launch ("ps axo pcpu,pmem,command | grep named | grep -v grep | awk 'BEGIN {sum=0}{sum+=$2}{print sum}'");
 
-				exec ("tail -n 15 /var/named/data/named.run 2>&1"
-					,$log_output
-					,$return);
+				$log_output = $sshclient->launch ("tail -n 15 /var/named/data/named.run 2>&1");
 
-				exec ("tail -n 15 /var/named/data/named.security 2>&1"
-					,$security_log_output
-					,$return);
+				$security_log_output = $sshclient->launch ("tail -n 15 /var/named/data/named.security 2>&1");
 
-				exec ("du -c -D -s -h /var/named/data | grep -i total | awk '{print $1}'"
-					,$log_size
-					,$return);
+				$log_size = $sshclient->launch ("du -c -D -s -h /var/named/data | grep -i total | awk '{print $1}'");
 
-				exec ("rndc status 2>&1", $status_output, $return);
+				$status_output = $sshclient->launch ("rndc status 2>&1");
 
 				echo "<p>Volcado de estado del servicio:</p><pre>";
-				foreach ($status_output as $line) {
-					echo $line . "\n";
-				}
+				echo $status_output[0];
 				echo "</pre>";
 
-				echo "<p>El estado de Bind es correcto con " . $out[0] . " instancia(s) activa(s)</p>";
+				echo "<p>El estado de Bind es correcto con " . $result[0] . " instancia(s) activa(s)</p>";
 				echo sprintf("<p>Uso de CPU: %.02f %%</p>", $cpu_usage[0]);
 				echo sprintf("<p>Uso de RAM: %.02f %%</p>", $ram_usage[0]);
 				echo "<br><br>";
 
 				echo "<p>Hay un total de " . $log_size[0] . "B en logs</p>";
 				echo "<p>Informaci&oacute;n del log:</p><pre>";
-				foreach ($log_output as $line){
-					echo  $line . "\n";
-				}
+				echo $log_output[0];
 				echo "</pre>";
 				echo "<br>";
 				echo "<p>Informaci&oacute;n del log de seguridad:</p>";
 				echo "<pre>";
-				foreach ($security_log_output as $line){
-					echo  $line . "\n";
-				}
+				echo $security_log_output[0];
 				echo "</pre>";
 
 			}

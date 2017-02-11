@@ -30,70 +30,25 @@ function custom_die($msg) {
 	die();
 }
 
-function check_valid_conf($conf){
-	// execute named-checkconf with the received content
-	// if pass, backup the old conf file
-	// and next update the content.
-
-	exec ("named-checkconf " . $conf
-		,$output
-		,$errlevel);
-
-	$return["out"]      = $output;
-	$return["errlevel"] = $errlevel;
-
-	return $return;
-
-	// TODO
-	// Save on /var/named/backup the conf files
-	// -> allow the user restore a backuped conf file
-}
-
 $servername = secure_get("id");
 
 if (!isset ($servername)){
 	custom_die("Unauthorized to access this content.");
 }
 
-// retrieve credentials from DB
-
-$dbclient = new DBClient($db_config);
-
-$q = "Select * from servers where tag='" . $servername . "' ;";
-$r = $dbclient->get_sql_object($q);
-
-if (empty($r)){
-	custom_die("No hay servidores registrados con ese nombre.");
-}
-
-// tried to get DB data
-$serverid = $r->id;
-$server_info = array();
-$server_info["user"] = $r->srv_user;
-$server_info["pass"] = coddns_decrypt($r->srv_password);
-
-// also tried to get user specifications (form), if defined.
-session_start();
-if (   (isset($_SESSION["servers"][$servername]["user"]))
-	&& (isset($_SESSION["servers"][$servername]["pass"])) ) {
-	$server_info = $_SESSION["servers"][$servername];
-}
-
-if ( (! isset ($server_info["user"]) ) || (! isset($server_info["pass"])) ) {
-	custom_die("No existen credenciales para acceder a este servidor.");
-}
-// SERVER CREDENTIALS ARE SET
-
+require_once(__DIR__ . "/../../include/functions_server.php");
 require_once(__DIR__ . "/../../lib/sshclient.php");
 
 $file_manager = array();
 
-// initialize ssh client
-$server_credentials["user"] = $server_info["user"];
-$server_credentials["pass"] = $server_info["pass"];
-$server_credentials["ip"]   = long2ip($r->ip);
-$server_credentials["port"] = $r->port;
+// Retrieve server credentials
+$server_credentials = get_server_data($db_config, $servername);
 
+if ($server_credentials === false) {
+	custom_die("No existen credenciales para acceder a este servidor.");
+}
+
+// initialize ssh client
 $sshclient = new SSHClient($server_credentials);
 //	$output = $sshclient->launch("cat /etc/named.conf");
 
