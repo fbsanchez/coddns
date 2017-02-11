@@ -166,7 +166,7 @@ if (check_lib("mysqli"))           { $mysqli_ok = 1; }
 if (check_lib("pgsql"))            { $pgsql_ok  = 1; }
 if (check_lib("ssh2"))             { $ssh2_ok   = 1; }
 
-if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
+if ($ssh2_ok+$writable_config_ok == 2) {
 	if ($mysqli_ok+$pgsql_ok >= 1){
 		$global_ok = 1;
 	}
@@ -189,16 +189,8 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 			<div class="status <?php echo check_item($global_ok);?>">&nbsp;</div>Requisitos
 		</div>
 		<div class="tab" id="requeriments" <?php if ($global_ok !=1) echo "style='max-height:1000px;'";?> >
-			<i>Software y servicios</i>
+			<i>Consola de administraci&oacute;n</i>
 			<ul>
-				<li>
-					<div class="status <?php check_item($named_ok);?>">&nbsp;</div>
-						<b>Bind - Servicio DNS</b><br><span style="font-size: 0.9em;margin-left: 25px;"> <?php echo $service_output[0];?> </span>
-				</li>
-				<li>
-					<div class="status <?php check_item($dnsmgr_ok);?>">&nbsp;</div>
-						<b>DNS manager script</b>
-				</li>
 				<li>
 					<div class="status ok">&nbsp;</div> <b>Servidor web</b>
 				</li>
@@ -208,6 +200,13 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 				<li>
 					<div class="status <?php check_item($writable_config_ok);?>">&nbsp;</div>
 						<b>Permisos de escritura sobre el directorio de configuraci&oacute;n</b>
+				</li>
+				<li>
+					<div class="status <?php check_item($ssh2_ok);?>">&nbsp;</div> <b>PHP PECL SSH2</b>
+					<?php if ($ssh2_ok != 1) {?>
+					<br><span style="font-size: 0.9em;margin-left: 25px;">Librer&iacute;as acceso SSH: yum install php-pecl-ssh2</span>
+					<br><span style="font-size: 0.9em;margin-left: 25px;">Librer&iacute;as acceso SSH: apt-get install php5-ssh2</span>
+					<?php }?>
 				</li>
 			</ul>
 			<b><i>Conectores a bases de datos</i></b> <span style="font-size:0.65em;">(al menos uno)</span>
@@ -219,16 +218,21 @@ if ($named_ok+$dnsmgr_ok+$writable_config_ok == 3){
 					<div class="status <?php check_item($pgsql_ok);?>">&nbsp;</div> PHP PostgreSQL (&gt; 9.X)
 				</li>
 			</ul>
+			<i>Administraci&oacute;n de servidor local</i> <span style="font-size:0.65em;">(opcional)</span>
+			<ul>
+				<li>
+					<div class="status <?php check_item($named_ok);?>">&nbsp;</div>
+						Bind - Servicio DNS<br><span style="font-size: 0.9em;margin-left: 25px;"> <?php echo $service_output[0];?> </span>
+				</li>
+				<li>
+					<div class="status <?php check_item($dnsmgr_ok);?>">&nbsp;</div>
+						DNS manager script
+				</li>
+			</ul>
 			<i>Herramientas</i> <span style="font-size:0.65em;">(opcional)</span>
 			<ul>
 				<li>
 					<div class="status <?php check_item($nmap_ok);?>">&nbsp;</div> nmap
-				</li>
-				<li>
-					<div class="status <?php check_item($ssh2_ok);?>">&nbsp;</div> PHP PECL SSH2
-					<?php if ($ssh2_ok != 1) {?>
-					<br><span style="font-size: 0.9em;margin-left: 25px;">Librer&iacute;as acceso SSH: yum install php-pecl-ssh2</span>
-					<?php }?>
 				</li>
 			</ul>
 		</div>

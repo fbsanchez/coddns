@@ -83,11 +83,16 @@ CREATE TABLE IF NOT EXISTS servers (
     tag character varying(200) NOT NULL default 'default' UNIQUE,
     ip bigint,
     gid int NOT NULL default 1,
+    port int default 22,
+    gid bigint unsigned NOT NULL default 1,
     srv_user character varying(200),
     srv_password text,
-    config text,
-    config_md5 character varying(200),
+    main_config_file character varying(255) default "/etc/named.conf",
+    fingerprint text,
     status int DEFAULT 0,
+    pub_key_file character varying(255) default NULL,
+    priv_key_file character varying(255) default NULL,
+    last_update timestamp,
     CONSTRAINT pkey_servers PRIMARY KEY (id),
     CONSTRAINT fkey_servers_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
 );
@@ -98,6 +103,7 @@ CREATE TABLE IF NOT EXISTS zones (
     domain character varying(255) NOT NULL,
     config text,
     gid int NOT NULL default 1,
+    is_public int(1) unsigned NOT NULL default 0,
     status int,
     server_id int NOT NULL, 
     master_id int NOT NULL,
@@ -214,49 +220,55 @@ INSERT INTO roles (tag,auth_level,description)
 -- GROUPS
 INSERT INTO groups (tag,description)
  values
-    ('all', 'DEFAULT group');
+    ('all', 'Global group'),
+    ('private', 'DEFAULT group');
 
 
 -- DEFAULT SITE_ACL
 INSERT INTO site_acl (m,z,op,auth_level)
  values
-    ('','','',0),
-    ('','api','',0),
-    ('','cliupdate','',0),
-    ('','downloads','',0),
-    ('','header','',0),
-    ('','ip','',0),
-    ('','logout','',0),
-    ('','main','',0),
-    ('','rest_host','',0),
-    ('','contact','',0),
-    ('usr','','',1),
-    ('usr','hosts','',1),
-    ('usr','hosts','mod',1),
-    ('usr','hosts','rq_mod',1),
-    ('usr','hosts','rq_new',1),
-    ('usr','hosts','rq_del',1),
-    ('usr','users','login',0),
-    ('usr','users','mod',1),
-    ('usr','users','remember',0),
-    ('usr','users','resetpass',0),
-    ('usr','users','rq_login',0),
-    ('usr','users','rq_mod',1),
-    ('usr','users','rq_resetpass',0),
-    ('usr','users','rq_signin',0),
-    ('usr','users','sendtoken',0),
-    ('adm','','',100),
-    ('adm','site','',100),
-    ('adm','site','manager',100),
-    ('adm','site','rq_new_user',100),
-    ('adm','service','',100),
-    ('adm','service','manager',100),
-    ('adm','servers','',100),
-    ('adm','servers','status',100),
-    ('adm','zones','',100),
-    ('cms','','',0),
-    ('','ajax','',0);
-
+    ('','','',0,'Index'),
+    ('','api','',0,'Api'),
+    ('','cliupdate','',0,''),
+    ('','downloads','',0,'Descargas'),
+    ('','header','',0,'Header'),
+    ('','ip','',0,'Muestra la Ip'),
+    ('','main','',0,'Menu lateral'),
+    ('','rest_host','',0,'No tienes acceso'),
+    ('','contact','',0,'Contactanos'),
+    ('','ajax','',0,'Ajax'),
+    ('','err404','',0,'Ajax'),
+    ('usr','','',1,''),
+    ('usr','hosts','',1,'Gestor de etiquetas'),
+    ('usr','hosts','mod',1,''),
+    ('usr','hosts','rq_mod',1,''),
+    ('usr','hosts','rq_new',1,''),
+    ('usr','hosts','rq_del',1,''),
+    ('usr','users','login',0,'P&aacute;gina de acceso'),
+    ('usr','users','mod',1, 'Mi cuenta'),
+    ('usr','users','remember',0,'Olvid&oacute; contraseña'),
+    ('usr','users','resetpass',0,'Cambiar contraseña'),
+    ('usr','users','rq_login',0,''),
+    ('usr','users','rq_mod',1,''),
+    ('usr','users','rq_resetpass',0,''),
+    ('usr','users','rq_signin',0,''),
+    ('usr','users','sendtoken',0,''),
+    ('usr','users','logout',0,'Desconexi&oacute;n'),
+    ('adm','','',100,'Panel de administraci&oacute;n'),
+    ('adm','site','',100,'Panel de administraci&oacute;n del sitio'),
+    ('adm','site','manager',100,'Administraci&oacute;n del sitio'),
+    ('adm','site','rq_new_user',100,'Crear un nuevo usuario'),
+    ('adm','center','',100,'Centro de administraci&oacute;n'),
+    ('adm','service','status',100,'Estado del servicios'),
+    ('adm','service','manager',100,'Administraci&oacute;n del servicios'),
+    ('adm','servers','',100,'Administraci&oacute;n de servidores'),
+    ('adm','server','status',100,'Estado del servidor'),
+    ('adm','server','control',100,'Control del servidor'),
+    ('adm','server','manager',100,'Centro de configuraci&oacute;n de servidores'),
+    ('adm','server','settings_manager',100,'Editor de configuraci&oacute;n de servidores'),
+    ('adm','server','rq_settings_manager',100,'Receptor de formulario de configuraci&oacute;n del servidor'),
+    ('adm','zones','',100,'Administraci&oacute;n de zonas'),
+    ('cms','','',0,'Documentaci&oacute;n');
 
 -- RECORD_TYPES
 INSERT INTO record_types(tag,description,auth_level)
@@ -272,6 +284,7 @@ INSERT INTO settings(field,value)
  values
     ("slack_url", ""),
     ("installdir", "/opt/coddns/"),
+    ("spooldir", "/opt/coddns/spool/"),
+    ("max_age", "7"),
     ("rndc_key", "/share/ddns/rndc.key");
-
 
