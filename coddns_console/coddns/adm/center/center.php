@@ -48,7 +48,6 @@ $user->check_auth_level($auth_level_required);
 		}
 	}
 	function mark(id){
-		document.getElementById("link_service").className="";
 		document.getElementById("link_servers").className="";
 		document.getElementById("link_zones").className="";
 		document.getElementById("adm_content").innerHTML = "Cargando...";
@@ -60,22 +59,16 @@ $user->check_auth_level($auth_level_required);
 <body>
 
 <?php
-$clickservices = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/service/service_status.php');\"";
 $clickservers = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/server/main.php');\"";
 $clickzones = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/zones/zones.php');\"";
 
 ?>
-	<a id="service" style="display:none;"></a>
 	<a id="servers" style="display:none;"></a>
 	<a id="zones" style="display:none;"></a>
 	<section>
 		<h2>Centro de administraci&oacute;n</h2>
 
 		<nav>
-			<a id="link_service" href="#service" class="" <?php echo $clickservices; ?> >
-				Servicio
-			</a>
-
 			<a id="link_servers" href="#servers" class="" <?php echo $clickservers; ?> >
 				Servidores
 			</a>
