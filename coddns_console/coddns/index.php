@@ -244,11 +244,16 @@ echo "</div>";
 ?>
 
 <?php
-if ($auth_level_required === null){
-    include (__DIR__ . DIRECTORY_SEPARATOR . "err404.html");
+if (! file_exists(__DIR__ . DIRECTORY_SEPARATOR . $url)) {
+    include (__DIR__ . DIRECTORY_SEPARATOR . "err404.php");
 }
 else {
-    include (__DIR__ . DIRECTORY_SEPARATOR . $url);
+    if ($auth_level_required === null){
+        include (__DIR__ . DIRECTORY_SEPARATOR . "err502.html");
+    }
+    else {
+        include (__DIR__ . DIRECTORY_SEPARATOR . $url);
+    }
 }
 ?>
 

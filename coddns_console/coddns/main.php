@@ -54,7 +54,6 @@ session_write_close();
 if ($user->get_is_logged()){
     // USER ZONE - OVERALL STATUS VIEW
 
-
 $dbclient = new DBClient($db_config);
 
 
@@ -94,17 +93,10 @@ $chart_pie["data"]["datasets"]["data"] = rtrim($data, ",");
 $chart_pie["data"]["datasets"]["backgroundColor"]      = rtrim($bgColor, ",");
 $chart_pie["data"]["datasets"]["hoverBackgroundColor"] = rtrim($hbgColor, ",");
 
-$dbclient->disconnect();
-
-
 /* --------------------------------------------------------------------------- */
 /* --------------------------------------------------------------------------- */
 
 
-/**
- * 2nd GRAPH: zone general statistics (requires coddns_core)
- */
-$dbclient->connect() or die($dbclient->lq_error());
 // Build data for linear graph
 
 $chart_linear["title"]  = "Estad&iacute;sticas por zona";
@@ -289,6 +281,11 @@ else {
 
 <?php
 }
+
+if ($dbclient->is_connected()) {
+    $dbclient->disconnect();
+}
+
 ?>
 </body>
 </html>
