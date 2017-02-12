@@ -206,9 +206,8 @@ if(isset($d)){
             <?php
             if ($user->is_global_admin()) {
             ?>
-            <a href="<?php echo $config["html_root"] . "/?m=adm&z=center#service"; ?>">Admininistrar el servicio</a>
             <a href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers"; ?>">Admininistrar servidores</a>
-            <a href="<?php echo $config["html_root"] . "/?m=adm&z=site"; ?>">Admininistrar el sitio</a>
+            <a href="<?php echo $config["html_root"] . "/?m=adm&z=site#users"; ?>">Admininistrar el sitio</a>
             <?php
             }
             ?>
@@ -282,7 +281,7 @@ else {
 <?php
 }
 
-if ($dbclient->is_connected()) {
+if ((isset($dbclient)) && ($dbclient->is_connected())) {
     $dbclient->disconnect();
 }
 

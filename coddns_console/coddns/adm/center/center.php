@@ -66,7 +66,7 @@ $clickzones = "onclick=\"mark(this);updateContent('adm_content','" . $config["ht
 	<a id="servers" style="display:none;"></a>
 	<a id="zones" style="display:none;"></a>
 	<section>
-		<h2>Centro de administraci&oacute;n</h2>
+		<h2>Centro de control</h2>
 
 		<nav>
 			<a id="link_servers" href="#servers" class="" <?php echo $clickservers; ?> >

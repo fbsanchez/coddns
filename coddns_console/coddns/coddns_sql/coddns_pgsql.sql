@@ -267,6 +267,8 @@ INSERT INTO site_acl (m,z,op,auth_level)
     ('adm','server','manager',100,'Centro de configuraci&oacute;n de servidores'),
     ('adm','server','settings_manager',100,'Editor de configuraci&oacute;n de servidores'),
     ('adm','server','rq_settings_manager',100,'Receptor de formulario de configuraci&oacute;n del servidor'),
+    ('adm','server','new',100,'Formulario nuevo servidor'),
+    ('adm','server','rq_new',100,'Receptor de formulario nuevo servidor'),
     ('adm','zones','',100,'Administraci&oacute;n de zonas'),
     ('cms','','',0,'Documentaci&oacute;n');
 
