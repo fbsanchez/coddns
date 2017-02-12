@@ -24,6 +24,12 @@ $auth_level_required = get_required_auth_level('adm','server','control');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
+if (!isset ($servername)){
+	$servername = secure_get("id");
+}
+else {
+	die ("Unauthorized to access this content.");
+}
 
 ?>
 
@@ -32,14 +38,26 @@ $user->check_auth_level($auth_level_required);
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_status.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_control.css";?>" />
+
 </head>
 
 <body>
 	<section>
 		<h3>Control del servicio</h3>
 
+		<ul>
+			<li>
+				<div id="check_conf"></div>
+				<a class="action" 
+				   href="#control"
+				   onclick="document.getElementById('check_conf').html='Cargando...'; updateContent('check_conf', '<?php echo $config["html_root"];?>/ajax.php', 'action=checkconf&id=<?php echo $servername;?>');">
+				   Check configuration
+				</a>
+			</li>
+		</ul>
 
+		
 		<div id="check_conf"></div>
 		</section>
 </body>
