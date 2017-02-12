@@ -723,7 +723,7 @@ elseif ($phase == 3){
 	$str_config .= "defined (\"MAX_HOST_LENGTH\") or define (\"MAX_HOST_LENGTH\", 200);\n";
 	$str_config .= "defined (\"ITEMS_PER_PAGE\") or define (\"ITEMS_PER_PAGE\", 15);\n";
 	$str_config .= "\n";
-	$str_config .= "include_once (__DIR__ . \"/../lib/util.php\");\n";
+	$str_config .= "include_once (__DIR__ . \"/../include/functions_util.php\");\n";
 	$str_config .= "\$config = load_extra_config(\$config);\n";
 	$str_config .= "\n";
 	$str_config .= "?>\n";
