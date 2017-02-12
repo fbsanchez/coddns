@@ -25,19 +25,23 @@ $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
 
-if(!isset($servername)){
-	$servername = secure_get("id");
-}
-session_start();
-if (!isset($_SESSION["servers"][$servername]["user"])){
-	$_SESSION["servers"][$servername]["user"] = secure_get("u");
-}
-if (!isset($_SESSION["servers"][$servername]["pass"])){
-	$_SESSION["servers"][$servername]["pass"] = secure_get("p","base64");
-}
-
-session_write_close();
-
 ?>
 
-<div>Service control on server <?php echo $servername;?></div>
+
+<!DOCTYPE HTML>
+
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_status.css";?>" />
+</head>
+
+<body>
+	<section>
+		<h3>Control del servicio</h3>
+
+
+		<div id="check_conf"></div>
+		</section>
+</body>
+
+</html>

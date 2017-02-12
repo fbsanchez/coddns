@@ -322,8 +322,7 @@ function list_acls($data) {
 
     $dbclient->connect();
 
-	$q = "select sa.tag, r.tag as rol from roles r, site_acl sa where sa.auth_level=r.auth_level;
-";
+	$q = "select sa.tag, r.tag as rol from roles r, site_acl sa where sa.auth_level=r.auth_level;";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 	$l = "select tag from roles;";
@@ -359,6 +358,64 @@ function list_acls($data) {
 	$dbclient->disconnect();
 }
 
+
+
+
+function adm_server_control_checkconf($data) {
+	global $config;
+
+	$auth_level_required = get_required_auth_level('adm','server','control');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+
+    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+    $dbclient->connect() or die ($dbclient->lq_error());
+
+	$servername = secure_get("id");
+
+	if (!isset ($servername)){
+		custom_die("Unauthorized to access this content.");
+	}
+
+	require_once(__DIR__ . "/../../include/functions_server.php");
+	require_once(__DIR__ . "/../../lib/sshclient.php");
+
+
+	// Retrieve server credentials
+	$server = get_server_data($db_config, $servername);
+
+	if ($server === false) {
+		custom_die("No existen credenciales para acceder a este servidor.");
+	}
+
+
+	if (empty($server->tag)){
+		echo "No hay servidores registrados con ese nombre.";
+		return 0;
+	}
+
+	// initialize ssh client
+	$sshclient = new SSHClient($server);
+
+	$sshclient->connect();
+
+	// Check if we're connected & authenticated into the server
+	if (! $sshclient->is_authenticated()){
+		echo "Datos de acceso no v&aacute;lidos";
+		return 0;
+	}
+
+	$dbclient = new DBClient($db_config);
+
+
+}
+
+
+
+//
+// AJAX API Control
+//
+
 $action    = secure_get("action");
 $arguments = secure_get("args","json");
 
@@ -376,7 +433,11 @@ switch ($action) {
 		list_acls($arguments);
 		break;
 	case 'exist_tag_groups':
-		exist_tag_groups($arguments);	
+		exist_tag_groups($arguments);
+		break;
+	case 'checkconf':
+		adm_server_control_checkconf($arguments);
+		break;
 	default:
 		print "Unknown action";
 		break;
