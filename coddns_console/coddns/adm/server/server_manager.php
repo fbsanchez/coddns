@@ -132,10 +132,10 @@ session_write_close();
 
 <body>
 <?php
-$clickstatus        = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_status.php','id=" . $servername . "');\"";
-$clickcontrol       = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_control.php','id=" . $servername . "');\"";
-$clickconfiguration = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_settings_manager.php','id=" . $servername . "');\"";
-$clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_versioning.php','id=" . $servername . "');\"";
+$clickstatus        = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_status.php','id=" . $servername . "',true);\"";
+$clickcontrol       = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_control.php','id=" . $servername . "',true);\"";
+$clickconfiguration = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_settings_manager.php','id=" . $servername . "',true);\"";
+$clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_versioning.php','id=" . $servername . "',true);\"";
 
 ?>
 	<a id="status" style="display:none;"></a>

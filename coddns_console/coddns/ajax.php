@@ -412,9 +412,11 @@ function adm_server_control_checkconf($data) {
 		$result = $sshclient->launch ("named-checkconf " . $server->main_config_file);
 
 		if (strlen($result[0] == "") && $result[1] == "") {
+			echo "<img src='" . $config["html_root"] . "/rs/img/status_ok.png' style='width: 10px; margin: 0 15px;'/>";
 			echo "El fichero " . $server->main_config_file . " es v&aacute;lido";
 		}
 		else {
+			echo "<img src='" . $config["html_root"] . "/rs/img/status_err.png' style='width: 10px; margin: 0 15px;'/>";
 			echo "El fichero " . $server->main_config_file . " <b>no</b> es v&aacute;lido. Informe:<br>";
 			echo "<pre>";
 			echo $result[0];
@@ -432,6 +434,68 @@ function adm_server_control_checkconf($data) {
 }
 
 
+function adm_server_control_restart($data) {
+	global $config;
+
+	$auth_level_required = get_required_auth_level('adm','server','control');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+
+    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+    $dbclient->connect() or die ($dbclient->lq_error());
+
+	$servername = secure_get("id");
+	
+	if (!isset ($servername)){
+		echo "Unauthorized to access this content.";
+		return 0;
+	}
+
+	require_once(__DIR__ . "/include/functions_server.php");
+	require_once(__DIR__ . "/lib/sshclient.php");
+
+
+	// Retrieve server credentials
+	$server = get_server_data($config["db_config"], $servername);
+
+	if ($server === false) {
+		echo "No existen credenciales para acceder a este servidor.";
+
+		return 0;
+	}
+
+
+	if (empty($server->tag)){
+		echo "No hay servidores registrados con ese nombre.";
+		return 0;
+	}
+
+	if (isset ($server->main_config_file)) {
+		// initialize ssh client
+		$sshclient = new SSHClient($server);
+
+		$sshclient->connect();
+
+		// Check if we're connected & authenticated into the server
+		if (! $sshclient->is_authenticated()){
+			echo "Datos de acceso no v&aacute;lidos";
+			return 0;
+		}
+
+		$result = $sshclient->launch ("systemctl restart named || /etc/init.d/named restart || service named restart");
+		echo "<img src='" . $config["html_root"] . "/rs/img/status_ok.png' style='width: 10px; margin: 0 15px;'/>";
+		echo "<pre>";
+		echo $result[0];
+		echo "\n";
+		echo "</pre>";
+
+		$sshclient->disconnect();
+	}
+	else {
+		echo "No se ha definido un fichero de configuraci&oacute;n por defecto para este servidor.";
+	}
+
+}
 
 //
 // AJAX API Control
@@ -458,6 +522,9 @@ switch ($action) {
 		break;
 	case 'checkconf':
 		adm_server_control_checkconf($arguments);
+		break;
+	case 'restart_service':
+		adm_server_control_restart($arguments);
 		break;
 	default:
 		print "Unknown action";

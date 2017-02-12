@@ -38,27 +38,45 @@ else {
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_control.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/server_control.css";?>" />
 
+
+<script type="text/javascript">
+	function check_configuration() {
+		show('check_conf');
+		updateContent('check_conf', '<?php echo $config["html_root"];?>/ajax.php', 'action=checkconf&id=<?php echo $servername;?>');
+	}
+
+	function restart_service() {
+		if (confirm("Are you sure?") == true) {
+			show('service_report');
+			updateContent('service_report', '<?php echo $config["html_root"];?>/ajax.php', 'action=restart_service&id=<?php echo $servername;?>');
+		}
+	}
+
+	function show(id) {
+		document.getElementById(id).style["max-height"] = "10000px";
+	}
+
+	document.onload= check_configuration();
+</script>
 </head>
 
 <body>
 	<section>
 		<h3>Control del servicio</h3>
-
-		<ul>
-			<li>
-				<div id="check_conf"></div>
-				<a class="action" 
-				   href="#control"
-				   onclick="document.getElementById('check_conf').html='Cargando...'; updateContent('check_conf', '<?php echo $config["html_root"];?>/ajax.php', 'action=checkconf&id=<?php echo $servername;?>');">
-				   Check configuration
-				</a>
-			</li>
-		</ul>
-
+		<p class="action" onclick="check_configuration();">Comprobar configuraci&oacute;n</p>
+		<div class="resultset" style="max-height: 0px;" id="check_conf">
+			<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style='width: 10px; margin: 0 15px;'/>
+		</div>
 		
-		<div id="check_conf"></div>
+
+		<br />
+		<p class="action" onclick="restart_service();">Reiniciar el servicio</p>
+
+		<div class="resultset" style="max-height: 0px;" id="service_report">
+			<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style='width: 10px; margin: 0 15px;'/>
+		</div>
 		</section>
 </body>
 
