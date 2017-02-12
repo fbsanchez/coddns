@@ -114,7 +114,6 @@ $text["de"]["nav_logout"]      ="Logout";
 <title>Custom Open Dynamic DNS</title>
 <meta charset="UTF-8"/>
 <meta name="google-site-verification" content="hBYboxJ02VZp_fkufkIvtjbyv-T98x6lnk4NBAROCpY" />
-<!--
 <link rel="apple-touch-icon" sizes="57x57" href="/rs/img/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="/rs/img/apple-icon-60x60.png">
 <link rel="apple-touch-icon" sizes="72x72" href="/rs/img/apple-icon-72x72.png">
@@ -132,8 +131,6 @@ $text["de"]["nav_logout"]      ="Logout";
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="/rs/img/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
-
--->
 <link rel="icon" type="image/png" sizes="16x16" href="/rs/img/favicon.ico">
 
 
