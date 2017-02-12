@@ -15,7 +15,7 @@
  * <summary> </summary>
  */
 require_once (__DIR__ . "/db.php");
-require_once (__DIR__ . "/ipv4.php");
+require_once (__DIR__ . "/../include/functions_ip.php");
 
 // Defines CODUser class
 

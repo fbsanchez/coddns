@@ -738,7 +738,7 @@ elseif ($phase == 3){
 
 	// FINAL STEP - create admin user using the configuration file
 	include_once (__DIR__ . "/include/config.php");
-	require_once (__DIR__ . "/lib/ipv4.php");
+	require_once (__DIR__ . "/include/functions_ip.php");
 
 	$dbclient = new DBClient($db_config);
 

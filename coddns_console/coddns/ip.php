@@ -16,7 +16,7 @@
  */
 
 require_once (__DIR__ . "/include/config.php");
-require_once (__DIR__ . "/lib/ipv4.php");
+require_once (__DIR__ . "/include/functions_ip.php");
 require_once (__DIR__ . "/include/functions_util.php");
 require_once (__DIR__ . "/lib/coduser.php");
 
