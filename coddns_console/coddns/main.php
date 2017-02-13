@@ -255,7 +255,7 @@ else {
 </section>
 <section id="login">
     <h3><?php echo $text[$lan]["main_acc"];?></h3>
-    <form id="loginf" method="POST" action="usr/rq_login.php" onsubmit="fsgo('loginf', 'login_response','usr/users/users_rq_login.php', true);return false;">
+    <form id="loginf" method="POST" action="usr/users/users_rq_login.php" onsubmit="fsgo('loginf', 'login_response','usr/users/users_rq_login.php', true);return false;">
     <ul>
         <li>
             <label>E-mail: </label>

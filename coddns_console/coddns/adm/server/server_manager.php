@@ -156,22 +156,19 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 			document.getElementById("link_control").className="";
 			document.getElementById("link_settings_manager").className="";
 			document.getElementById("link_versioning").className="";
-			document.getElementById("srv_content").innerHTML = "Cargando...";
+			document.getElementById("srv_content").innerHTML = '<img src="<?php $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Cargando...';
 			id.className = "selected";
 		}
 	</script>
 	<section>
 	<h2>Administrar <i><?php echo $servername;?></i></h2>
+	<p class="subtitle"><?php echo $server->ip;?></p>
 	<?php
 	if($server->has_credentials()) {
 		// Credentials had been set
 		//  show navigation
 	?>
-	<form action="#settings_manager" method="POST">
-		<input type="hidden" value="1" name="forget"/>
-		<input type="submit" value="desconectar" />
-	</form>
-
+	
 	<nav>
 		<a id="link_status" href="#status" class="" <?php echo $clickstatus; ?> >
 			Estado
@@ -192,6 +189,11 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	<div id="srv_content" class="content">
 		
 	</div>
+
+	<form action="#settings_manager" method="POST" onsubmit="if(!confirm('Are you sure?')) { return false; }">
+		<input type="hidden" value="1" name="forget"/>
+		<input type="submit" value="desconectar" />
+	</form>
 
 	<?php
 		// End -- Allowed navigation panel

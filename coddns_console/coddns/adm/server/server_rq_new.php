@@ -24,4 +24,10 @@ $auth_level_required = get_required_auth_level('adm','server','new');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
+
+
 ?>
+
+
+
+Servidor no conectado, gestor en construcci&oacute;n

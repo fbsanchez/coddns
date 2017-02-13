@@ -86,6 +86,7 @@ a#remember:hover{
 section.uarea{
     width: 60%;
     max-width: 720px;
+    min-width: 600px;
     margin: 0 auto;
 }
 ul{
@@ -102,7 +103,7 @@ li label{
 li input{
     float: right;
 }
-input[type="email"],li input[type="text"], li input[type="password"] {
+input[type="email"],li input[type="text"], li input[type="password"], li input[type="number"] {
     width: 150px;
     border: none;
     border-bottom: 1px solid #ccc;
@@ -164,3 +165,10 @@ a.return:hover {
     box-shadow: 1px 1px 5px #343434;
     border: 1px solid #ddd;
 }
+
+p.subtitle {
+    margin: -20px 22px 0px;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
