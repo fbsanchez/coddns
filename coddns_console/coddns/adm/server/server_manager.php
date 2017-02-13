@@ -156,7 +156,7 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 			document.getElementById("link_control").className="";
 			document.getElementById("link_settings_manager").className="";
 			document.getElementById("link_versioning").className="";
-			document.getElementById("srv_content").innerHTML = '<img src="<?php $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Cargando...';
+			document.getElementById("srv_content").innerHTML = '<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Cargando...';
 			id.className = "selected";
 		}
 	</script>

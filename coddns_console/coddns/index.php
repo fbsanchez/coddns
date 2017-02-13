@@ -114,24 +114,24 @@ $text["de"]["nav_logout"]      ="Logout";
 <title>Custom Open Dynamic DNS</title>
 <meta charset="UTF-8"/>
 <meta name="google-site-verification" content="hBYboxJ02VZp_fkufkIvtjbyv-T98x6lnk4NBAROCpY" />
-<link rel="apple-touch-icon" sizes="57x57" href="/rs/img/apple-icon-57x57.png">
-<link rel="apple-touch-icon" sizes="60x60" href="/rs/img/apple-icon-60x60.png">
-<link rel="apple-touch-icon" sizes="72x72" href="/rs/img/apple-icon-72x72.png">
-<link rel="apple-touch-icon" sizes="76x76" href="/rs/img/apple-icon-76x76.png">
-<link rel="apple-touch-icon" sizes="114x114" href="/rs/img/apple-icon-114x114.png">
-<link rel="apple-touch-icon" sizes="120x120" href="/rs/img/apple-icon-120x120.png">
-<link rel="apple-touch-icon" sizes="144x144" href="/rs/img/apple-icon-144x144.png">
-<link rel="apple-touch-icon" sizes="152x152" href="/rs/img/apple-icon-152x152.png">
-<link rel="apple-touch-icon" sizes="180x180" href="/rs/img/apple-icon-180x180.png">
-<link rel="icon" type="image/png" sizes="192x192"  href="/rs/img/android-icon-192x192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/rs/img/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="96x96" href="/rs/img/favicon-96x96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/rs/img/favicon-16x16.png">
-<link rel="manifest" href="/rs/img/manifest.json">
+<link rel="apple-touch-icon" sizes="57x57" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-57x57.png">
+<link rel="apple-touch-icon" sizes="60x60" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-60x60.png">
+<link rel="apple-touch-icon" sizes="72x72" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-72x72.png">
+<link rel="apple-touch-icon" sizes="76x76" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-76x76.png">
+<link rel="apple-touch-icon" sizes="114x114" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-114x114.png">
+<link rel="apple-touch-icon" sizes="120x120" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-120x120.png">
+<link rel="apple-touch-icon" sizes="144x144" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-144x144.png">
+<link rel="apple-touch-icon" sizes="152x152" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-152x152.png">
+<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-180x180.png">
+<link rel="icon" type="image/png" sizes="192x192"  href="<?php echo $config["html_root"]; ?>/rs/img/android-icon-192x192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="<?php echo $config["html_root"]; ?>/rs/img/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="<?php echo $config["html_root"]; ?>/rs/img/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="<?php echo $config["html_root"]; ?>/rs/img/favicon-16x16.png">
+<link rel="manifest" href="<?php echo $config["html_root"]; ?>/rs/img/manifest.json">
 <meta name="msapplication-TileColor" content="#ffffff">
-<meta name="msapplication-TileImage" content="/rs/img/ms-icon-144x144.png">
+<meta name="msapplication-TileImage" content="<?php echo $config["html_root"]; ?>/rs/img/ms-icon-144x144.png">
 <meta name="theme-color" content="#ffffff">
-<link rel="icon" type="image/png" sizes="16x16" href="/rs/img/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="<?php echo $config["html_root"]; ?>/rs/img/favicon.ico">
 
 
 <?php
@@ -149,8 +149,8 @@ $text["de"]["nav_logout"]      ="Logout";
 
 //if (! check_user_agent('mobile') ){
 //?>
-<link rel="stylesheet" type="text/css" href="rs/css/pc/main.css">
-<link rel="stylesheet" type="text/css" href="rs/css/pc/header.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"]; ?>/rs/css/pc/main.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"]; ?>/rs/css/pc/header.css">
 <?php
 /*
 } else {
@@ -160,7 +160,7 @@ $text["de"]["nav_logout"]      ="Logout";
 <?php
 //}
 */?>
-<script type="text/javascript" src="rs/js/util.js"></script>
+<script type="text/javascript" src="<?php echo $config["html_root"]; ?>/rs/js/util.js"></script>
 <script type="text/javascript">
     function checkHostName(){
         updateContent("rec_info", "rest_host.php", "h="+document.getElementById('h').value);

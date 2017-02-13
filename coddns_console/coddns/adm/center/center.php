@@ -50,7 +50,7 @@ $user->check_auth_level($auth_level_required);
 	function mark(id){
 		document.getElementById("link_servers").className="";
 		document.getElementById("link_zones").className="";
-		document.getElementById("adm_content").innerHTML = '<img src="<?php $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Cargando...';
+		document.getElementById("adm_content").innerHTML = '<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Cargando...';
 		id.className = "selected";
 	}
 </script>
