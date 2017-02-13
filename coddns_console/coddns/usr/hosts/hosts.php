@@ -396,7 +396,11 @@ $text["de"]["reg_type"]      = "DNS record type";
         </tr>
     </thead>
     <tbody id="hosts_list">
-    <tr><td style="border:none;">Loading...</td></tr>
+    <tr><td style="border:none;">
+    <?php
+        echo "<img src='" . $config["html_root"] . "/rs/img/status_ok.png' style='width: 10px; margin: 0 15px;'/> Cargando...";
+    ?>
+    </td></tr>
     <!-- Filled by AJAX ~ onload sortHostsBy() -->
     </tbody>
 </table>
