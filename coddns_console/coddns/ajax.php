@@ -485,13 +485,7 @@ function adm_server_control_restart($data) {
 		$result = $sshclient->launch ("systemctl restart named || /etc/init.d/named restart || service named restart");
 		echo "<img src='" . $config["html_root"] . "/rs/img/status_ok.png' style='width: 10px; margin: 0 15px;'/>";
 		echo "<pre>";
-		if ($result[0] == "") {
-			echo "Cache cleared.";
-		}
-		else {
-			echo $result[0];
-			echo $result[1];
-		}
+		echo $result[0];
 		echo "\n";
 		echo "</pre>";
 
@@ -555,7 +549,13 @@ function adm_server_control_clear_cache($data) {
 		$result = $sshclient->launch ("rndc flush");
 		echo "<img src='" . $config["html_root"] . "/rs/img/status_ok.png' style='width: 10px; margin: 0 15px;'/>";
 		echo "<pre>";
-		echo $result[0];
+		if ($result[0] == "") {
+			echo "Cache cleared.";
+		}
+		else {
+			echo $result[0];
+			echo $result[1];
+		}
 		echo "\n";
 		echo "</pre>";
 
