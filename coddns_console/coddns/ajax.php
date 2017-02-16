@@ -548,17 +548,17 @@ function adm_server_control_clear_cache($data) {
 
 		$result = $sshclient->launch ("rndc flush");
 		echo "<img src='" . $config["html_root"] . "/rs/img/status_ok.png' style='width: 10px; margin: 0 15px;'/>";
-		echo "<pre>";
 		if ($result[0] == "") {
 			echo "Cache cleared.";
 		}
 		else {
+			echo "<pre>";
 			echo $result[0];
 			echo $result[1];
+			echo "\n";
+			echo "</pre>";
 		}
-		echo "\n";
-		echo "</pre>";
-
+		
 		$sshclient->disconnect();
 	}
 	else {
