@@ -48,9 +48,16 @@ else {
 	}
 
 	function restart_service() {
-		if (confirm("Are you sure?") == true) {
+		if (confirm("[restart-service] Are you sure?") == true) {
 			show('service_report');
 			updateContent('service_report', '<?php echo $config["html_root"];?>/ajax.php', 'action=restart_service&id=<?php echo $servername;?>');
+		}
+	}
+
+	function clear_cache() {
+		if (confirm("[clear-cache] Are you sure?") == true) {
+			show('clear_cache_report');
+			updateContent('clear_cache_report', '<?php echo $config["html_root"];?>/ajax.php', 'action=clear_cache&id=<?php echo $servername;?>');
 		}
 	}
 
@@ -77,6 +84,14 @@ else {
 		<div class="resultset" style="max-height: 0px;" id="service_report">
 			<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style='width: 10px; margin: 0 15px;'/>
 		</div>
+
+		<br />
+		<p class="action" onclick="clear_cache();">Vaciar la cache del servidor</p>
+
+		<div class="resultset" style="max-height: 0px;" id="clear_cache_report">
+			<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style='width: 10px; margin: 0 15px;'/>
+		</div>
+
 		</section>
 </body>
 
