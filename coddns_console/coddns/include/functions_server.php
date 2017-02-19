@@ -111,5 +111,58 @@ function check_valid_conf($conf){
 
 
 
+/**
+ * get_server_connection Returns an active sshclient over the designed server
+ * Be sure to scape the servername before call this function!
+ * @return sshclient session or false if process fails
+ */
+function get_server_connection($servername) {
+	global $config;
+
+	$auth_level_required = get_required_auth_level('adm','server','control');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+
+    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+    $dbclient->connect() or die ($dbclient->lq_error());
+	
+	if (!isset ($servername)){
+		echo "Unauthorized to access this content.";
+		return false;
+	}
+
+	require_once(__DIR__ . "/../lib/sshclient.php");
+
+
+	// Retrieve server credentials
+	$server = get_server_data($config["db_config"], $servername);
+
+	if ($server === false) {
+		echo "No existen credenciales para acceder a este servidor.";
+
+		return 0;
+	}
+
+
+	if (empty($server->tag)){
+		echo "No hay servidores registrados con ese nombre.";
+		return 0;
+	}
+
+	if (isset ($server->main_config_file)) {
+		// initialize ssh client
+		$sshclient = new SSHClient($server);
+
+		$sshclient->set_server_info($server);
+
+		$sshclient->connect();
+
+		return $sshclient;
+	}
+
+	return false;	
+}
+
+
 
 ?>

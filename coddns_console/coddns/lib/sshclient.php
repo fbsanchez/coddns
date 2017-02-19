@@ -35,6 +35,9 @@ class SSHClient {
 	var $pass = null;
 	var $port = 22;
 
+
+	var $server = null;
+
 	var $connection    = false;
 	var $authenticated = false;
 	var $connected     = false;
@@ -232,6 +235,14 @@ class SSHClient {
 
 		$this->disconnect();
 		return $r;
+	}
+
+	function set_server_info($server) {
+		$this->server = $server;
+	}
+
+	function get_server_info() {
+		return $this->server;
 	}
 }
 
