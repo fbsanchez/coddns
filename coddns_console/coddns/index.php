@@ -112,6 +112,12 @@ $text["de"]["nav_logout"]      ="Logout";
 <html lang="<?php echo $lan;?>">
 <head>
 <title>Custom Open Dynamic DNS</title>
+
+<meta property="og:title" content="CODDNS" />
+<meta property="og:description" content="Your IP: <?php echo _ip();?><br/> Dynamic DNS for everyone!" />
+<meta property="og:image" content="/rs/img/ms-icon-310x310.png" />
+<meta name="description" content="Your IP is <?php echo _ip();?>" />
+
 <meta charset="UTF-8"/>
 <meta name="google-site-verification" content="hBYboxJ02VZp_fkufkIvtjbyv-T98x6lnk4NBAROCpY" />
 <link rel="apple-touch-icon" sizes="57x57" href="<?php echo $config["html_root"]; ?>/rs/img/apple-icon-57x57.png">
