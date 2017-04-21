@@ -34,6 +34,27 @@ $user->check_auth_level($auth_level_required);
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_status.css";?>" />
 </head>
 <body>
+
+<?php
+
+$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
+
+
+$zones = $dbclient->get_sql_array("select z.*, s.tag as server_tag from zones z, servers s where z.server_id=s.id;");
+
+?>
+<table class="">
+<tr>
+	<th>Zona</th><th>Servidor</th><th>Acceso p&uacute;blico</th>
+</tr>
+<?php
+foreach ($zones["data"] as $zone) {
+	echo "<tr><td>" . $zone["domain"] . "</td><td>" . $zone["server_tag"] . "</td><td>" . $zone["is_public"] . "</td></tr>";
+}
+echo "</table>";
+
+?>
+
 En construcci&oacute;n
 </body>
 

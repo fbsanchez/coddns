@@ -18,7 +18,7 @@ require_once (__DIR__ . "/db.php");
 require_once (__DIR__ . "/../include/functions_ip.php");
 require_once (__DIR__ . "/../include/functions_util.php");
 
-// Defines CODUser class
+// Defines CODServer class
 
 class CODServer {
 	var $ip;

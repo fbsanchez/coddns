@@ -109,10 +109,40 @@ function check_valid_conf($conf){
 	// -> allow the user restore a backuped conf file
 }
 
+/**
+ * get_server_connection Returns a new sshclient object
+ * @return sshclient session or false if process fails
+ */
+function get_server_connection_from_hash($server) {
+	global $config;
+
+	if (!isset($server)) {
+		return false;
+	}
+
+	require_once(__DIR__ . "/../lib/sshclient.php");
+
+	$sh = new StdClass();
+	$sh->user = $server->srv_user;
+	$sh->pass = coddns_decrypt($server->srv_password);
+	$sh->ip   = long2ip($server->ip);
+	$sh->port = $server->port;
+
+	// initialize ssh client
+	$sshclient = new SSHClient($sh);
+
+	if ($sshclient === null){
+		return false;
+	}
+
+	$sshclient->set_server_info($server);
+
+	return $sshclient;
+}
 
 
 /**
- * get_server_connection Returns an active sshclient over the designed server
+ * get_server_connection Returns an active sshclient against the target server
  * Be sure to scape the servername before call this function!
  * @return sshclient session or false if process fails
  */
