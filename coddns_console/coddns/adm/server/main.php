@@ -48,7 +48,7 @@ $user->check_auth_level($auth_level_required);
 	$dbclient = new DBClient($db_config);
 	$dbclient->connect() or die($dbclient->lq_error());
 
-	$q = "select s.*,(select count(*) from zones z where z.server_id=s.id ) as nzones from servers s;";
+	$q = "select s.*,(select count(*) from zones z, zone_server sz where sz.id_server=s.id and sz.id_zone=z.id ) as nzones from servers s;";
 	$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 	while ($r = $dbclient->fetch_object($results)) {

@@ -78,12 +78,22 @@ CREATE TABLE IF NOT EXISTS record_types (
 ) engine=InnoDB;
 
 
+-- table clusters
+CREATE TABLE IF NOT EXISTS clusters (
+    id serial,
+    tag varchar(200) NOT NULL default "default" UNIQUE,
+    gid bigint unsigned NOT NULL default 1,
+    status int DEFAULT 0,
+    CONSTRAINT fkey_cluster_group  FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
+) engine=InnoDB;
+
+
 -- Table Servers
 CREATE TABLE IF NOT EXISTS servers (
     id serial,
     tag varchar(200) NOT NULL default "default" UNIQUE,
     ip bigint,
-	port int default 22,
+    port int default 22,
     gid bigint unsigned NOT NULL default 1,
     srv_user varchar(200) default "root",
     srv_password text,
@@ -93,8 +103,12 @@ CREATE TABLE IF NOT EXISTS servers (
     pub_key_file varchar(255) default NULL,
     priv_key_file varchar(255) default NULL,
     last_update timestamp,
+    cluster_id bigint unsigned DEFAULT NULL,
+    server_load int unsigned DEFAULT 0,
+    mastery int unsigned DEFAULT 100,
     CONSTRAINT pkey_servers PRIMARY KEY (id),
-    CONSTRAINT fkey_servers_group FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE
+    CONSTRAINT fkey_servers_group  FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE,
+    CONSTRAINT fkey_servers_cluster FOREIGN KEY (cluster_id) REFERENCES clusters(id) ON DELETE SET NULL ON UPDATE CASCADE
 ) engine=InnoDB;
 
 
@@ -104,13 +118,26 @@ CREATE TABLE IF NOT EXISTS zones (
     domain varchar(255) NOT NULL,
     config text,
     gid bigint unsigned NOT NULL default 1,
-    is_public int(1) unsigned NOT NULL default 0,
     status int,
-    server_id bigint unsigned NOT NULL, 
-    master_id bigint unsigned NOT NULL,
-    CONSTRAINT pkey_zones PRIMARY KEY (id,domain,server_id),
-    CONSTRAINT fkey_zones_server FOREIGN KEY (server_id) REFERENCES servers(id) ON DELETE CASCADE,
-    CONSTRAINT fkey_zones_master FOREIGN KEY (master_id) REFERENCES servers(id) ON DELETE CASCADE
+    is_public int(1) unsigned NOT NULL default 0,
+    CONSTRAINT pkey_zones PRIMARY KEY (id),
+    CONSTRAINT fkey_zones_gid FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT const_zone_unique_domain UNIQUE (domain)
+) engine=InnoDB;
+
+
+-- new table zone_server
+CREATE TABLE IF NOT EXISTS zone_server (
+    id serial,
+    id_zone bigint unsigned NOT NULL,
+    id_server bigint unsigned NOT NULL,
+    id_master bigint unsigned DEFAULT NULL,
+    rep_status int unsigned DEFAULT NULL,
+    ref_type int unsigned DEFAULT NULL,
+    CONSTRAINT pkey_zs PRIMARY KEY (id),
+    CONSTRAINT fkey_zs_zone FOREIGN KEY (id_zone) REFERENCES zones(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fkey_zs_server FOREIGN KEY (id_server) REFERENCES servers(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fkey_zs_master FOREIGN KEY (id_master) REFERENCES servers(id)
 ) engine=InnoDB;
 
 

@@ -40,7 +40,7 @@ $user->check_auth_level($auth_level_required);
 $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
 
 
-$zones = $dbclient->get_sql_array("select z.*, s.tag as server_tag from zones z, servers s where z.server_id=s.id;");
+$zones = $dbclient->get_sql_array("select z.*, s.tag as server_tag from zones z, servers s, zone_server zs where zs.id_server=s.id and zs.id_zone=z.id;");
 
 ?>
 <table class="">
