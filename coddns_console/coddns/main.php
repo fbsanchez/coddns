@@ -68,7 +68,7 @@ $dbclient = new DBClient($db_config);
  */
 // build data for zones per server chart:
 $dbclient->connect() or die($dbclient->lq_error());
-$q = "select s.id,s.tag,(select count(*) from zones z where z.server_id=s.id ) as nzones from servers s;";
+$q = "select s.id,s.tag,(select count(*) from zones z, zone_server sz where z.id=sz.id_zone and s.id=sz.id_server ) as nzones from servers s;";
 $results = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
 $chart_pie["title"]  = "Zonas por servidor";
