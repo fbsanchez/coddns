@@ -135,7 +135,7 @@ session_write_close();
 $clickstatus        = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_status.php','id=" . $servername . "',true);\"";
 $clickcontrol       = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_control.php','id=" . $servername . "',true);\"";
 $clickconfiguration = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_settings_manager.php','id=" . $servername . "',true);\"";
-$clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_versioning.php','id=" . $servername . "',true);\"";
+$clickoptions    = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_options.php','id=" . $servername . "',true);\"";
 
 ?>
 	<a id="status" style="display:none;"></a>
@@ -171,18 +171,18 @@ $clickversioning    = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	
 	<nav>
 		<a id="link_status" href="#status" class="" <?php echo $clickstatus; ?> >
-			Estado
+			Status
 		</a>
 
 		<a id="link_control" href="#control" class="" <?php echo $clickcontrol; ?> >
-			Control
+			Manage
 		</a>
 
 		<a id="link_settings_manager" href="#settings_manager" class="" <?php echo $clickconfiguration; ?> >
-			Configuraci&oacute;n
+			Bind configuration
 		</a>
-		<a id="link_versioning" href="#versioning" class="" <?php echo $clickversioning; ?> >
-			Backup
+		<a id="link_versioning" href="#options" class="" <?php echo $clickoptions; ?> >
+			Options
 		</a>
 	</nav>
 

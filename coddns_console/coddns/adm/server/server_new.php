@@ -37,22 +37,22 @@ $user->check_auth_level($auth_level_required);
 
 <body>
 	<section>
-		<h2>Registrar servidor</h2>
+		<h2>Add a new server</h2>
 
 		<form name="new_server" action="#" onsubmit="fsgo('new_server', 'ajax_message','<?php echo $config["html_root"]; ?>/adm/server/server_rq_new.php', true); return false;">
 			<ul>
-			<li><label>Direcci&oacute;n IP/ FQDN</label><input type="text" placeholder="IP" name="ip" /></li>
-			<li><label>Puerto</label><input type="number" placeholder="22" name="port" /></li>
-			<li><label>Usuario</label><input type="text" name="user" placeholder="user name" /></li>
-			<li><label>Contrase&ntilde;a</label><input type="password" name="pass" /></li>
-			<li><label>Fichero de configuraci&oacute;n principal</label><input type="text" name="conf" value="/etc/named.conf" placeholder="/etc/named.conf" /></li>
-			<li><input type="submit" name="crear" value="Conectar" />
+			<li><label>IP Address/ FQDN</label><input type="text" placeholder="IP" name="ip" /></li>
+			<li><label>Port</label><input type="number" placeholder="22" name="port" /></li>
+			<li><label>User</label><input type="text" name="user" placeholder="user name" /></li>
+			<li><label>Password</label><input type="password" name="pass" /></li>
+			<li><label>Main configuration file path</label><input type="text" name="conf" value="/etc/named.conf" placeholder="/etc/named.conf" /></li>
+			<li><input type="submit" name="create" value="Connect" />
 		</ul>
 
 
 		</form>
 
-		<a class="return" href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers" ?>">Volver</a>	
+		<a class="return" href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers" ?>">Go back</a>	
 	</section>
 
 	

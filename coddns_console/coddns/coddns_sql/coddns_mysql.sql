@@ -291,6 +291,8 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','server','rq_settings_manager',100,'Receptor de formulario de configuraci&oacute;n del servidor'),
     ('adm','server','new',100,'Formulario nuevo servidor'),
     ('adm','server','rq_new',100,'Receptor de formulario nuevo servidor'),
+    ('adm','server','options',100,'Ver opciones del servidor'),
+    ('adm','server','rq_options',100,'Actualizar opciones del servidor'),
     ('adm','zones','',100,'Administraci&oacute;n de zonas'),
     ('cms','','',0,'Documentaci&oacute;n');
 
@@ -306,6 +308,7 @@ INSERT INTO record_types(tag,description,auth_level)
 -- SETTINGS - DEFAULT
 INSERT INTO settings(field,value)
  values
+    ("dbschema", "1"),
     ("slack_url", ""),
     ("installdir", "/opt/coddns/"),
     ("spooldir", "/opt/coddns/spool/"),

@@ -78,6 +78,8 @@ else { // SERVER CREDENTIALS ARE SET
 		return 0;
 	}
 
+
+	// retrieve stored configuration from remote server
 	$localfile = transfer_conf_files($config, $sshclient, $server->id, $server->main_config_file);
 
 	$id=0;

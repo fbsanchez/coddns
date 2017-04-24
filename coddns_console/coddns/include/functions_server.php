@@ -69,7 +69,18 @@ function get_server_data($db_config, $servername) {
 
 function transfer_conf_files($config, $sshclient, $serverid, $remote_configfile){
 	// get folder name
-	$localfile   = $config["spooldir"] . $serverid . $remote_configfile;
+	
+	$servers_spool = $config["spooldir"] . "/servers/";
+	$zones_spool   = $config["spooldir"] . "/zones/";
+	// Create if not exists
+	if (! is_dir($servers_spool)) {
+		mkdir($servers_spool, 0770);
+	}
+	if (! is_dir($zones_spool)) {
+		mkdir($zones_spool, 0770);
+	}
+
+	$localfile   = $servers_spool . $serverid . $remote_configfile;
 	$localfolder = dirname($localfile);
 
 	// create local folder
