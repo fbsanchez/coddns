@@ -87,7 +87,7 @@ function list_hosts($data){
 select g.tag, h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='elb0rx@gmail.com'
  */
 	// Get total host counter - unlimited
-	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl, (select mail from users where id=h.oid) as mail from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.edit=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='" . $_SESSION["email"] . "' ";
+	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl, (select mail from users where id=h.oid) as mail from hosts h, record_types r, users u, groups g, tusers_groups ug, zones z where z.id=h.zone_id and h.rtype=r.id and h.gid=ug.gid and ((z.is_public=0 and (ug.view=1 or ug.edit=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id) or ((z.is_public=1 and (ug.view=1 or ug.edit=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.id=h.oid))) and u.mail='" . $_SESSION["email"] . "' ";
 	if (isset($text_filter) && ($text_filter != "")){
 		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
 		if (isset($ip_filter) && $ip_filter > 0){
@@ -101,7 +101,7 @@ select g.tag, h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
 	$nrows = $dbclient->lq_nresults();
 
-	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl, (select mail from users where id=h.oid) as mail from hosts h, record_types r, users u, groups g, tusers_groups ug where h.rtype=r.id and h.gid=ug.gid and (ug.view=1 or ug.edit=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.mail='" . $_SESSION["email"] . "' ";
+	$q = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl, (select mail from users where id=h.oid) as mail from hosts h, record_types r, users u, groups g, tusers_groups ug, zones z where z.id=h.zone_id and h.rtype=r.id and h.gid=ug.gid and ((z.is_public=0 and (ug.view=1 or ug.edit=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id) or ((z.is_public=1 and (ug.view=1 or ug.edit=1 or ug.admin=1) and u.id=ug.oid and ug.gid=g.id and u.id=h.oid))) and u.mail='" . $_SESSION["email"] . "' ";
 	if (isset($text_filter) && ($text_filter != "")){
 		$q .= " and (lower(h.tag) like lower('%" . $text_filter . "%') ";
 		if (isset($ip_filter) && $ip_filter > 0){
