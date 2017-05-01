@@ -183,6 +183,22 @@ function write_file($content, $filepath,$mode = "w"){
 
 /**
  * Securize an argument passed to the script
+ * Modes accepted:
+ * email
+ * number
+ * url_get
+ * letters
+ * letters++
+ * ip_addr
+ * insecure_text
+ * text
+ * rich_text
+ * url
+ * date
+ * datetime
+ * ip
+ * json
+ * base64
  */
 function secure_get($argument, $mode = "url_get"){
     require_once(__DIR__ . "/../lib/db.php");

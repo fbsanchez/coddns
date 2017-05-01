@@ -28,23 +28,61 @@ class CODServer {
 	var $user;
 	var $status;
 	var $config;
+	var $gid;
 	var $main_config_file;
 
 	/**
 	 * Initializes a CODServer object based on
-	 * 	the name of the server
+	 * 	the name of the server or hash if is an empty object
 	 * @param server_name $server_name 
 	 * @return Int returns the ID of the server (if any)
 	 */
-	public function CODServer($server_name = false) {
+	public function CODServer($raw = false) {
 
-		if ($server_name === false) {
+		if ((!isset($raw)) || ($raw === false)) {
+			return $this;
+		}
+		elseif (is_array($raw)) {
+			# create new volatile server from hash
+			if (isset ($raw["ip"])) {
+				if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $raw["ip"])) {
+					$this->ip = long2ip($raw["ip"]);
+				}
+				else {
+					$this->ip = $raw["ip"];
+				}
+			}
+			$this->id     = null;
+			if (isset($raw["gid"])) {
+				$this->gid    = $raw["gid"];
+			}
+			if (isset($raw["tag"])) {
+				$this->name   = $raw["tag"];
+			}
+			if (isset($raw["port"])) {
+				$this->port   = $raw["port"];
+			}
+			if (isset($raw["pass"])) {
+				$this->pass   = coddns_decrypt($raw["pass"]);
+			}
+			if (isset($raw["user"])) {
+				$this->user   = $raw["user"];
+			}
+			if (isset($raw["status"])) {
+				$this->status = $raw["status"];
+			}
+			if (isset($raw["main_config_file"])) {
+				$this->main_config_file = $raw["main_config_file"];
+			}
+			if (isset($raw["fingerprint"])) {
+				$this->fingerprint      = $raw["fingerprint"];
+			}
+
 			return $this;
 		}
 		
-		return $this->load_server($server_name);
+		return $this->load_server($raw);
 	}
-
 
 	public function load_server($server_name) {
 		$this->load_cfg();
@@ -55,21 +93,37 @@ class CODServer {
 		$query = 'select * from servers where tag="' . $server_name . '"';
 		$r = $dbclient->get_sql_object($query);
 		if (isset($r)){
-			$this->ip     = long2ip($r->ip);
+			if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $r->ip)) {
+				$this->ip = long2ip($r->ip);
+			}
+			else {
+				$this->ip = $r->ip;
+			}
 			$this->id     = $r->id;
 			$this->gid    = $r->gid;
 			$this->name   = $r->tag;
 			$this->port   = $r->port;
 			$this->pass   = coddns_decrypt($r->srv_password);
 			$this->user   = $r->srv_user;
-			$this->pass   = coddns_decrypt($r->srv_password);
 			$this->status = $r->status;
 			$this->main_config_file = $r->main_config_file;
 			$this->fingerprint      = $r->fingerprint;
+
 		}
 		return $this;
 	}
 
+	public function save() {
+		// create or update data server information
+		if (!isset($this->id)) {
+			// create new server
+			
+		}
+		else {
+			// update existent server
+			
+		}
+	}
 
 	private function load_cfg(){
 		if (empty($this->config)){

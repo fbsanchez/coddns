@@ -145,13 +145,30 @@ class DBClient {
   /**
    * Clears input for a sql argument
    * XXX: Needs a harder check...
+   *
+   * Accepts:
+   * email
+   * number
+   * url_get
+   * letters
+   * letters++
+   * ip_addr
+   * insecure_text
+   * text
+   * rich_text
+   * url
+   * date
+   * datetime
+   * ip
+   * json
+   * base64
    */
   function prepare($clsqlarg, $type){
     
     switch($type){
       case "email":     return preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg);
       case "number":    return floatval($clsqlarg);
-      case "url_get":   return preg_replace("/[^a-zA-Z0-9_.]/", "", $clsqlarg);
+      case "url_get":   return preg_replace("/[^a-zA-Z0-9_\.-]/", "", $clsqlarg);
       case "letters":   return preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg);
       case "letters++": return preg_replace("/[^a-zA-Z0-9\.]/", "", $clsqlarg);
       case "ip_addr":   return preg_replace("/[^0-9\.]/", "", $clsqlarg);

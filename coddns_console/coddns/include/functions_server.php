@@ -59,7 +59,12 @@ function get_server_data($db_config, $servername) {
 	// transform fields
 	$server->user = $server_info["user"];
 	$server->pass = $server_info["pass"];
-	$server->ip   = long2ip($server->ip);
+	$check        = long2ip($server->ip);
+
+	if ($check !== false) {
+		// not a FQDN, IP loaded
+		$server->ip = $check;
+	}
 
 
 	return $server;

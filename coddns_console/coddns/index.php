@@ -291,7 +291,7 @@ document.onkeyup = function(evt) {
 };
 </script>
 <div id ="ajax_message_wrapper">
-    <a href="#" id ="ajax_message_close" onclick="close_ajax_message();return false;">Cerrar</a>
+    <b><a href="#" id ="ajax_message_close" onclick="close_ajax_message();return false;">[x]</a></b>
     <div id="ajax_message" onchange="raise_ajax_message();return false;"></div>
     </div>
 </div>

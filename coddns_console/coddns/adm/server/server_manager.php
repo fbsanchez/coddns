@@ -135,7 +135,7 @@ session_write_close();
 $clickstatus        = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_status.php','id=" . $servername . "',true);\"";
 $clickcontrol       = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_control.php','id=" . $servername . "',true);\"";
 $clickconfiguration = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_settings_manager.php','id=" . $servername . "',true);\"";
-$clickoptions    = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_options.php','id=" . $servername . "',true);\"";
+$clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $config["html_root"] . "/adm/server/server_options.php','id=" . $servername . "',true);\"";
 
 ?>
 	<a id="status" style="display:none;"></a>

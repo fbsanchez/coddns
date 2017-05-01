@@ -33,20 +33,20 @@ session_write_close();
 
 if ( (! isset ($_POST["edith"])) || (! isset($_POST["nip"])) ){
     echo "Please fill all the data and comply the minimum/maximum field lengths.";
-    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
+    echo '<a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>';
     exit (1);
 }
 
 if (   ( strlen($_POST["edith"]) < MIN_HOST_LENGTH)
     || ( strlen($_POST["nip"]) < 7) ){
     echo "Please fill all the data and comply the minimum/maximum field lengths.";
-    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
+    echo '<a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>';
     exit (1);
 }
 $check = ip2long($_POST["nip"]);
 if ( $check < 0 || $check == FALSE ){
     echo "Target IP value is not valid";
-    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
+    echo '<a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>';
     exit (2);
 }
 
@@ -68,7 +68,7 @@ $ip   = $dbclient->prepare($_POST["nip"], "ip");
 
 if ($ip === FALSE){
     echo $text["en"]["ip_f"];
-    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
+    echo '<a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>';
     exit (1);
 }
 
@@ -95,7 +95,7 @@ if( $dbclient->lq_nresults() == 1 ){
 }
 else{
     echo "Error while updating target, please contact the administrator";
-    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
+    echo '<a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>';
     exit (3);
 }
 
@@ -105,4 +105,4 @@ $dbclient->disconnect();
 
 //header ("Location: ". $config["html_root"] . "/?z=hosts&lang=". $lan);
 ?>
-<a class="ajax_button" href="#" onclick="location.reload();">OK</a>
+<a class="ajax_button" href="<?php echo $config["html_root"] . "/?m=usr&z=hosts" ?>">OK</a>

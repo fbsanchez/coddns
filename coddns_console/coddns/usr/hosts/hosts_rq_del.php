@@ -32,12 +32,18 @@ $lan = $_SESSION["lan"];
 session_write_close();
 
 if (! isset ($_POST["delh"]) ){
-	die ("Missing parameter, please warn administrator...");
+	echo "Missing parameter, please warn administrator...";
+	echo '<a class="ajax_button" href="close_ajax_message();">OK</a>';
+	exit(1);
 }
 
 $dbclient = new DBClient($db_config);
 
-$dbclient->connect() or die("ERR");
+if (!$dbclient->connect()) {
+	echo "Failed to connect to database, please warn administrator.";
+	echo '<a class="ajax_button" href="close_ajax_message();">OK</a>';
+	exit(1);
+}
 
 $phost = $dbclient->prepare($_POST["delh"], "url_get");
 $fields = explode(".", $phost,2);
@@ -89,7 +95,7 @@ else {
 }
 ?>
 
-<a class="ajax_button" href="#" onclick="location.reload();">OK</a>
+<a class="ajax_button" href="<?php echo $config["html_root"] . "/?m=usr&z=hosts" ?>">OK</a>
 
 </body>
 </html>

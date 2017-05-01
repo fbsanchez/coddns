@@ -44,9 +44,9 @@ $user->check_auth_level($auth_level_required);
 				<li><label>Server name (tag)</label><input type="text" placeholder="tag" name="tag" /></li>
 				<li><label>IP Address/ FQDN</label><input type="text" placeholder="IP" name="ip" /></li>
 				<li><label>Port</label><input type="number" placeholder="22" name="port" /></li>
-				<li><label>User</label><input type="text" name="user" placeholder="user name" /></li>
+				<li><label>User</label><input type="text" placeholder="user name" name="user" /></li>
 				<li><label>Password</label><input type="password" name="pass" /></li>
-				<li><label>Main configuration file path</label><input type="text" name="conf" value="/etc/named.conf" placeholder="/etc/named.conf" /></li>
+				<li><label>Main configuration file path</label><input type="text" value="/etc/named.conf" placeholder="/etc/named.conf" name="conf" /></li>
 				<li>
 					<label>Group:</label> <select class="input_select" name="group">
 						<?php

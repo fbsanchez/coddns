@@ -58,6 +58,8 @@ upgrade_coddns:BEGIN
             ADD COLUMN mastery int unsigned DEFAULT 100,
             ADD CONSTRAINT fkey_servers_cluster FOREIGN KEY (cluster_id) REFERENCES clusters(id) ON DELETE SET NULL ON UPDATE CASCADE;
 
+        -- Alter column ip to allow FQDN
+        alter table servers modify column ip varchar(255);
 
         -- new table zone_server
         CREATE TABLE IF NOT EXISTS zone_server (

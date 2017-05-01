@@ -88,7 +88,7 @@ function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl,  $gid = 0,
         $dbclient->exeq($q) or die($dbclient->lq_error());
         echo $text[$lan]["ok"];
     ?>
-        <a class="ajax_button" href="#" onclick="location.reload();">OK</a>
+        <a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>
         <?php
     }
     $dbclient->disconnect();
@@ -228,9 +228,6 @@ switch ($rtype_p){
             $q = "insert into hosts (oid, tag, ip, ttl, rtype, zone_id, gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'), $zone_id, $gid);";
             $dbclient->exeq($q) or die($dbclient->lq_error());
             echo $text[$lan]["ok"];
-        ?>
-            <a class="ajax_button" href="#" onclick="location.reload();">OK</a>
-            <?php
         }
         $dbclient->disconnect();
         session_write_close();
@@ -238,31 +235,28 @@ switch ($rtype_p){
         break;
     }
     case "CNAME":{
-        echo "Inserting $host as CNAME of $rtag";
+        echo "Adding $host as CNAME of $rtag<br>";
         add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $gid);
 
         break;
     }
     case "NS":{
-        echo "inserting NS";
+        echo "Adding NS target<br>";
         add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $gid);
         break;
     }
     case "MX":{
-        echo "inserting MX";
+        echo "Adding MX target<br>";
         add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl, $gid);
         break;
     }
     default:{
-        echo "Unknown RR";
+        echo "Unknown RR<br>";
         break;
     }
 }
-
-
-
-
 ?>
+<a class="ajax_button" href="<?php echo $config["html_root"] . "/?m=usr&z=hosts" ?>">OK</a>
 </body>
 
 </html>
