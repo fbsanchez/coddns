@@ -26,7 +26,7 @@ $user->check_auth_level($auth_level_required);
 
 function custom_die($msg) {
 	echo $msg;
-	echo "<script>raise_ajax_message();</script>";
+	echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
 	die();
 }
 
@@ -104,4 +104,4 @@ if ($flag == 1) {
 
 ?>
 
-<script>raise_ajax_message();</script>
+<a class="ajax_button" href="#" onclick="location.reload();">OK</a>;

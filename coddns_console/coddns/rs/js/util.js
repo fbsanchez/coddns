@@ -251,7 +251,22 @@ function addnametodelete(id){
 }
 
 function raise_ajax_message(){
-  ajax_message_wrapper.style['max-height'] = '200px';
+  ajax_container.style['opacity'] = "1";
+  ajax_container.style['visibility'] = 'visible';
+
+  ajax_message_wrapper.style['opacity'] = "1";
+  ajax_message_wrapper.style['visibility'] = 'visible';
+}
+
+function close_ajax_message(){
+  
+  ajax_container.style['opacity'] = "0";
+  ajax_container.style['visibility'] = 'hidden';
+  ajax_container.style['transition'] = '0s visibility 0.3s, opacity 0.3s 0s';
+
+  ajax_message_wrapper.style['opacity'] = "0";
+  ajax_message_wrapper.style['visibility'] = 'hidden';
+  ajax_message_wrapper.style['transition'] = '0s visibility 0.3s, opacity 0.3s 0s';
 }
 
 /**

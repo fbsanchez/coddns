@@ -88,7 +88,7 @@ function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl,  $gid = 0,
         $dbclient->exeq($q) or die($dbclient->lq_error());
         echo $text[$lan]["ok"];
     ?>
-        <script type="text/javascript">location.reload();</script>
+        <a class="ajax_button" href="#" onclick="location.reload();">OK</a>
         <?php
     }
     $dbclient->disconnect();
@@ -150,9 +150,12 @@ $dbclient->connect() or die ($dbclient->lq_error());
 
 $zone     = $dbclient->prepare($_POST["zone"], "url_get");
 
+// XXX check if user has grants to write in the public section, maybe remove left side of the query is better than always allow users to write in public areas...
 // check granted zones for the current user
-$q = "select t.id, t.domain from ((select z.id, z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1))"
-        . "UNION (select z.id, z.domain from zones z, tusers_groups ug, users u where z.is_public=1)) t where t.domain='" . $zone . "';";
+$q = "select t.id, t.domain from ((select z.id, z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1)) "
+        . "UNION (select z.id, z.domain from zones z, tusers_groups ug, users u where z.is_public=1 and (ug.edit=1 or ug.admin=1))) t where t.domain='" . $zone . "';";
+
+//echo $q;
 
 $results  = $dbclient->exeq($q);
 $r = $dbclient->fetch_object($results);
@@ -226,7 +229,7 @@ switch ($rtype_p){
             $dbclient->exeq($q) or die($dbclient->lq_error());
             echo $text[$lan]["ok"];
         ?>
-            <script type="text/javascript">location.reload();</script>
+            <a class="ajax_button" href="#" onclick="location.reload();">OK</a>
             <?php
         }
         $dbclient->disconnect();

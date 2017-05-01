@@ -32,18 +32,21 @@ $lan = $_SESSION["lan"];
 session_write_close();
 
 if ( (! isset ($_POST["edith"])) || (! isset($_POST["nip"])) ){
-    echo "Rellene todos los datos";
+    echo "Please fill all the data and comply the minimum/maximum field lengths.";
+    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
     exit (1);
 }
 
 if (   ( strlen($_POST["edith"]) < MIN_HOST_LENGTH)
     || ( strlen($_POST["nip"]) < 7) ){
-    echo "Rellene todos los datos y respete las longitudes m&aacute;ximas.";
+    echo "Please fill all the data and comply the minimum/maximum field lengths.";
+    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
     exit (1);
 }
 $check = ip2long($_POST["nip"]);
 if ( $check < 0 || $check == FALSE ){
-    echo "La direcci&oacute;n IP no es v&aacute;lida";
+    echo "Target IP value is not valid";
+    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
     exit (2);
 }
 
@@ -65,6 +68,7 @@ $ip   = $dbclient->prepare($_POST["nip"], "ip");
 
 if ($ip === FALSE){
     echo $text["en"]["ip_f"];
+    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
     exit (1);
 }
 
@@ -87,11 +91,11 @@ if( $dbclient->lq_nresults() == 1 ){
     $out = shell_exec("dnsmgr d " . $host . " A");
     // -- add
     $out = shell_exec("dnsmgr a " . $host . " A " . $ip);
-    echo "OK";
+    echo "Target succesfully updated";
 }
 else{
-    echo "ERR";
-    redirect ("Location: " . $config["html_root"] . "/?z=err40X.html");
+    echo "Error while updating target, please contact the administrator";
+    echo '<a class="ajax_button" href="#" onclick="location.reload();">OK</a>';
     exit (3);
 }
 
@@ -101,4 +105,4 @@ $dbclient->disconnect();
 
 //header ("Location: ". $config["html_root"] . "/?z=hosts&lang=". $lan);
 ?>
-<script type="text/javascript">location.reload();</script>
+<a class="ajax_button" href="#" onclick="location.reload();">OK</a>

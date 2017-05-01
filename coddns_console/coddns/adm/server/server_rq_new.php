@@ -25,9 +25,17 @@ $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
 
+echo "<pre>";
+var_dump($_POST);
+echo "</pre>";
+
+
+
 
 ?>
 
 
 
 Servidor no conectado, gestor en construcci&oacute;n
+<p>Press "ESC" to stay in this page and add another server</p>
+<a class="ajax_button" href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers" ?>">OK</a>

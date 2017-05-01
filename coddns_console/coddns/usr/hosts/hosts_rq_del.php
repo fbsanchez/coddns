@@ -77,7 +77,6 @@ if ($dbclient->lq_nresults() > 0) {
 	<div>
 		<p>Se ha eliminado <?php echo $host;?> correctamente<p>
 	</div>
-	<script type="text/javascript">location.reload();</script>
 	<?php
 	}
 }
@@ -89,5 +88,8 @@ else {
 	<?php
 }
 ?>
+
+<a class="ajax_button" href="#" onclick="location.reload();">OK</a>
+
 </body>
 </html>

@@ -281,16 +281,19 @@ else {
 }
 ?>
 
-<div id ="ajax_message_wrapper">
+<div id="ajax_container">
 <script type="text/javascript">
-    function ajax_message_tweak(val){
-        ajax_message_wrapper.style["max-height"] = val+"px";
-        return false;
+document.onkeyup = function(evt) {
+    evt = evt || window.event;
+    if (evt.keyCode == 27) {
+        close_ajax_message();
     }
+};
 </script>
-    <a href="#" id ="ajax_message_close" onclick="ajax_message_tweak(0);return false;">Cerrar</a>
-    <div id="ajax_message" onchange="ajax_message_tweak(200);return false;"></div>
-
+<div id ="ajax_message_wrapper">
+    <a href="#" id ="ajax_message_close" onclick="close_ajax_message();return false;">Cerrar</a>
+    <div id="ajax_message" onchange="raise_ajax_message();return false;"></div>
+    </div>
 </div>
 </div>
 </body>
