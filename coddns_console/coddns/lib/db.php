@@ -16,6 +16,7 @@
  */
 require_once (__DIR__ . "/myclient.php");
 require_once (__DIR__ . "/pgclient.php");
+require_once (__DIR__ . "/../include/functions_util.php");
 
 class DBClient {
   var $username;
@@ -99,7 +100,7 @@ class DBClient {
       $out    = array();
 
       // Retrieve all items
-      while($tmp = $this->fetch_objects($r)) {
+      while($tmp = $this->fetch_object($r)) {
         array_push($out, $tmp);
       }
       
