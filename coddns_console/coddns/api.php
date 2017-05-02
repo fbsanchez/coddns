@@ -36,7 +36,65 @@ catch (Exception $e) {
 	echo json_encode(array ("Error" => $e->getMessage()));
 	exit (0);
 }
-echo "Access granted [" . $auth_token . "][" . $auth_level_required . "]";
+
+
+// Access to main api section granted.
+
+
+
+/**
+ * Returns a data dump in JSON format with the data of the desired
+ * stats_item
+ */
+function get_data($auth_token, $arguments) {
+	global $config;
+	try {
+		$auth_level_required = get_required_auth_level('','api','');
+		$user = new CODUser($auth_token);
+		$user->check_auth_level($auth_level_required);
+	} 
+	catch (Exception $e) {
+		echo json_encode(array ("Error" => $e->getMessage()));
+		exit (0);
+	}
+
+	/*
+	$arguments["oid"];
+	$arguments["tstart"];
+	$arguments["tend"];
+	*/
+
+	$q = " select * from stats_data where id_item=468 order by utimestamp desc limit 50";
+
+	$result_set = $config["dbh"]->get_sql_all_objects($q);
+
+	echo json_encode($result_set["data"]);
+
+
+
+}
+
+
+
+//
+// AJAX API Control
+//
+
+$action    = secure_get("action");
+$arguments = secure_get("args","json");
+
+switch ($action) {
+	case 'get_data':
+		get_data($auth_token, $arguments);
+		break;
+	default:
+		print json_encode(array ("Error" => "Unknown action"));
+		break;
+}
+
+
+
+
 
 ?>
 

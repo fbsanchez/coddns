@@ -15,12 +15,13 @@
  * <summary> </summary>
  */
 
-require (__DIR__ . "/../include/config.php");
 
 /**
  * Read extra configuration from DB
  */
 function load_extra_config($cnf){
+    global $config;
+    
     include_once (__DIR__ . "/../lib/db.php");
     $cnf["dbh"] = new DBClient($cnf["db_config"]);
 
