@@ -46,12 +46,12 @@ if(isset($_GET["lang"])){
         case "de": 
             $_SESSION["lan"] = $_GET["lang"];
             break;
-        default: $_SESSION["lan"]   = "es";
+        default: $_SESSION["lan"]   = "en";
     }
 }
 else{
     if(! isset($_SESSION["lan"]) )
-        $_SESSION["lan"] = "es";
+        $_SESSION["lan"] = "en";
 }
 
 /* shorter var name... */

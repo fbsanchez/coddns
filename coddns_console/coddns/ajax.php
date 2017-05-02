@@ -33,7 +33,7 @@ $user->check_auth_level($auth_level_required);
 function list_hosts($data){
 	global $config;
 
-	$auth_level_required = get_required_auth_level('','ajax','');
+	$auth_level_required = get_required_auth_level('usr','hosts','');
 	$user = new CODUser();
 	$user->check_auth_level($auth_level_required);
 
@@ -362,7 +362,9 @@ function list_acls($data) {
 function adm_server_control_checkconf($data) {
 	global $config;
 
-	global $config;
+	$auth_level_required = get_required_auth_level('adm','server','control');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
 
 	require_once(__DIR__ . "/include/functions_server.php");
 	
@@ -383,11 +385,11 @@ function adm_server_control_checkconf($data) {
 
 		if (strlen($result[0] == "") && $result[1] == "") {
 			echo "<img src='" . $config["html_root"] . "/rs/img/status_ok.png' style='width: 10px; margin: 0 15px;'/>";
-			echo "El fichero " . $server->main_config_file . " es v&aacute;lido";
+			echo "Bind configuration file " . $server->main_config_file . " is valid.";
 		}
 		else {
 			echo "<img src='" . $config["html_root"] . "/rs/img/status_err.png' style='width: 10px; margin: 0 15px;'/>";
-			echo "El fichero " . $server->main_config_file . " <b>no</b> es v&aacute;lido. Informe:<br>";
+			echo "Bind configuration file " . $server->main_config_file . " <b>is not</b> es valid. Exceptions summary:<br>";
 			echo "<pre>";
 			echo $result[0];
 			echo $result[1];

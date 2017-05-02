@@ -72,7 +72,7 @@ $dbclient = $config["dbh"];
 
 <body>
 	<section>
-		<h3>Estado del servicio</h3>
+		<h3>Service status</h3>
 
 		<?php
 			// check named service:
@@ -94,28 +94,28 @@ $dbclient = $config["dbh"];
 
 				$status_output = $sshclient->launch ("rndc status 2>&1");
 
-				echo "<p>Volcado de estado del servicio:</p><pre>";
+				echo "<p>Service status dump:</p><pre>";
 				echo $status_output[0];
 				echo "</pre>";
 
-				echo "<p>El estado de Bind es correcto con " . $result[0] . " instancia(s) activa(s)</p>";
-				echo sprintf("<p>Uso de CPU: %.02f %%</p>", $cpu_usage[0]);
-				echo sprintf("<p>Uso de RAM: %.02f %%</p>", $ram_usage[0]);
+				echo "<p>Bind is running with " . $result[0] . " active instance(s)</p>";
+				echo sprintf("<p>Bind CPU usage: %.02f %%</p>", $cpu_usage[0]);
+				echo sprintf("<p>Bind RAM usage: %.02f %%</p>", $ram_usage[0]);
 				echo "<br><br>";
 
-				echo "<p>Hay un total de " . $log_size[0] . "B en logs</p>";
-				echo "<p>Informaci&oacute;n del log:</p><pre>";
+				echo "<p>There're " . $log_size[0] . "B spent in logs</p>";
+				echo "<p>Log content:</p><pre>";
 				echo $log_output[0];
 				echo "</pre>";
 				echo "<br>";
-				echo "<p>Informaci&oacute;n del log de seguridad:</p>";
+				echo "<p>Security log:</p>";
 				echo "<pre>";
 				echo $security_log_output[0];
 				echo "</pre>";
 
 			}
 			else {
-				echo "<p>Bind est&aacute; detenido. No hay ninguna instancia activa</p>";
+				echo "<p>Bind is stopped, without any instance of 'named' running.</p>";
 			}
 		?>
 	</section>

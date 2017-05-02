@@ -71,22 +71,22 @@ else {
 
 <body>
 	<section>
-		<h3>Control del servicio</h3>
-		<p class="action" onclick="check_configuration();">Comprobar configuraci&oacute;n</p>
+		<h3>Service control</h3>
+		<p class="action" onclick="check_configuration();">Check configuration</p>
 		<div class="resultset" style="max-height: 0px;" id="check_conf">
 			<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style='width: 10px; margin: 0 15px;'/>
 		</div>
 		
 
 		<br />
-		<p class="action" onclick="restart_service();">Reiniciar el servicio</p>
+		<p class="action" onclick="restart_service();">Restart service</p>
 
 		<div class="resultset" style="max-height: 0px;" id="service_report">
 			<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style='width: 10px; margin: 0 15px;'/>
 		</div>
 
 		<br />
-		<p class="action" onclick="clear_cache();">Vaciar la cache del servidor</p>
+		<p class="action" onclick="clear_cache();">Flush DNS cache</p>
 
 		<div class="resultset" style="max-height: 0px;" id="clear_cache_report">
 			<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style='width: 10px; margin: 0 15px;'/>

@@ -81,7 +81,7 @@ $clickzones = "onclick=\"mark(this);updateContent('adm_content','" . $config["ht
 		<div id="adm_content" class="content">
 		</div>
 
-		<a class="return" href="<?php echo $config["html_root"] . "/?m=adm" ?>">Volver</a>
+		<a class="return" href="<?php echo $config["html_root"] . "/?m=adm" ?>">Go back</a>
 	</section>
 </body>
 

@@ -161,7 +161,7 @@ $clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		}
 	</script>
 	<section>
-	<h2>Administrar <i><?php echo $servername;?></i></h2>
+	<h2>Manage <i><?php echo $servername;?></i></h2>
 	<p class="subtitle"><?php echo $server->ip;?></p>
 	<?php
 	if($server->has_credentials()) {

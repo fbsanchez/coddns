@@ -151,50 +151,51 @@ else {
 if (check_show($user,null,"main",null)) {
     $enable_main = 1;
 ?>
-        <li><a id="menu_item_main"      class="<?php echo $menu_item_main;?>"     href="<?php echo $config["html_root"];?>/">Inicio</a></li>
+        <li><a id="menu_item_main"      class="<?php echo $menu_item_main;?>"     href="<?php echo $config["html_root"];?>/">Home</a></li>
 <?php } ?>
 
 <?php
 if (check_show($user,null,"downloads",null)) {
     $enable_downloads = 1;?>
-        <li><a id="menu_item_downloads" class="<?php echo $menu_item_downloads;?>" href="<?php echo $config["html_root"];?>/?z=downloads">Descargas</a></li>
+        <li><a id="menu_item_downloads" class="<?php echo $menu_item_downloads;?>" href="<?php echo $config["html_root"];?>/?z=downloads">Downloads</a></li>
 <?php } ?>
 
 <?php
+/*
 if ((file_exists('cms/')) && (check_show($user,"cms",null,null))) {
     $enable_cms = 1;
 ?>
         <li><a id="menu_item_pub" class="<?php echo $menu_item_pub;?>" href="<?php echo $config["html_root"];?>/?m=cms">Documentaci&oacute;n</a></li>
-<?php } ?>
+<?php } */?>
 <?php
 if (check_show($user,"usr","hosts",null)) {
     $enable_hosts = 1;
 ?>
-        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=hosts">&Aacute;rea personal</a></li>
+        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=hosts">Host management</a></li>
 <?php } ?>
 <?php
 if (check_show($user,"usr","users","mod")) {
     $enable_users_mod = 1;
 ?>
-        <li><a id="menu_item_user"      class="<?php echo $menu_item_user;?>"       href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=mod">Mi cuenta</a></li>
+        <li><a id="menu_item_user"      class="<?php echo $menu_item_user;?>"       href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=mod">My account</a></li>
 <?php } ?>
 <?php
 if (check_show($user,"adm",null,null)) {
     $enable_adm = 1;
 ?>
-        <li><a id="menu_item_adm"      class="<?php echo $menu_item_adm;?>"       href="<?php echo $config["html_root"];?>/?m=adm">Administraci&oacute;n</a></li>
+        <li><a id="menu_item_adm"      class="<?php echo $menu_item_adm;?>"       href="<?php echo $config["html_root"];?>/?m=adm">Administration</a></li>
 <?php } ?>
 <?php
 if (($user->get_is_logged()) && (check_show($user,null,"logout",null))) {
     $enable_logout = 1;
 ?>
-        <li><a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=logout">Desconectarme</a></li>
+        <li><a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=logout">Log off</a></li>
 <?php } ?>
 <?php
 if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"))) {
     $enable_users_login = 1;
 ?>
-        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=login">&Aacute;rea personal</a></li>
+        <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=login">Host management</a></li>
 <?php
 }
 ?>
@@ -239,25 +240,27 @@ if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"
     <?php
 if (check_show($user,null,"logout",null)) {
 ?>
-        <li><a id="menu_item_contact"    class="<?php echo $menu_item_contact;?>"     href="<?php echo $config["html_root"];?>/?z=contact">Contactar</a></li>
+        <li><a id="menu_item_contact"    class="<?php echo $menu_item_contact;?>"     href="<?php echo $config["html_root"];?>/?z=contact">Contact</a></li>
 <?php } ?>
 
         <li>
-            <a id="menu_item_policy"  href="#" class="pl" onclick="red(this,'main','cpolicy.html');"><?php echo $text[$lan]["cookie_policy"];?></a>
+            <a id="menu_item_policy"  href="#" class="pl" onclick="red(this,'main','cpolicy.html');">Cookie policy</a>
         </li>
         <li>
-            <a id="menu_item_cookies" href="#" class="pl" onclick="red(this,'main','terms.html');"><?php echo $text[$lan]["terms"];?></a>
+            <a id="menu_item_cookies" href="#" class="pl" onclick="red(this,'main','terms.html');">Terms of service</a>
         </li>
     </ul>
-    <div style="display:inline-block;">
-    <a target="_new" title="Fco de Borja S&aacute;nchez" href='https://plus.google.com/104344930735301242497/about'>
-        <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/gp.png') #DA4835 no-repeat center;background-size:30px;"></div>
-    </a>
-    </div>
-    <div style="display: inline-block;margin-left: 15px;">
-    <a target="_new2" title="CODDNS en GitHub" href='https://github.com/fbsanchez/coddns'>
-        <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/github.png') #FFF no-repeat center;background-size:41px;"></div>
-    </a>
+    <div class="pics">
+        <div style="display:inline-block;">
+        <a target="_new" title="Fco de Borja S&aacute;nchez" href='https://plus.google.com/104344930735301242497/about'>
+            <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/gp.png') #DA4835 no-repeat center;background-size:30px;"></div>
+        </a>
+        </div>
+        <div style="display: inline-block;margin-left: 15px;">
+        <a target="_new2" title="CODDNS en GitHub" href='https://github.com/fbsanchez/coddns'>
+            <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/github.png') #FFF no-repeat center;background-size:41px;"></div>
+        </a>
+        </div>
     </div>
 </div>
 </header>

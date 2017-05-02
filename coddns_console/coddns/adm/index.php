@@ -42,21 +42,21 @@ $user->check_auth_level($auth_level_required);
 
 <body>
 	<section>
-		<h2>Panel de administraci&oacute;n</h2>
+		<h2>Administration panel</h2>
 	</section>
 	<nav>
 		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=site#users"?>">
 			<div class="menu_button" style="background: #FCFEFF;">
 			
 				<img src="<?php echo $config["html_root"] . "/rs/img/site_options2_gray.png"; ?>" alt="Site Settings"/>
-				<p>Configurar el sitio</p>
+				<p>Site settings</p>
 			</div>
 		</a>
 
 		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers"?>">
 			<div class="menu_button" style="background: #FEFCFF;">
 				<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Administation Center"/>
-				<p>Centro de administraci&oacute;n</p>
+				<p>Administration center</p>
 			</div>
 		</a>
 	</nav>

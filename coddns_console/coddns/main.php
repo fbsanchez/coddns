@@ -124,7 +124,7 @@ for ($x = 0; $x <= ($now-$utime_init); $x+=$time_interval) {
 
 while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
     // get all items dependent on those block elements
-    $q = "select id, tag from stats_item where id_block=" . $row_blocks["id_block"] . " and tag like '%auth%';";
+    $q = "select id, tag from stats_item where id_block=" . $row_blocks["id_block"] . " and tag like '%in auth%';";
     $r_items = $dbclient->exeq($q) or die($dbclient->lq_error());
 
     while ($row_items = $dbclient->fetch_array ($r_items)) {

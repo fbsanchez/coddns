@@ -52,6 +52,7 @@ header div#menu{
     margin-top: 15px;
     background: #1F282B;
     position: absolute;
+    text-align: right;
 }
 
 header * ul {
@@ -94,6 +95,12 @@ header div#contact{
     z-index: 0;
     position: absolute;
     bottom: 0;
+    text-align: right;
+}
+
+header div#contact div.pics{
+	text-align: left;
+    margin-top: 25px;
 }
 
 header div#contact div.pic{
@@ -101,6 +108,7 @@ header div#contact div.pic{
 	height: 45px;
 	margin: 10px -20px 10px 30px;
 	border-radius: 50%;
+	text-align: center;
 }
 header div#contact div.pic:hover{
 	box-shadow: 0 0 5px #ddd;
