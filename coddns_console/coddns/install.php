@@ -693,7 +693,7 @@ elseif ($phase == 3){
 	$server_id = $dbclient->last_id();
 
 	// Add current domain, to the zones table
-	$q = "insert into zones (domain,server_id,master_id,gid) values ('" . $domain . "', $server_id, $server_id,default)";
+	$q = "insert into zones (domain,server_id,master_id,gid) values (\"" . $domain . "\", $server_id, $server_id,default)";
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	
 	$dbclient->disconnect();
