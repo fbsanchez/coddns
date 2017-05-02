@@ -100,8 +100,10 @@ foreach ($file_manager as $item) {
 
 if ($flag == 1) {
 	echo "Please restart the service<br>";
+	echo '<a class="ajax_button" href="#control" onclick="location.reload();">OK</a>';
+}
+else {
+	echo '<a class="ajax_button" href="#control" onclick="close_ajax_message();">OK</a>';
 }
 
 ?>
-
-<a class="ajax_button" href="#control" onclick="location.reload();">OK</a>
