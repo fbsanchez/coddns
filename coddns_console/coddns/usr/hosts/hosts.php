@@ -46,9 +46,8 @@ $text["es"]["dberror"]       = "Wooops, contacte con el administrador";
 $text["es"]["reg_type"]      = "Tipo de registro";
 
 /* ENGLISH */
-$text["en"]["hosts_title"] = "<h2>Gestor de etiquetas</h2>";
+$text["en"]["hosts_title"] = "<h2>Tag manager</h2>";
 $text["en"]["hosts_welcome"] = "
-    <h2>Tag manager</h2>
     <p>Here you can add new tags for your devices (<i>hosts</i>) or manage them.</p>
     <p>Remember this: The responsability over the content you have opened to Internet is only yours.</p>
 ";
@@ -82,7 +81,7 @@ $text["de"]["reg_type"]      = "DNS record type";
 
 <html>
 <head>
-    <title>resultados</title>
+    <title>Hosts</title>
     <style type="text/css"/>
 		<?php
 		include_once (__DIR__ . "/../../rs/css/pc/hosts.php");
