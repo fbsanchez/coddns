@@ -688,12 +688,18 @@ elseif ($phase == 3){
 	}
 
 	// Add current server to database
-	$q = "insert into servers (ip) values (\"" . $myip . "\")";
+	$q = "insert into servers (ip) values ('" . $myip . "')";
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	$server_id = $dbclient->last_id();
 
 	// Add current domain, to the zones table
-	$q = "insert into zones (domain,server_id,master_id,gid) values (\"" . $domain . "\", $server_id, $server_id,default)";
+	$q = "insert into zones (domain,gid) values ('" . $domain . "', default)";
+	$dbclient->exeq($q) or die ($dbclient->lq_error());
+	$zone_id = $dbclient->last_id();
+
+
+	// Add zone <-> server relation
+	$q = "insert into zone_server (id_zone,id_server,is_master) values ($zone_id,$server_id,1)";
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	
 	$dbclient->disconnect();
