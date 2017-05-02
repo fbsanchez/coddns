@@ -688,7 +688,7 @@ elseif ($phase == 3){
 	}
 
 	// Add current server to database
-	$q = "insert into servers (ip) values (" . $myip . ")";
+	$q = "insert into servers (ip) values (\"" . $myip . "\")";
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	$server_id = $dbclient->last_id();
 
