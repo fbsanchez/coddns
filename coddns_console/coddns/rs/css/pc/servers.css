@@ -24,3 +24,6 @@ div.server a{
 div.server a:hover{
 	border:none;
 }
+div.server_summary {
+	font-size: 0.8em;
+}

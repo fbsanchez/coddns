@@ -59,8 +59,8 @@ $user->check_auth_level($auth_level_required);
 <body>
 
 <?php
-$clickservers = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/server/main.php');\"";
-$clickzones = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/zones/zones.php');\"";
+$clickservers = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/server/main.php',null,true);\"";
+$clickzones = "onclick=\"mark(this);updateContent('adm_content','" . $config["html_root"] . "/adm/zones/zones.php',null,true);\"";
 
 ?>
 	<a id="servers" style="display:none;"></a>

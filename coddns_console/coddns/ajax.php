@@ -473,6 +473,86 @@ function adm_server_control_clear_cache($data) {
 
 }
 
+
+function list_servers() {
+	global $config;
+
+	$auth_level_required = get_required_auth_level('adm','servers','');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+
+	require_once(__DIR__ . "/include/functions_server.php");
+	
+	$dbclient = $config["dbh"];
+
+	$q = "select s.*,(select count(*) from zones z, zone_server sz where sz.id_server=s.id and sz.id_zone=z.id ) as nzones from servers s;";
+	$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+	while ($r = $dbclient->fetch_object($results)) {
+
+			$named_ok = -1;
+
+			$server_conn = get_server_connection_from_hash($r);
+			
+			if ($server_conn !== false) {
+				// check named service:
+			
+				$out = $server_conn->launch ("rndc status | grep running | wc -l");
+				
+				if (($out[0] >= 1) && ($out[1] == "")) {
+					$named_ok  = 1;
+				}
+				elseif (($out[0] == 0) && ($out[1] == "")) {
+					$named_ok = 0;
+				}
+				else {
+					$err_msg = $out[1];
+				}
+			}
+
+		?>
+
+		<div class="server">
+
+			<a id="show_<?php echo $r->tag;?>" href="<?php echo $config["html_root"];?>?m=adm&z=server&op=manager&id=<?php echo $r->tag; ?>#status">
+			<?php 
+			echo "<img src=\"";
+
+			if ($named_ok == 1) {
+				echo $config["html_root"] . "/rs/img/server_up_50.png";
+				$status = "Online";
+			}
+			elseif($named_ok == 0) {
+				echo $config["html_root"] . "/rs/img/server_down_50.png";
+				$status = "Offline";
+			}
+			else {
+				echo $config["html_root"] . "/rs/img/server_warning_50.png";
+				$status = "Unknown";
+			}
+			echo "\" alt='server status'/>";
+			?>
+			</a>
+			<div class="server_summary">
+			<p>Server: <?php echo $r->tag;?></p>
+			<p>IP/FQDN: <?php echo $r->ip;?></p>
+			<p>Status: <?php echo $status;?></p>
+			<p>Zones loaded: <?php echo $r->nzones;?></p>
+			</div>
+		</div>
+	<?php
+	}
+}
+
+
+
+
+
+
+
+
+
+
 //
 // AJAX API Control
 //
@@ -493,6 +573,9 @@ switch ($action) {
 	case 'list_acls':
 		list_acls($arguments);
 		break;
+	case 'list_servers':
+		list_servers($arguments);
+		break;
 	case 'exist_tag_groups':
 		exist_tag_groups($arguments);
 		break;
@@ -509,6 +592,7 @@ switch ($action) {
 		print "Unknown action";
 		break;
 }
+
 
 
 ?>

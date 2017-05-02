@@ -33,78 +33,29 @@ $user->check_auth_level($auth_level_required);
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="rs/css/pc/servers.css">
+<script type="text/javascript">
+	function load_servers() {
+		updateContent("servers_list", "ajax.php", "action=list_servers&args=");
+	}
+	document.onload = load_servers();
+</script>
 </head>
 
 <body>
 	<section>
-	<p>Haz click en el servidor que desees administrar:</p>
+	<p>Please select the server you want to manage:</p>
 	<br />
 	<a href="<?php echo $config["html_root"];?>?m=adm&z=server&op=new">
 		<img class="add" src="<?php echo $config["html_root"] . "/rs/img/add.png";?>" alt="add" />
-		<span>Agregar un nuevo servidor</span>
+		<span>Add new server connection</span>
 	</a>
 	<br />
-<?php 
-	$dbclient = $config["dbh"];
 
-	$q = "select s.*,(select count(*) from zones z, zone_server sz where sz.id_server=s.id and sz.id_zone=z.id ) as nzones from servers s;";
-	$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
-	while ($r = $dbclient->fetch_object($results)) {
-
-			$named_ok = -1;
-
-			$server_conn = get_server_connection_from_hash($r);
-			
-			if ($server_conn !== false) {
-				// check named service:
-			
-				$out = $server_conn->launch ("rndc status | grep running | wc -l");
-				
-				if (($out[0] >= 1) && ($out[1] == "")) {
-					$named_ok  = 1;
-				}
-				elseif (($out[0] == 0) && ($out[1] == "")) {
-					$named_ok = 0;
-				}
-				else {
-					$err_msg = $out[1];
-				}
-			}
-
-		?>
-
-		<div class="server">
-
-			<a id="show_<?php echo $r->tag;?>" href="<?php echo $config["html_root"];?>?m=adm&z=server&op=manager&id=<?php echo $r->tag; ?>#status">
-			<?php 
-			echo "<img src=\"";
-
-			if ($named_ok == 1) {
-				echo $config["html_root"] . "/rs/img/server_up_50.png";
-				$status = "Operativo";
-			}
-			elseif($named_ok == 0) {
-				echo $config["html_root"] . "/rs/img/server_down_50.png";
-				$status = "Desconectado";
-			}
-			else {
-				echo $config["html_root"] . "/rs/img/server_warning_50.png";
-				$status = "Desconocido";
-			}
-			echo "\" alt='server status'/>";
-			?>
-			</a>
-			<div>
-			<p>Servidor: <?php echo $r->tag;?></p>
-			<p>Estado: <?php echo $status;?></p>
-			<p>Zonas cargadas: <?php echo $r->nzones;?></p>
-			</div>
-		</div>
+	<section id="servers_list">
 	<?php
-	}
-
+		echo "<img src='" . $config["html_root"] . "/rs/img/loading.gif' style='width: 10px; margin: 0 15px;'/> Loading...";
 	?>
+	</section>
 	</section>
 
 	<section style="margin-top: 40px;clear:both;" id="server_info">
