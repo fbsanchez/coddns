@@ -673,6 +673,9 @@ elseif ($phase == 3){
 	$dbclient  = new DBClient($config);
 	$dbclient->connect() or die ($dbclient->lq_error());
 
+	// store dbh for future connections
+	$config["dbh"] = $dbclient;
+
 	$html_root = $_POST["html_root"];
 	$user      = $_POST["user"];
 	$rq_pass   = base64_decode($_POST["pass"]);
