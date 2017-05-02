@@ -699,7 +699,7 @@ elseif ($phase == 3){
 
 
 	// Add zone <-> server relation
-	$q = "insert into zone_server (id_zone,id_server,is_master) values ($zone_id,$server_id,1)";
+	$q = "insert into zone_server (id_zone,id_server,id_master) values ($zone_id,$server_id,$server_id)";
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	
 	$dbclient->disconnect();
