@@ -168,9 +168,16 @@ function get_server_connection_from_hash($server) {
 function get_server_connection($servername) {
 	global $config;
 
-	$auth_level_required = get_required_auth_level('adm','server','control');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
+	try {
+		$auth_level_required = get_required_auth_level('adm','server','control');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
+
 
     $dbclient = $dbclient = $config["dbh"];
 	

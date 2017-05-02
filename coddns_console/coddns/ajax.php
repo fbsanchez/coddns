@@ -21,9 +21,15 @@ require_once (__DIR__ . "/lib/htmlwriter.php");
 require_once (__DIR__ . "/include/functions_util.php");
 require_once (__DIR__ . "/lib/coduser.php");
 
-$auth_level_required = get_required_auth_level('','ajax','');
-$user = new CODUser();
-$user->check_auth_level($auth_level_required);
+try {
+	$auth_level_required = get_required_auth_level('','ajax','');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+}
+catch (Exception $e) {
+	echo $e->getMessage();
+	exit (1);
+}
 
 /**
  * $sortby
@@ -33,9 +39,15 @@ $user->check_auth_level($auth_level_required);
 function list_hosts($data){
 	global $config;
 
-	$auth_level_required = get_required_auth_level('usr','hosts','');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
+	try {
+		$auth_level_required = get_required_auth_level('usr','hosts','');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
 
     $dbclient = $config["dbh"];
 
@@ -169,9 +181,16 @@ function list_hosts($data){
 function list_users($data) {
 	global $config;
 	// Minimal access to manage site ACL
-	$auth_level_required = get_required_auth_level('adm','site','');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
+	try {
+		$auth_level_required = get_required_auth_level('adm','site','');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
+
 
     $dbclient = $config["dbh"];
 
@@ -224,9 +243,16 @@ function list_users($data) {
 function list_groups($data) {
 	global $config;
 	// Minimal access to manage site ACL
-	$auth_level_required = get_required_auth_level('adm','site','');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
+	try {
+		$auth_level_required = get_required_auth_level('adm','site','');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
+
 
     $dbclient = $config["dbh"];
 
@@ -316,9 +342,16 @@ function list_groups($data) {
 function list_acls($data) {
 	global $config;
 	// Minimal access to manage site ACL
-	$auth_level_required = get_required_auth_level('adm','site','');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
+	try {
+		$auth_level_required = get_required_auth_level('adm','site','');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
+
 
     $dbclient = $config["dbh"];
 
@@ -362,9 +395,16 @@ function list_acls($data) {
 function adm_server_control_checkconf($data) {
 	global $config;
 
-	$auth_level_required = get_required_auth_level('adm','server','control');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
+	try {
+		$auth_level_required = get_required_auth_level('adm','server','control');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
+
 
 	require_once(__DIR__ . "/include/functions_server.php");
 	
@@ -479,9 +519,16 @@ function adm_server_control_clear_cache($data) {
 function list_servers() {
 	global $config;
 
-	$auth_level_required = get_required_auth_level('adm','servers','');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
+	try {
+		$auth_level_required = get_required_auth_level('adm','servers','');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
+
 
 	require_once(__DIR__ . "/include/functions_server.php");
 	

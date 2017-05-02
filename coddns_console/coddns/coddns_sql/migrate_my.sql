@@ -87,6 +87,9 @@ upgrade_coddns:BEGIN
             DROP COLUMN master_id,
             ADD CONSTRAINT fkey_zones_gid FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
             ADD CONSTRAINT const_zone_unique_domain UNIQUE (domain);
+
+        ALTER TABLE users
+            ADD COLUMN auth_token varchar(255) DEFAULT NULL;
     END IF;
 
 

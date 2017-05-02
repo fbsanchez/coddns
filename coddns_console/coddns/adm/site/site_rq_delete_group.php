@@ -21,9 +21,15 @@ require_once (__DIR__ . "/../../include/functions_ip.php");
 require_once (__DIR__ . "/../../include/functions_util.php");
 require_once (__DIR__ . "/../../lib/coduser.php");
 
-$auth_level_required = get_required_auth_level('adm','site','rq_delete_group');
-$user = new CODUser();
-$user->check_auth_level($auth_level_required);
+try {
+	$auth_level_required = get_required_auth_level('adm','site','rq_delete_group');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+}
+catch (Exception $e) {
+	echo $e->getMessage();
+	exit (1);
+}
 
 $error = 0;
 if (   (! isset ($_POST["tag"]) )   ) {

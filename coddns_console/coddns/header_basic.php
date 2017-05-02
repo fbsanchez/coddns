@@ -32,9 +32,14 @@ function check_show($user, $mode, $zone, $operation){
     return false;
 }
 
-
-$user = new CODUser();
-$user->check_auth_level(get_required_auth_level(null,"header",null));
+try {
+    $user = new CODUser();
+    $user->check_auth_level(get_required_auth_level(null,"header",null));
+}
+catch (Exception $e) {
+    echo $e->getMessage();
+    exit (1);
+}
 
 session_start();
 if (!isset($_SESSION["lan"])){

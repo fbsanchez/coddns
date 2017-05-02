@@ -248,8 +248,14 @@ else {
 
 $auth_level_required = get_required_auth_level($mode,$zone,$operation);
 
-$user = new CODUser();
-$user->check_auth_level($auth_level_required);
+try {
+    $user = new CODUser();
+    $user->check_auth_level($auth_level_required);
+}
+catch (Exception $e) {
+    echo $e->getMessage();
+    exit (1);
+}
 
 
 include_once("header.php");

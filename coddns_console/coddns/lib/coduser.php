@@ -29,8 +29,9 @@ class CODUser {
 	var $auth_level = null;
 	var $logged     = false;
 	var $config;
+	var $auth_token;
 
-	function CODUser(){
+	function CODUser($auth_token = null){
 		$this->load_cfg();
 		$checks = 0;
 		if (session_status() == PHP_SESSION_NONE){
@@ -61,6 +62,13 @@ class CODUser {
 		}
 		if (session_status() != PHP_SESSION_NONE){
 			session_write_close();
+		}
+		
+		if(isset($auth_token)){
+			$this->auth_token = $auth_token;
+		}
+		else {
+			$this->auth_token = false;
 		}
 		
 		// reload auth level
@@ -197,16 +205,23 @@ class CODUser {
 	/**
 	 * Load and refresh the access level of the user
 	 */
-	function load_auth_level(){
+	function load_auth_level($auth_token = null){
 		global $config;
-		if (!$this->logged) {
+		if ((!$this->logged) && (!$this->auth_token)) {
 			return 0;
 		}
 
 		// Retrieve rol and auth level from DB
 		$dbclient = $config["dbh"];
 
-		$q = "SELECT u.rol,r.auth_level FROM users u, roles r WHERE u.id=" . $this->oid . " and r.id=u.rol;";
+
+		if((isset($this->auth_token)) && ($this->auth_token != "")) {
+			$q = "SELECT u.rol,r.auth_level FROM users u, roles r WHERE u.auth_token=" . $this->auth_token. " and r.id=u.rol;";
+		}
+		else {
+			$q = "SELECT u.rol,r.auth_level FROM users u, roles r WHERE u.id=" . $this->oid . " and r.id=u.rol;";	
+		}
+		
 		$result = $dbclient->get_sql_object($q) or die("Cannot connect");
 		if (!isset($result->auth_level)){
 			return 0;
@@ -233,16 +248,16 @@ class CODUser {
 		global $config;
 		$auth_level = $this->load_auth_level();
 
+		$error = "Unauthorized to access this content";
+
 		if (! isset($level)){
-			die ("Unauthorized to access this content");
+			throw new Exception ($error);
 			//redirect ($this->config["html_root"] . "/?z=err404");
-			exit(0);
 		}
 
 		if ((! isset ($auth_level)) || (! isset($level)) || ( $auth_level < $level) ) {
-			die ("Unauthorized to access this content");
+			throw new Exception ($error);
 			/// redirect ($this->config["html_root"] . "/");
-			exit(0);
 		}
 	}
 

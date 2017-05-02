@@ -20,9 +20,16 @@ require_once(__DIR__ . "/../../lib/db.php");
 require_once(__DIR__ . "/../../include/functions_util.php");
 require_once(__DIR__ . "/../../lib/coduser.php");
 
-$auth_level_required = get_required_auth_level('adm','service','manager');
-$user = new CODUser();
-$user->check_auth_level($auth_level_required);
+try {
+	$auth_level_required = get_required_auth_level('adm','service','manager');
+	$user = new CODUser();
+	$user->check_auth_level($auth_level_required);
+}
+catch (Exception $e) {
+	echo $e->getMessage();
+	exit (1);
+}
+
 ?>
 
 
