@@ -141,7 +141,7 @@ $clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	<a id="status" style="display:none;"></a>
 	<a id="control" style="display:none;"></a>
 	<a id="settings_manager" style="display:none;"></a>
-	<a id="versioning" style="display:none;"></a>
+	<a id="options" style="display:none;"></a>
 	<script type="text/javascript">
 		var anchors = location.href.split('#');
 		window.onload = function (){
@@ -155,8 +155,8 @@ $clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $co
 			document.getElementById("link_status").className="";
 			document.getElementById("link_control").className="";
 			document.getElementById("link_settings_manager").className="";
-			document.getElementById("link_versioning").className="";
-			document.getElementById("srv_content").innerHTML = '<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Cargando...';
+			document.getElementById("link_options").className="";
+			document.getElementById("srv_content").innerHTML = '<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Loading...';
 			id.className = "selected";
 		}
 	</script>
@@ -181,7 +181,7 @@ $clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		<a id="link_settings_manager" href="#settings_manager" class="" <?php echo $clickconfiguration; ?> >
 			Bind configuration
 		</a>
-		<a id="link_versioning" href="#options" class="" <?php echo $clickoptions; ?> >
+		<a id="link_options" href="#options" class="" <?php echo $clickoptions; ?> >
 			Options
 		</a>
 	</nav>
@@ -204,23 +204,23 @@ $clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $co
 
 	?>
 	<form method="POST" action="#settings_manager" onsubmit="this.elements['p'].value = btoa(this.elements['p'].value);">
-	<p>&gt;&gt; No se han encontrado credenciales para acceder a <?php echo $server->ip;?></p>
-	<p>Indique una a continuaci&oacute;n:</p>
+	<p>&gt;&gt; There are no credentials set to access <?php echo $server->ip;?></p>
+	<p>Please specify:</p>
 	<ul>
 		<li>
-			<label>Usuario:</label>
+			<label>User</label>
 			<input type="text" name="u" placeholder="user"/>
 		</li>
 		<li>
-			<label>Contrase&ntilde;a:</label>
+			<label>Password</label>
 			<input type="password" name="p" placeholder="password"/>
 		</li>
 		<li>
-			<label>Puerto:</label>
+			<label>Port</label>
 			<input type="number" name="port" value="<?php echo $server->port;?>" />
 		</li>
 		<li>
-			<label>Recordar contrase&ntilde;a</label><input type="checkbox" name="r"/>
+			<label>Store credentials</label><input type="checkbox" name="r"/>
 		</li>
 		<li>
 			<input type="submit" value="Conectar"/>
@@ -231,7 +231,7 @@ $clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		// End -- No available credentials
 	}
 	?>
-	<a class="return" href="<?php echo $config["html_root"];?>/?m=adm&z=center#servers">Volver</a>
+	<a class="return" href="<?php echo $config["html_root"];?>/?m=adm&z=center#servers">Go back</a>
 	</section>
 </body>
 

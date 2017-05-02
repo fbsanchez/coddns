@@ -40,15 +40,15 @@ $server = new CODServer($data);
 
 if ($server === false) {
 	echo "<p>Failed to create server. Please check information given.</p>";
-	echo '<a class="ajax_button" href="' . $config["html_root"] . '/?m=adm&z=server&op=new">OK</a>';
+	echo '<a class="ajax_button" href="#" onclick="close_ajax_message();" >OK</a>';
 	exit (1);
 }
 
 
 // save server configuration to database
 if (!$server->save_all()) {
-	echo "<p>Failed to create server. Cannot save to database.</p>";
-	echo '<a class="ajax_button" href="' . $config["html_root"] . '/?m=adm&z=server&op=new">OK</a>';
+	echo "<p>Failed to create server. Target couldn't be saved on database.</p><p>Please check information given</p>";
+	echo '<a class="ajax_button" href="#" onclick="close_ajax_message();" >OK</a>';
 	exit (1);	
 }
 

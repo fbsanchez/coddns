@@ -16,7 +16,7 @@
  */
 
 require_once(__DIR__ . "/../../include/config.php");
-require_once(__DIR__ . "/../../lib/db.php");
+require_once(__DIR__ . "/../../lib/codserver.php");
 require_once(__DIR__ . "/../../include/functions_util.php");
 require_once(__DIR__ . "/../../lib/coduser.php");
 
@@ -31,6 +31,8 @@ else {
 	die ("Unauthorized to access this content.");
 }
 
+$server = new CODServer($servername);
+
 ?>
 
 
@@ -41,6 +43,17 @@ else {
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/server_control.css";?>" />
 </head>
 <body>
-	In progress...
+<form>
+	<ul>
+	<li><label>Server name (tag)</label><input type="text" name="tag" value="<?php echo $server->name;?>"></li>
+	<li><label>IP Address/ FQDN</label><input type="text" name="tag" value="<?php echo $server->ip;?>"></li>
+	<li><label>Port</label><input type="number" name="tag" value="<?php echo $server->port;?>"></li>
+	<li><label>User</label><input type="text" name="tag" value="<?php echo $server->user;?>"></li>
+	<li><label>Password</label><input type="password" name="tag" value=""></li>
+	<li><label>Main configuration file path</label><input type="text" name="tag" value="<?php echo $server->main_config_file;?>"></li>
+	<li><label>Group</label><input type="text" name="tag" value="<?php echo get_group_name($server->gid);?>"></li>
+	</ul>
+</form>
+
 </body>
 </html>

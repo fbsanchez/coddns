@@ -91,6 +91,25 @@ class DBClient {
     return false;
   }
 
+
+  function get_sql_all_objects($query) {
+    if ((isset($this->client)) && ($this->is_connected())) {
+      $r      = $this->exeq($query) or error_log($this->lq_error());
+      $nitems = $this->lq_nresults();
+      $out    = array();
+
+      // Retrieve all items
+      while($tmp = $this->fetch_objects($r)) {
+        array_push($out, $tmp);
+      }
+      
+      
+      return array( "nitems" => $nitems, "data" => $out);
+    }
+    return false;
+  }
+
+
   function get_sql_array($query){
     if ((isset($this->client)) && ($this->is_connected())) {
       $r      = $this->exeq($query) or error_log($this->lq_error());

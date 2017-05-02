@@ -50,7 +50,7 @@ $user->check_auth_level($auth_level_required);
 	function mark(id){
 		document.getElementById("link_servers").className="";
 		document.getElementById("link_zones").className="";
-		document.getElementById("adm_content").innerHTML = '<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Cargando...';
+		document.getElementById("adm_content").innerHTML = '<img src="<?php echo $config['html_root']; ?>/rs/img/loading.gif" style="width: 10px; margin: 0 15px;"/>Loading...';
 		id.className = "selected";
 	}
 </script>
@@ -66,15 +66,15 @@ $clickzones = "onclick=\"mark(this);updateContent('adm_content','" . $config["ht
 	<a id="servers" style="display:none;"></a>
 	<a id="zones" style="display:none;"></a>
 	<section>
-		<h2>Centro de control</h2>
+		<h2>Control center</h2>
 
 		<nav>
 			<a id="link_servers" href="#servers" class="" <?php echo $clickservers; ?> >
-				Servidores
+				Servers
 			</a>
 
 			<a id="link_zones" href="#zones" class="" <?php echo $clickzones; ?> >
-				Zonas
+				Zones
 			</a>
 		</nav>
 

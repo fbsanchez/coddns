@@ -135,6 +135,17 @@ class CODServer {
 
 		$dbclient = $config["dbh"];
 
+		// Validate fields
+		if ( (!isset ($this->name))
+		  || ($this->name == "")
+		  || (!isset ($this->ip))
+		  || ($this->ip == "")
+		  || (!isset ($this->main_config_file))
+		  || ($this->main_config_file == "") )  {
+			return false;
+		}
+
+
 		// CDE ~ this data could have been provided by users
 		$tag  = $dbclient->prepare($this->name, "text");
 		$user = $dbclient->prepare($this->user, "text");

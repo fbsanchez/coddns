@@ -258,4 +258,18 @@ function _long2ip($target) {
 }
 
 
+/**
+ * returns the tag associated to a group
+ */
+function get_group_name($gid) {
+    global $config;
+    if (!isset($gid)) {
+        return false;
+    }
+
+    $r = $config["dbh"]->get_sql_object("select tag from groups where id=" . $config["dbh"]->prepare($gid,"number"));
+
+    return $r->tag;
+}
+
 ?>
