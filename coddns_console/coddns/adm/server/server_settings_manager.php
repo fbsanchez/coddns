@@ -90,7 +90,7 @@ else { // SERVER CREDENTIALS ARE SET
 	// load files
 ?>
 
-	<form id="update_config" method="POST" onsubmit="fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server/server_rq_settings_manager.php', true);return false;">
+	<form id="update_config" method="POST" onsubmit="fsgo('update_config','ajax_message','<?php echo $config["html_root"];?>/adm/server/server_rq_settings_manager.php', true,raise_ajax_message);return false;">
 	<input name="id" value="<?php echo $servername;?>" type="hidden" />
 	<input id="gconf_input_<?php echo $id;?>" name="gconf_input_<?php echo $id;?>" type="hidden" />
 

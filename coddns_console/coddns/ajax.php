@@ -37,8 +37,7 @@ function list_hosts($data){
 	$user = new CODUser();
 	$user->check_auth_level($auth_level_required);
 
-    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-    $dbclient->connect() or die ($dbclient->lq_error());
+    $dbclient = $config["dbh"];
 
     $limit = ITEMS_PER_PAGE;
     $text_filter = null;
@@ -161,8 +160,6 @@ function list_hosts($data){
 	    	nrows.innerHTML=" (" + item_count + ")";
 	    </script>
 	<?php
-
-	$dbclient->disconnect();
 }
 
 /**
@@ -176,9 +173,7 @@ function list_users($data) {
 	$user = new CODUser();
 	$user->check_auth_level($auth_level_required);
 
-    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-
-    $dbclient->connect();
+    $dbclient = $config["dbh"];
 
 	$q = "select u.mail as mail, r.tag as rol, u.ip_last_login as ip_last_login, u.last_login as last_login, u.first_login as first_login from users u, roles r where r.id=u.rol;";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
@@ -220,8 +215,6 @@ function list_users($data) {
 	    </tbody>
 	<?php
 	}
-
-	$dbclient->disconnect();
 }
 
 /**
@@ -235,9 +228,7 @@ function list_groups($data) {
 	$user = new CODUser();
 	$user->check_auth_level($auth_level_required);
 
-    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-
-    $dbclient->connect();
+    $dbclient = $config["dbh"];
 
 	$q = "select * from groups;";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
@@ -315,7 +306,6 @@ function list_groups($data) {
 	    </tbody>
 	<?php
 	}
-	$dbclient->disconnect();
 }
 
 
@@ -330,9 +320,7 @@ function list_acls($data) {
 	$user = new CODUser();
 	$user->check_auth_level($auth_level_required);
 
-    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-
-    $dbclient->connect();
+    $dbclient = $config["dbh"];
 
 	$q = "select sa.tag, r.tag as rol from roles r, site_acl sa where sa.auth_level=r.auth_level;";
 	$r = $dbclient->exeq($q) or die ($dbclient->lq_error());
@@ -366,8 +354,6 @@ function list_acls($data) {
 	    </tbody>
 	<?php
 	}
-
-	$dbclient->disconnect();
 }
 
 

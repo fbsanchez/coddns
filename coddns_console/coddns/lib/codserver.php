@@ -30,6 +30,8 @@ class CODServer {
 	var $config;
 	var $gid;
 	var $main_config_file;
+	var $mastery;
+	var $server_load;
 
 	/**
 	 * Initializes a CODServer object based on
@@ -38,26 +40,23 @@ class CODServer {
 	 * @return Int returns the ID of the server (if any)
 	 */
 	public function CODServer($raw = false) {
+		global $config;
 
 		if ((!isset($raw)) || ($raw === false)) {
 			return $this;
 		}
 		elseif (is_array($raw)) {
 			# create new volatile server from hash
+			# If saved will be created as a new server! use $raw as name to load from db
+			$this->id = null;
 			if (isset ($raw["ip"])) {
-				if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $raw["ip"])) {
-					$this->ip = long2ip($raw["ip"]);
-				}
-				else {
-					$this->ip = $raw["ip"];
-				}
+				$this->ip     = _long2ip($raw["ip"]);
 			}
-			$this->id     = null;
 			if (isset($raw["gid"])) {
 				$this->gid    = $raw["gid"];
 			}
 			if (isset($raw["tag"])) {
-				$this->name   = $raw["tag"];
+				$this->name   = $config["dbh"]->decode($raw["tag"]);
 			}
 			if (isset($raw["port"])) {
 				$this->port   = $raw["port"];
@@ -66,16 +65,34 @@ class CODServer {
 				$this->pass   = coddns_decrypt($raw["pass"]);
 			}
 			if (isset($raw["user"])) {
-				$this->user   = $raw["user"];
+				$this->user   = $config["dbh"]->decode($raw["user"]);
 			}
 			if (isset($raw["status"])) {
 				$this->status = $raw["status"];
 			}
+			else {
+				$this->status = 0;
+			}
+			if (isset($raw["mastery"])) {
+				$this->mastery = $raw["mastery"];
+			}
+			else {
+				$this->mastery = 100;
+			}
+			if (isset($raw["server_load"])) {
+				$this->server_load = $raw["server_load"];
+			}
+			else {
+				$this->server_load = 0;
+			}
 			if (isset($raw["main_config_file"])) {
-				$this->main_config_file = $raw["main_config_file"];
+				$this->main_config_file = $config["dbh"]->decode($raw["main_config_file"]);
 			}
 			if (isset($raw["fingerprint"])) {
-				$this->fingerprint      = $raw["fingerprint"];
+				$this->fingerprint = $config["dbh"]->decode($raw["fingerprint"]);
+			}
+			else {
+				$this->fingerprint = null;
 			}
 
 			return $this;
@@ -85,49 +102,83 @@ class CODServer {
 	}
 
 	public function load_server($server_name) {
-		$this->load_cfg();
-		$dbclient = new DBClient($this->config["db_config"]);
-		$dbclient->connect();
+		global $config;
+		
+		$dbclient = $config["dbh"];
 		
 		$secure_name = $dbclient->prepare($server_name, "text");
 		$query = 'select * from servers where tag="' . $server_name . '"';
 		$r = $dbclient->get_sql_object($query);
 		if (isset($r)){
-			if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $r->ip)) {
-				$this->ip = long2ip($r->ip);
-			}
-			else {
-				$this->ip = $r->ip;
-			}
+			$this->ip     = _long2ip($r->ip);
 			$this->id     = $r->id;
 			$this->gid    = $r->gid;
-			$this->name   = $r->tag;
+			$this->name   = $dbclient->decode($r->tag);
 			$this->port   = $r->port;
 			$this->pass   = coddns_decrypt($r->srv_password);
-			$this->user   = $r->srv_user;
+			$this->user   = $dbclient->decode($r->srv_user);
 			$this->status = $r->status;
-			$this->main_config_file = $r->main_config_file;
-			$this->fingerprint      = $r->fingerprint;
+			$this->main_config_file = $dbclient->decode($r->main_config_file);
+			$this->fingerprint      = $dbclient->decode($r->fingerprint);
+			$this->mastery          = $r->mastery;
+			$this->server_load      = $r->server_load;
 
 		}
 		return $this;
 	}
 
-	public function save() {
+	public function save_all() {
+		global $config;
+		if (!isset($this->name)){
+			return false;
+		}
+
+		$dbclient = $config["dbh"];
+
+		// CDE ~ this data could have been provided by users
+		$tag  = $dbclient->prepare($this->name, "text");
+		$user = $dbclient->prepare($this->user, "text");
+		$pass = coddns_encrypt($this->pass);
+		$ip   = _ip2long($this->ip);
+		$port = $dbclient->prepare($this->port, "number");
+		$fingerprint      = $dbclient->prepare($this->fingerprint, "text");
+		$main_config_file = $dbclient->prepare($this->main_config_file, "text");
+
+		// internal data
+		$status      = $this->status;
+		$server_load = $this->server_load;
+		$mastery     = $this->mastery;
+
+
+
+
 		// create or update data server information
 		if (!isset($this->id)) {
 			// create new server
-			
+			$q = "insert into servers (tag,ip,port,srv_user,srv_password,main_config_file,fingerprint,status,server_load,mastery) values"
+				. "(\"$tag\", \"$ip\", $port, \"$user\", \"$pass\", \"$main_config_file\", \"$fingerprint\", $status, $server_load, $mastery)";
+
+			if($dbclient->do_sql($q)) {
+				$this->id = $dbclient->last_id();
+				return $this->id;
+			}
+			return false;
 		}
 		else {
-			// update existent server
-			
+			$q = "udpate servers set tag=\"$tag\", ip=\"$ip\", port=$port, srv_user=\"$user\",srv_password=\"$pass\",main_config_file=\"$main_config_file\" "
+				. ",fingerprint=\"$fingerprint\",status=$status,server_load=$server_load,mastery=$mastery";
+
+			if($dbclient->do_sql($q)) {
+				return true;
+			}
 		}
+
+		return false;
 	}
 
 	private function load_cfg(){
 		if (empty($this->config)){
-			include (__DIR__ . "/../include/config.php");
+			global $config;
 			$this->config = $config;
 		}
 	}
@@ -146,27 +197,23 @@ class CODServer {
 	}
 
 	function set_credentials($user,$pass, $port=null){
-		$this->load_cfg();
+		global $config;
 
-		$dbclient = new DBClient($this->config["db_config"]);
-		$dbclient->connect();
+		$dbclient = $config["dbh"];
 
 		$this->user = $dbclient->prepare($user, "text");
 		$this->pass = $pass;
 		$this->port = $dbclient->prepare($port, "number");
-
-		$dbclient->disconnect();
 	}
 
 	function save_credentials(){
-		$this->load_cfg();
+		global $config;
 
 		if (empty ($this->id)){
 			return false;
 		}
 
-		$dbclient = new DBClient($this->config["db_config"]);
-		$dbclient->connect();
+		$dbclient = $config["dbh"];
 		$secured_user = $dbclient->prepare($this->user, "text");
 		$secured_pass = coddns_encrypt($this->pass);
 		if (isset($port)){
@@ -180,13 +227,13 @@ class CODServer {
 	}
 
 	function forgot_credentials() {
-		$this->load_cfg();
+		global $config;
 
 		if (empty ($this->id)){
 			return false;
 		}
 
-		$dbclient = new DBClient($this->config["db_config"]);
+		$dbclient = $config["dbh"];
 		$query = 'update servers set srv_password="", srv_user="" where id=' . $this->id;
 		$dbclient->do_sql($query);
 		unset ($this->pass);

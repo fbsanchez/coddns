@@ -58,13 +58,11 @@ if ( ( strlen($rq_opass) < MIN_PASS_LENGTH)
     exit(2);
 }
 
-$dbclient = new DBClient($db_config);
+$dbclient = $config["dbh"];
 $salt  = $config["salt"];
 $opass = hash ("sha512",$salt . $rq_opass);
 $npass = hash ("sha512",$salt . $rq_npass);
 $cpass = hash ("sha512",$salt . $rq_cpass);
-
-$dbclient->connect() or die ("<div class='err'>Woooops, culpa nuestra, contacte con el administrador</div>");
 
 $q = "Select * from users where lower(mail)=lower('" . $user->get_mail() . "') and pass='" . $opass . "';";
 $r = $dbclient->fetch_object ($dbclient->exeq($q));
@@ -74,8 +72,6 @@ if ($dbclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
 }
 $q = "Update users set pass='" . $npass . "' where lower(mail)=lower('" . $user->get_mail() . "');";
 $dbclient->exeq($q);
-
-$dbclient->disconnect();
 
 echo "<div class='ok'>Contrase&ntilde;a actualizada con &eacute;xito</div>";
 

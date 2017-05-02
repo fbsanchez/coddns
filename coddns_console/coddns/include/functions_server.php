@@ -27,15 +27,16 @@
 require_once (__DIR__ . "/../lib/codserver.php");
 
 function get_server_data($db_config, $servername) {
+	global $config;
 	// retrieve credentials from DB
 
-	$dbclient = new DBClient($db_config);
+	$dbclient = $config["dbh"];
 
 	$q = "Select * from servers where tag='" . $servername . "' ;";
 	$server = $dbclient->get_sql_object($q);
 
 	if (empty($server)){
-		custom_die("No hay servidores registrados con ese nombre.");
+		die("No hay servidores registrados con ese nombre [$servername].");
 	}
 
 
@@ -57,9 +58,11 @@ function get_server_data($db_config, $servername) {
 
 	// SERVER CREDENTIALS ARE SET
 	// transform fields
-	$server->user = $server_info["user"];
+	$server->user = $dbclient->decode($server_info["user"]);
 	$server->pass = $server_info["pass"];
-	$check        = long2ip($server->ip);
+	$check        = _long2ip($server->ip);
+	$server->main_config_file = $dbclient->decode($server->main_config_file);
+
 
 	if ($check !== false) {
 		// not a FQDN, IP loaded
@@ -141,7 +144,7 @@ function get_server_connection_from_hash($server) {
 	$sh = new StdClass();
 	$sh->user = $server->srv_user;
 	$sh->pass = coddns_decrypt($server->srv_password);
-	$sh->ip   = long2ip($server->ip);
+	$sh->ip   = _long2ip($server->ip);
 	$sh->port = $server->port;
 
 	// initialize ssh client
@@ -169,8 +172,7 @@ function get_server_connection($servername) {
 	$user = new CODUser();
 	$user->check_auth_level($auth_level_required);
 
-    $dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-    $dbclient->connect() or die ($dbclient->lq_error());
+    $dbclient = $dbclient = $config["dbh"];
 	
 	if (!isset ($servername)){
 		echo "Unauthorized to access this content.";

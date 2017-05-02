@@ -58,7 +58,7 @@ if (! $sshclient->is_authenticated()){
 	return 0;
 }
 
-$dbclient = new DBClient($db_config);
+$dbclient = $config["dbh"];
 
 ?>
 

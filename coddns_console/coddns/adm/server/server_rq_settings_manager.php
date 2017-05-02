@@ -104,4 +104,4 @@ if ($flag == 1) {
 
 ?>
 
-<a class="ajax_button" href="#" onclick="location.reload();">OK</a>;
+<a class="ajax_button" href="#control" onclick="location.reload();">OK</a>

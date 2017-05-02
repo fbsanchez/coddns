@@ -83,8 +83,7 @@ if ($_POST["p"] != $_POST["cp"]){
     exit(3);
 }
 
-$dbclient = new DBClient($db_config);
-$dbclient->connect() or die ($text[$lan]["dberror"]);
+$dbclient = $config["dbh"];
 
 $user  = $dbclient->prepare($_POST["u"], "email");
 $pass  = hash ("sha512",$config["salt"] . $rq_npass);
@@ -104,9 +103,6 @@ $q = "update users set hash='' where lower(mail)=lower('" . $user . "');";
 $dbclient->exeq($q);
 $q = "update users set max_time_valid_hash=null where lower(mail)=lower('" . $user . "');";
 $dbclient->exeq($q);
-
-$dbclient->disconnect();
-
 
 echo $text[$lan]["ok"];
 

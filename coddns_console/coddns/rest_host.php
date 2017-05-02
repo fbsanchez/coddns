@@ -43,8 +43,7 @@ if (   ( strlen ($_POST["h"]) < MIN_HOST_LENGTH )
     die ("<div class='r err'>No cumple los requisitos</div>");
 }
 
-$dbclient = new DBClient($db_config);
-$dbclient->connect() or die("ERR");
+$dbclient = $config["dbh"];
 
 $host = $dbclient->prepare($_POST["h"], "letters");
 $zone = $dbclient->prepare($_POST["z"], "url_get");
@@ -53,9 +52,8 @@ $zone = $dbclient->prepare($_POST["z"], "url_get");
 $q = "select * from hosts where lower(tag)=lower('" . $host . "." . $zone . "');";
 $dbclient->exeq($q);
 if ( $dbclient->lq_nresults() > 0 )
-        echo "<div class='r err'>No disponible</div>";
+	echo "<div class='r err'>No disponible</div>";
 else
-        echo "<div class='r ok'>Disponible</div>";
-$dbclient->disconnect();
+	echo "<div class='r ok'>Disponible</div>";
 ?>
 

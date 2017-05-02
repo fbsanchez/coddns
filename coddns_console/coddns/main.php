@@ -54,7 +54,7 @@ session_write_close();
 if ($user->get_is_logged()){
     // USER ZONE - OVERALL STATUS VIEW
 
-$dbclient = new DBClient($db_config);
+$dbclient = $config["dbh"];
 
 
 /******************************************************
@@ -67,7 +67,6 @@ $dbclient = new DBClient($db_config);
  * 1st GRAPH: Zone usage
  */
 // build data for zones per server chart:
-$dbclient->connect() or die($dbclient->lq_error());
 $q = "select s.id,s.tag,(select count(*) from zones z, zone_server sz where z.id=sz.id_zone and s.id=sz.id_server ) as nzones from servers s;";
 $results = $dbclient->exeq($q) or die ($dbclient->lq_error());
 
@@ -279,10 +278,6 @@ else {
 </section>
 
 <?php
-}
-
-if ((isset($dbclient)) && ($dbclient->is_connected())) {
-    $dbclient->disconnect();
 }
 
 ?>

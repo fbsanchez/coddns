@@ -22,15 +22,14 @@ require (__DIR__ . "/../include/config.php");
  */
 function load_extra_config($cnf){
     include_once (__DIR__ . "/../lib/db.php");
-    $dbclient = new DBClient($cnf["db_config"]);
+    $cnf["dbh"] = new DBClient($cnf["db_config"]);
 
-    $dbclient->connect() or die ($dbclient->lq_error());
+    $cnf["dbh"]->connect() or die ($cnf["dbh"]->lq_error());
     $q = "select * from settings;";
-    $r = $dbclient->exeq($q) or die ($dbclient->lq_error());
-    while ($row = $dbclient->fetch_array ($r) ) {
+    $r = $cnf["dbh"]->exeq($q) or die ($cnf["dbh"]->lq_error());
+    while ($row = $cnf["dbh"]->fetch_array ($r) ) {
         $cnf[$row["field"]] = $row["value"];
     }
-    $dbclient->disconnect();
 
     return $cnf;
 }
@@ -202,8 +201,9 @@ function write_file($content, $filepath,$mode = "w"){
  */
 function secure_get($argument, $mode = "url_get"){
     require_once(__DIR__ . "/../lib/db.php");
+    global $config;
 
-    $securizer = new DBClient(null);
+    $securizer = $config["dbh"];
 
     if (isset ($_REQUEST["$argument"])){
         $token = $securizer->prepare($_REQUEST["$argument"], $mode);
@@ -217,9 +217,9 @@ function secure_get($argument, $mode = "url_get"){
  */
 function get_required_auth_level($mode,$zone,$operation){
     require_once(__DIR__ . "/../lib/db.php");
-    include(__DIR__ . "/../include/config.php");
+    global $config;
 
-    $dbclient = new DBClient($db_config);
+    $dbclient = $config["dbh"];
     $sm = $dbclient->prepare($mode, "url_get");
     $sz = $dbclient->prepare($zone, "url_get");
     $so = $dbclient->prepare($operation, "url_get");
@@ -231,6 +231,30 @@ function get_required_auth_level($mode,$zone,$operation){
     }
     return null;
 
+}
+
+
+/**
+ * _ip2long returns ip2long if target ip is a valid IPv4 
+ */
+function _ip2long($target) {
+    global $config;
+    if (preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $target)) {
+        return ip2long($target);
+    }
+    return $config["dbh"]->prepare($target, "url_get");
+}
+
+
+/**
+ * _long2ip returns a valid IPv4 or FQDN of target
+ */
+function _long2ip($target) {
+    global $config;
+    if (preg_match('/\d+/', $target)) {
+        return long2ip($target);
+    }
+    return $config["dbh"]->prepare($target, "url_get");
 }
 
 

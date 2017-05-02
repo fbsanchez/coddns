@@ -29,9 +29,7 @@ $auth_level_required = get_required_auth_level('adm','site','');
 $user = new CODUser();
 $user->check_auth_level($auth_level_required);
 
-$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-
-$dbclient->connect();
+$dbclient = $config["dbh"];
 
 $q = "select tag from roles;";
 $r = $dbclient->exeq($q) or die ($dbclient->lq_error());

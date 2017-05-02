@@ -45,8 +45,7 @@ $user->check_auth_level($auth_level_required);
 	</a>
 	<br />
 <?php 
-	$dbclient = new DBClient($db_config);
-	$dbclient->connect() or die($dbclient->lq_error());
+	$dbclient = $config["dbh"];
 
 	$q = "select s.*,(select count(*) from zones z, zone_server sz where sz.id_server=s.id and sz.id_zone=z.id ) as nzones from servers s;";
 	$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
@@ -105,7 +104,6 @@ $user->check_auth_level($auth_level_required);
 	<?php
 	}
 
-	$dbclient->disconnect();
 	?>
 	</section>
 

@@ -82,7 +82,8 @@ class CODUser {
 	 * Return all available groups for current user with RR grant or higher
 	 */
 	function get_read_groups(){
-		$dbclient = new DBClient($this->config["db_config"]);
+		global $config;
+		$dbclient = $config["dbh"];
 		$q = "select g.id, g.tag from groups g, tusers_groups ug, users u where ug.oid=u.id and ug.gid=g.id and u.mail='" . $this->mail . "' and (ug.view=1 or ug.edit=1 or ug.admin=1);";
 		return $dbclient->get_sql_array($q);
 	}
@@ -96,16 +97,17 @@ class CODUser {
 	 *
 	 * ARGUMENTS MUST BE CHECKED OUT HERE
 	 */
-	function login($rq_user, $rq_pass){
+	function login($rq_user, $rq_pass) {
+		global $config;
+		$this->load_cfg();
 		if ($this->logged){
 			return false;
 		}
 
-		$dbclient = new DBClient($this->config["db_config"]);
+		$dbclient = $config["dbh"];
 		$user = $dbclient->prepare($rq_user, "email");
 		$pass = hash ("sha512",$this->config["salt"] . $rq_pass);
 
-		$dbclient->connect() or die ($dbclient->lq_error());
 
 		$q = "Select * from users where lower(mail)=lower('" . $user . "') and pass='" . $pass . "';";
 		$r = $dbclient->fetch_object ($dbclient->exeq($q));
@@ -114,8 +116,6 @@ class CODUser {
 		}
 		$q = "update users set last_login=now(), ip_last_login='" . $dbclient->prepare(_ip(), "ip") . "' where lower(mail)=lower('" . $user . "');";
 		$dbclient->exeq($q) or die($dbclient->lq_error());
-
-		$dbclient->disconnect();
 
 		if (session_status() == PHP_SESSION_NONE){
 			session_start();
@@ -149,12 +149,9 @@ class CODUser {
 			return null;
 		}
 
-		$dbclient = new DBClient($this->config["db_config"]);
+		$dbclient = $config["dbh"];
 		$user = $dbclient->prepare($_POST["u"], "email");
 		$pass = hash ("sha512",$this->config["salt"] . $rq_pass);
-
-		
-		$dbclient->connect() or die ($dbclient->lq_error());
 
 		$q = "Select * from users where lower(mail)=lower('" . $user . "');";
 		$dbclient->exeq($q) or die ($dbclient->lq_error());
@@ -166,7 +163,6 @@ class CODUser {
 		    $q = "insert into tusers_groups (gid,oid,edit)  values ((select id from groups where tag='private'), (select id from users where lower(mail)=lower('" . $user . "')),1 );";
 		    $dbclient->exeq($q) or die ($dbclient->lq_error());
 
-		    $dbclient->disconnect();
 
 		    $q = "Select * from users where lower(mail)=lower('" . $user . "') and pass='" . $pass . "';";
 		    $r = $dbclient->get_sql_object($q);
@@ -202,16 +198,20 @@ class CODUser {
 	 * Load and refresh the access level of the user
 	 */
 	function load_auth_level(){
-		if (!$this->logged)
+		global $config;
+		if (!$this->logged) {
 			return 0;
+		}
 
 		// Retrieve rol and auth level from DB
-		$dbclient = new DBClient($this->config["db_config"]) or die($dbclient->lq_error());
+		$dbclient = $config["dbh"];
+
 		$q = "SELECT u.rol,r.auth_level FROM users u, roles r WHERE u.id=" . $this->oid . " and r.id=u.rol;";
-		$result = $dbclient->get_sql_object($q);
+		$result = $dbclient->get_sql_object($q) or die("Cannot connect");
 		if (!isset($result->auth_level)){
 			return 0;
 		}
+
 		$this->rol        = $result->rol;
 		$this->auth_level = $result->auth_level;
 
@@ -230,10 +230,12 @@ class CODUser {
 
 
 	function check_auth_level($level=0){
+		global $config;
 		$auth_level = $this->load_auth_level();
 
 		if (! isset($level)){
-			redirect ($this->config["html_root"] . "/?z=err404");
+			die ("Unauthorized to access this content");
+			//redirect ($this->config["html_root"] . "/?z=err404");
 			exit(0);
 		}
 
@@ -245,9 +247,10 @@ class CODUser {
 	}
 
 	function is_global_admin() {
+		global $config;
 		if (!$this->logged)
 			return false;
-		$dbclient = new DBClient($this->config["db_config"]);
+		$dbclient = $config["dbh"];
 		$q = "select auth_level from roles where tag='admin'";
 		$r = $dbclient->get_sql_object($q);
 		if(isset($r->auth_level)) {
@@ -265,9 +268,10 @@ class CODUser {
 	}
 
 	function int_check_grants_over_item($grants="(ug.view=1 or ug.admin=1)", $item, $item_type="host"){
+		global $config;
 		if (!$this->logged)
 			return false;
-		$dbclient = new DBClient($this->config["db_config"]);
+		$dbclient = $config["dbh"];
 		switch ($item_type){
 			case "host":
 				$q = "select count(tag) as n from hosts where ((oid=(select id from users where lower(mail)=lower('" . $this->mail . "')) and gid=(select id from groups where tag='private')) or (gid in (select g.id from groups g, tusers_groups ug, users u where u.id=ug.oid and g.id=ug.gid and " . $grants ." and lower(u.mail)=lower('" . $this->mail . "')))) and lower(tag)=lower('" . $item . "');";

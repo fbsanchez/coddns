@@ -46,8 +46,7 @@ if   ( ( strlen($_POST["u"]) < MIN_USER_LENGTH )
     die ("ERR");
 
 
-$dbclient = new DBClient($db_config);
-$dbclient->connect() or die ("ERR");
+$dbclient = $config["dbh"];
 
 $rq_user = $dbclient->prepare($_POST["u"], "email");
 $rq_pass = base64_decode($_POST["p"]);
@@ -101,5 +100,4 @@ else{
     echo "OK: La ip asociada a " . $host . " ya estaba actualizada.\n";
 }
 
-$dbclient->disconnect();
 ?>

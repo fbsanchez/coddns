@@ -43,8 +43,7 @@ if (  (!isset ($_POST["edith"])) || (! isset ($_POST["editip"]))  ){
     exit (1);
 }
 
-$dbclient= new DBClient($db_config);
-$dbclient->connect() or die ("ERR");
+$dbclient= $config["dbh"];
 
 $phost = $dbclient->prepare($_POST["edith"], "url_get");
 $fields = explode(".", $phost,2);

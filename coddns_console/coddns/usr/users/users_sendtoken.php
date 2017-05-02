@@ -70,8 +70,7 @@ if ( strlen($_POST["u"]) < MIN_USER_LENGTH){
     exit(2);
 }
 
-$dbclient = new DBClient($db_config);
-$dbclient->connect() or die ($text[$lan]["dberror"]);
+$dbclient = $config["dbh"];
 
 $user = $dbclient->prepare($_POST["u"], "email");
 
@@ -141,9 +140,6 @@ $text_mail_welcome_subject = $text[$lan]["subject"];
 
 $q = "update users set hash='" . $hash . "', max_time_valid_hash = now() + Interval 30 minute where lower(mail)=lower('" . $user . "');";
 $dbclient->exeq($q);
-
-$dbclient->disconnect();
-
 
 $recipient = $user;                    //recipient
 $mail_body = $text_mail_welcome_body;  //mail body

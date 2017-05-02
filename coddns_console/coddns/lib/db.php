@@ -76,33 +76,36 @@ class DBClient {
   }
 
   function do_sql($query){
-    $this->connect() or die($this->lq_error());
-    $r   = $this->exeq($query) or die($this->lq_error());
-    $this->disconnect();
-    return $r;
+    if ((isset($this->client)) && ($this->is_connected())) {
+      return $this->exeq($query) or die($this->lq_error());
+    }
+    return false;
   }
 
   function get_sql_object($query){
-    $this->connect() or die($this->lq_error());
-    $r   = $this->exeq($query) or die($this->lq_error());
-    $out = $this->fetch_object($r);
-    $this->disconnect();
-    return $out;
+    if ((isset($this->client)) && ($this->is_connected())) {
+      $r   = $this->exeq($query) or die($this->lq_error());
+      $out = $this->fetch_object($r);
+      return $out;
+    }
+    return false;
   }
 
   function get_sql_array($query){
-    $this->connect() or die($this->lq_error());
-    $r      = $this->exeq($query) or error_log($this->lq_error());
-    $nitems = $this->lq_nresults();
-    $out    = array();
+    if ((isset($this->client)) && ($this->is_connected())) {
+      $r      = $this->exeq($query) or error_log($this->lq_error());
+      $nitems = $this->lq_nresults();
+      $out    = array();
 
-    // Retrieve all items
-    while($tmp = $this->fetch_array($r)) {
-      array_push($out, $tmp);
+      // Retrieve all items
+      while($tmp = $this->fetch_array($r)) {
+        array_push($out, $tmp);
+      }
+      
+      
+      return array( "nitems" => $nitems, "data" => $out);
     }
-    
-    $this->disconnect();
-    return array( "nitems" => $nitems, "data" => $out);
+    return false;
   }
 
   /**
@@ -172,7 +175,7 @@ class DBClient {
       case "letters":   return preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg);
       case "letters++": return preg_replace("/[^a-zA-Z0-9\.]/", "", $clsqlarg);
       case "ip_addr":   return preg_replace("/[^0-9\.]/", "", $clsqlarg);
-      case "insecure_text":{
+      case "insecure_text":{ // there's no need to use this in a permanent connection
         $search  = array("<script", "</script>", "%0A");
         return str_replace("%", "$",(
             urlencode(
@@ -224,7 +227,7 @@ class DBClient {
         return null;
       }
       case "ip":{
-        return ip2long($clsqlarg);
+        return _ip2long($clsqlarg);
       }
       case "json":{
         return json_decode($clsqlarg);
@@ -236,7 +239,7 @@ class DBClient {
     }
   }
 
-  function decode($v,$tflag){
+  function decode($v,$tflag=null){
     if (isset($tflag)){
       return date("Y-m-d\TH:i:s\Z", $v);
     }

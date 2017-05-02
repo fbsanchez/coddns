@@ -37,13 +37,7 @@ if (! isset ($_POST["delh"]) ){
 	exit(1);
 }
 
-$dbclient = new DBClient($db_config);
-
-if (!$dbclient->connect()) {
-	echo "Failed to connect to database, please warn administrator.";
-	echo '<a class="ajax_button" href="close_ajax_message();">OK</a>';
-	exit(1);
-}
+$dbclient = $config["dbh"];
 
 $phost = $dbclient->prepare($_POST["delh"], "url_get");
 $fields = explode(".", $phost,2);
@@ -64,8 +58,6 @@ $r = $dbclient->exeq($q);
 if ($dbclient->lq_nresults() > 0) {
 	// LAUNCH DNS UPDATER
 	$out = shell_exec("dnsmgr d " . $host . " A");
-
-	$dbclient->disconnect();
 
 	?>
 

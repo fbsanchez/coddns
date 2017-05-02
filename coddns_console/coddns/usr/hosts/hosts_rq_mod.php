@@ -51,8 +51,7 @@ if ( $check < 0 || $check == FALSE ){
 }
 
 
-$dbclient = new DBClient($db_config);
-$dbclient->connect() or die ("ERR");
+$dbclient = $config["dbh"];
 
 $phost = $dbclient->prepare($_POST["edith"], "url_get");
 $fields = explode(".", $phost,2);
@@ -99,10 +98,5 @@ else{
     exit (3);
 }
 
-
-
-$dbclient->disconnect();
-
-//header ("Location: ". $config["html_root"] . "/?z=hosts&lang=". $lan);
 ?>
 <a class="ajax_button" href="<?php echo $config["html_root"] . "/?m=usr&z=hosts" ?>">OK</a>

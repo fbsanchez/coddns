@@ -194,8 +194,7 @@ $text["de"]["reg_type"]      = "DNS record type";
     <?php
     // Retrieve all DNS Record types available from de DB
 
-    $dbclient = new DBClient($db_config) or die ($dbclient->lq_error());
-    $dbclient->connect() or die ($dbclient->lq_error());
+    $dbclient = $config["dbh"];
 
     $q = "(select z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1))"
         . "UNION (select z.domain from zones z, tusers_groups ug, users u where z.is_public=1)";
@@ -407,6 +406,3 @@ $text["de"]["reg_type"]      = "DNS record type";
 </div>
 </body>
 </html>
-<?php
-$dbclient->disconnect();
-?>

@@ -30,39 +30,31 @@ if (   (! isset ($_POST["tag"]) )   ) {
     $error = 1;
 }
 else{
+	$dbclient = $config["dbh"];
 	if(  ( isset ($_POST["delete_all"]) )  ){
 		//delete all
 		$tag_explode = explode(",",$_POST["tag"]);
 		foreach ($tag_explode as $key => $value) {
-			$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-			$dbclient->connect() or die ($dbclient->lq_error());
+			
 			$l = "SELECT id from groups WHERE tag ='" . $value . "';";
 			$q = $dbclient->exeq($l) or die ($dbclient->lq_error());
 			$row = $dbclient->fetch_object ($q);
 
-			$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-			$dbclient->connect() or die ($dbclient->lq_error());
 			$l = "DELETE FROM groups WHERE id ='" . $row->id . "';";
 			$dbclient->exeq($l) or die ($dbclient->lq_error());
-
-			$dbclient->disconnect();	
 		}
 	}
 	else{
 		//normal delete
 		$result = array();
-		$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-		$dbclient->connect() or die ($dbclient->lq_error());
+		
 		$l = "SELECT id from groups WHERE tag ='" . $_POST["tag"] . "';";
 		$q = $dbclient->exeq($l) or die ($dbclient->lq_error());
 		$row = $dbclient->fetch_object ($q);
 
-		$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-		$dbclient->connect() or die ($dbclient->lq_error());
 		$l = "DELETE FROM groups WHERE id ='" . $row->id . "';";
 		$dbclient->exeq($l) or die ($dbclient->lq_error());
-
-		$dbclient->disconnect();
+		
 	}
 	?>
 		<script type="text/javascript">location.reload();</script>

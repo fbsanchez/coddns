@@ -245,6 +245,7 @@ else {
     $url .= $zone . DIRECTORY_SEPARATOR . $zone . "_" . $operation . ".php";
 }
 
+
 $auth_level_required = get_required_auth_level($mode,$zone,$operation);
 
 $user = new CODUser();
@@ -291,11 +292,16 @@ document.onkeyup = function(evt) {
 };
 </script>
 <div id ="ajax_message_wrapper">
-    <b><a href="#" id ="ajax_message_close" onclick="close_ajax_message();return false;">[x]</a></b>
-    <div id="ajax_message" onchange="raise_ajax_message();return false;"></div>
+    <b><a title="dismiss" href="#" id ="ajax_message_close" onclick="close_ajax_message();">x</a></b>
+    <div id="ajax_message" onchange="raise_ajax_message();"></div>
     </div>
 </div>
 </div>
 </body>
 
 </html>
+
+
+<?php
+    $config["dbh"]->disconnect();
+?>

@@ -56,7 +56,6 @@ $text["en"]["ok"]    = "Succesfully added<script>r();</script>";
 function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl,  $gid = 0, $priority = 10){
     global $text,$lan;
 
-    $dbclient->connect() or die ($dbclient->lq_error());
     // INSERT NEW HOST IF NO ONE EXISTS
     $q = "select * from hosts where lower(tag)=lower('" . $host . "');";
     $dbclient->exeq($q);
@@ -91,7 +90,6 @@ function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl,  $gid = 0,
         <a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>
         <?php
     }
-    $dbclient->disconnect();
     session_write_close();
 }
 ?>
@@ -143,8 +141,7 @@ if ($error === 1) {
     exit (1);
 }
 
-$dbclient = new DBClient($db_config);
-$dbclient->connect() or die ($dbclient->lq_error());
+$dbclient = $config["dbh"];
 
 
 
@@ -229,7 +226,6 @@ switch ($rtype_p){
             $dbclient->exeq($q) or die($dbclient->lq_error());
             echo $text[$lan]["ok"];
         }
-        $dbclient->disconnect();
         session_write_close();
 
         break;

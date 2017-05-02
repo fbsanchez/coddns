@@ -30,8 +30,7 @@ if (   (! isset ($_POST["tag"]) )   ) {
     $error = 1;
 }
 else{
-	$dbclient = new DBClient($config["db_config"]) or die ($dbclient->lq_error());
-	$dbclient->connect() or die ($dbclient->lq_error());
+	$dbclient = $dbclient = $config["dbh"];
 
 	$l = "select id from groups where tag ='" . $_POST["tag"] . "';";
 	$s = $dbclient->exeq($l) or die ($dbclient->lq_error());
@@ -50,13 +49,11 @@ if(!$error){
 		$q = "insert into groups (tag, description, parent) values ('" . $_POST["tag"] . "', '" . $_POST["description"] . "', '" . $_POST["parent"] . "');";
 	}
 	$dbclient->exeq($q) or die($dbclient->lq_error());
-	$dbclient->disconnect();
 	?>
 		<script type="text/javascript">location.reload();</script>
 	<?php
 }
 else{
-	$dbclient->disconnect();
 	if( isset($message) ){
 		echo "<h4 class='message_error'>El nombre '" . $message . "' ya existe en la bbdd por favor introduzca otro</h4>";
 	}
