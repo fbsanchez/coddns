@@ -110,6 +110,11 @@ function evalScript( elem ) {
 }
 
 
+var ajax = {
+  result: "",
+  response: ""
+};
+
 /**
  * pseudo class definition html for queries
  */
@@ -153,6 +158,70 @@ var html = { // Default values
     }
   }
 
+
+/**
+ * Makes an AJAX query against url, sending data
+ * @param  url    target to be queried
+ * @param  data   data to send (query)
+ * @param  target where to store the response
+ * @return        false (always)
+ */
+function get_ajax_response(url, data, target, callback) {
+  var __html = { // Default values
+  url      : "",
+  method   : "POST",
+  args     : "",
+  sync     : true,
+  scroll   : false,
+  callback : null,
+  response : null,
+  xmlHttp  : null,
+  send     : function (){
+    if (window.XMLHttpRequest){
+      this.xmlHttp=new XMLHttpRequest();
+    }
+    else {
+      this.xmlHttp=new ActiveXObject("Microsoft.XMLHTTP");
+    }
+    if( this.method == "GET" ){
+      this.xmlHttp.open( this.method, this.url+"?"+this.args, this.sync );
+      this.args = null;
+    }
+    else { /* POST */
+      this.xmlHttp.open( this.method, this.url, this.sync );
+      if( this.args )
+        this.args = this.args;
+    }
+    this.xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    if( this.callback )
+      this.xmlHttp.onreadystatechange = function () {
+        if(this.readyState == 4 &&this.status == 200){
+          __html.response = this.response;
+          __html.callback();
+          if(__html.scroll == true){
+            window.scrollTo(0,0);
+          }
+        }
+      }
+      this.xmlHttp.send( this.args );
+    }
+  }
+
+  __html.url      = url;
+  __html.args     = data;
+  __html.scroll   = false;
+  __html.method   = "POST";
+  __html.callback = function() {
+    if(__html.xmlHttp.readyState == 4 && __html.xmlHttp.status == 200){
+      target.response = __html.response;
+      if(callback)
+        callback();
+    }
+    target.status = __html.xmlHttp.status;
+  };
+  __html.send();
+  return false;
+}
 
 /**
  * updateContent of id with html requested to url with parameters

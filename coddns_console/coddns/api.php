@@ -60,18 +60,38 @@ function get_data($auth_token, $arguments) {
 
 	/*
 	$arguments["oid"];
+	$arguments["custom_tag"]
 	$arguments["tstart"];
 	$arguments["tend"];
 	*/
 
-	$q = " select * from stats_data where id_item=468 order by utimestamp desc limit 50";
+	if(!isset($arguments->oid)) {
+		echo "{}";
+		return false;
+	}
 
-	$result_set = $config["dbh"]->get_sql_all_objects($q);
+	if(!isset($arguments->custom_tag)){
+		$arguments->custom_tag = "values";
+	}
 
-	echo json_encode($result_set["data"]);
+	$q = " select value,from_unixtime(utimestamp, '%Y-%m-%dT%H:%i:%s') as timestamp from stats_data where id_item=" . $config["dbh"]->prepare($arguments->oid,"number") . " order by utimestamp desc limit 100";
+	$result_set = $config["dbh"]->get_sql_array($q);
+
+	$out = array();
+	$values = array($arguments->custom_tag);
+	$timestamps = array("t_" . $arguments->custom_tag);
+	foreach ($result_set["data"] as $k) {
+		array_push ($values, $k["value"] );
+		array_push ($timestamps, $k["timestamp"] );
+	}
 
 
+	$out["values"]     = $values;
+	$out["timestamps"] = $timestamps;
 
+
+	echo json_encode($out);
+	return true;
 }
 
 

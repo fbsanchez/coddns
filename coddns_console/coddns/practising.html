@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Example</title>
+  <link rel="stylesheet" type="text/css" href="rs/js/external/c3-0.4.11/c3.min.css" />
+  <script type="text/javascript" src="rs/js/external/c3-0.4.11/c3.js"></script>
+  <script type="text/javascript" src="rs/js/external/d3-3.5.7/d3.min.js"></script>
+
+  <script type="text/javascript" src="rs/js/util.js"></script>
+
+</head>
+<body>
+
+<center>
+<h3>queries resulted in authoritative answer</h3>
+</center>
+<div id="graph">
+  
+</div>
+
+<script type="text/javascript">
+  var serie1 = {status:"",response:"", painted:0};
+  var serie2 = {status:"",response:"", painted:0};
+
+  var series = [];
+  var restantes=2;
+
+  var chart = c3.generate({
+      bindto: '#graph',
+      data: {
+        xFormat: '%Y-%m-%dT%H:%M:%S',
+        xs: {
+          'data1':'t_data1',
+          'data2':'t_data2'
+        },
+        columns: []
+      },
+      axis: {
+          x: {
+              type: 'timeseries',
+              tick: {
+                      format: '%Y-%m-%d %H:%M:%S'
+              }
+          }
+      }
+    });
+
+
+
+  function harvest_data() {
+    
+    setTimeout(function () {
+      var readed = 0;
+      if ((serie1) && (serie1.status) && (serie1.status == 200) && (serie1.painted == 0)) {
+        chart.load({
+          columns: [
+              JSON.parse(serie1.response)["values"],
+              JSON.parse(serie1.response)["timestamps"]
+          ]
+        });
+        serie1.painted=1;
+        readed++;
+      }
+      if ((serie2) && (serie2.status) && (serie2.status == 200) && (serie2.painted == 0)) {
+        chart.load({
+          columns: [
+              JSON.parse(serie2.response)["values"],
+              JSON.parse(serie2.response)["timestamps"]
+          ]
+        });
+        serie2.painted=1;
+        readed++;
+      }
+    
+      if (readed >= restantes) {
+        return;
+      }
+      else {
+        harvest_data();
+      }
+    },1000);
+  }
+
+  (function () {
+    get_ajax_response("api.php",'action=get_data&args={"oid":392,"custom_tag":"data1"}',serie1);
+    get_ajax_response("api.php",'action=get_data&args={"oid":382,"custom_tag":"data2"}',serie2);
+
+
+    harvest_data();
+  })();
+
+
+
+/*
+
+      data: {
+        columns: 
+        mimeType: 'json',
+        xFormat: '%Y-%m-%dT%H:%M:%S',
+        xs: {
+          'value': 'timestamp',
+        }
+        keys: {
+            x: 'timestamp',
+            value: ['value'],
+        }
+      },
+      axis: {
+          x: {
+              type: 'timeseries',
+              tick: {
+                      format: '%Y-%m-%d %H:%M:%S'
+              }
+          }
+      },
+      subchart: {
+          show: true
+      },
+*/
+    
+
+</script>
+
+</body>
+</html>

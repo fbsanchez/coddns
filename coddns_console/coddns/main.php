@@ -51,7 +51,9 @@ session_write_close();
 <head>
 <title>Overall page</title>
 <link rel="stylesheet" type="text/css" href="rs/css/pc/main_overall.css">
-<script src='<?php echo $config["html_root"] . "/rs/js/external/chart.js/Chart.js";?>'></script>
+<link rel="stylesheet" type="text/css" href='<?php echo $config["html_root"] . "/rs/js/external/c3-0.4.11/c3.min.css";?>'>
+<script src='<?php echo $config["html_root"] . "/rs/js/external/d3-3.5.7/d3.min.js";?>'></script>
+<script src='<?php echo $config["html_root"] . "/rs/js/external/c3-0.4.11/c3.min.js";?>'></script>
 </head>
 
 <body>
@@ -62,145 +64,109 @@ if ($user->get_is_logged()){
 
 $dbclient = $config["dbh"];
 
-
-/******************************************************
- * GRAPHS
- *  1st: zone usage
- *  2st: zone general statistics (require coddns_core)
- ******************************************************/
-
-/**
- * 1st GRAPH: Zone usage
- */
-// build data for zones per server chart:
-$q = "select s.id,s.tag,(select count(*) from zones z, zone_server sz where z.id=sz.id_zone and s.id=sz.id_server ) as nzones from servers s;";
-$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
-$chart_pie["title"]  = "Zonas por servidor";
-$chart_pie["id"]     = "zone_usage";
-$chart_pie["width"]  = "150";
-$chart_pie["height"] = "250";
-$chart_pie["legend_style"] = "width: 150px;";
-
-$labels   = "";
-$data     = "";
-$bgColor  = "";
-$hbgColor = "";
-
-while ($r = $dbclient->fetch_object($results)) {
-    $labels   .= "'" . $r->tag . "',";
-    $data     .= $r->nzones . ",";
-    $bgColor  .= "getNextColor(),";
-    $hbgColor .= "getCurrentShape(),";
-}
-$chart_pie["data"]["labels"]           = rtrim($labels, ",");
-$chart_pie["data"]["datasets"]["data"] = rtrim($data, ",");
-$chart_pie["data"]["datasets"]["backgroundColor"]      = rtrim($bgColor, ",");
-$chart_pie["data"]["datasets"]["hoverBackgroundColor"] = rtrim($hbgColor, ",");
-
-/* --------------------------------------------------------------------------- */
-/* --------------------------------------------------------------------------- */
-
-
-// Build data for linear graph
-
-$chart_linear["title"]  = "Estad&iacute;sticas por zona";
-$chart_linear["id"]     = "zone_stats";
-$chart_linear["width"]  = "600";
-$chart_linear["height"] = "400";
-$chart_linear["legend_style"] = "width: 600px;";
-
-// get all block elements dependent on zones:
-$q = "select b.id_block,z.domain from stats_szb b, zones z where b.id_zone=z.id;";
-$r_blocks = $dbclient->exeq($q) or die($dbclient->lq_error());
-
-$i = 0; // initialize 'series' counter
-
-$utime_init = time() - 86400;
-$time_interval = 300;
-$now = time();
-
-$chart_linear["labels"] = "";
-for ($x = 0; $x <= ($now-$utime_init); $x+=$time_interval) {
-    $chart_linear["labels"] .= "'" . date("Ymd H:i:s", $utime_init + $x) . "'";
-    if ($x < $now){
-        $chart_linear["labels"] .= ",";
-    }
-}
-
-while ($row_blocks = $dbclient->fetch_array ($r_blocks)) {
-    // get all items dependent on those block elements
-    $q = "select id, tag from stats_item where id_block=" . $row_blocks["id_block"] . " and tag like '%in auth%';";
-    $r_items = $dbclient->exeq($q) or die($dbclient->lq_error());
-
-    while ($row_items = $dbclient->fetch_array ($r_items)) {
-        // get all final data
-        $q = "select * from (select * from stats_data where id_item=" . $row_items["id"] . " and utimestamp >= " . $utime_init . " order by utimestamp desc) sub order by utimestamp asc;";
-        $r_data = $dbclient->exeq($q) or die($dbclient->lq_error());
-
-        $d[$i]["label"] = $row_items["tag"];
-        $d[$i]["data"]  = "";
-        $d[$i]["backgroundColor"] = "getNextShape()";
-        $d[$i]["borderColor"]     = "getCurrentShape()";
-
-        $column = 0;
-        while ($row_data = $dbclient->fetch_array ($r_data)) {
-            // organize
-            $current_time_segment_floor = $utime_init + (($column) * $time_interval);
-            while ( $current_time_segment_floor < $now ){
-                // calculate segment
-                $current_time_segment_floor = $utime_init + (($column) * $time_interval);
-                $current_time_segment_ceil  = $utime_init + (($column+1) * $time_interval);
-
-                // check data in segment (column)
-                if ( ( $current_time_segment_ceil  >  $row_data["utimestamp"] )
-                  && ( $current_time_segment_floor <= $row_data["utimestamp"] ) ) {
-                    // if the value is in the "segment" of time is represented in the graph, add the data:
-                    $d[$i]["data"] .= $row_data["value"] . ",";
-                    $column++;
-                    break;
-                }
-                else{
-                    // else set to null, and skip this segment
-                    $d[$i]["data"] .= "null,";
-                }
-                $column++;
-            }
-        }
-        $d[$i]["data"] = rtrim($d[$i]["data"], ",");
-
-        $d[$i]["data"] .= "";
-        // Next dataset
-        $i++;
-    }
-}
-if(isset($d)){
-    $chart_linear["datasets"] = $d;
-}
-
-
-
-
-
 ?>
 
 <section style="margin-bottom: 20px; text-align: justify;">
     <h1>Inicio</h1>
     <article>
         <h3>Resumen general</h3>
-        <div class="chart_wrapper">
-            <div class="graph_wrapper">
-                <?php
-                    echo print_graph_pie($chart_pie);
-                ?>
-            </div>
-            <div class="graph_wrapper">
-                <?php
-                    echo print_graph_line($chart_linear);
-                ?>
-            </div>
 
+        <div id="graph">
         </div>
+        <center><h4>queries resulted in authoritative answer</h4></center>
+
+        <script type="text/javascript">
+
+            <?php
+            // print as many "serieX" as graphs to show in the same draw area
+            ?>
+
+            var serie1 = {status:"",response:"", painted:0};
+            var serie2 = {status:"",response:"", painted:0};
+
+            var series = [];
+            var restantes=2;
+
+            var chart = c3.generate({
+              bindto: '#graph',
+              data: {
+                xFormat: '%Y-%m-%dT%H:%M:%S',
+                xs: {
+            <?php
+            // Also print X-Y mappping references
+            ?>
+                  'coddns.org':'t_coddns.org',
+                  'senoscasan.net':'t_senoscasan.net'
+                },
+                columns: []
+              },
+              axis: {
+                  x: {
+                      type: 'timeseries',
+                      tick: {
+                              format: '%Y-%m-%d %H:%M:%S'
+                      }
+                  }
+              }
+            });
+
+
+
+            function harvest_data() {
+
+            setTimeout(function () {
+              var readed = 0;
+            <?php
+            // Print entire block as many times as graphs to show in the same draw area
+            ?>
+              if ((serie1) && (serie1.status) && (serie1.status == 200) && (serie1.painted == 0)) {
+                chart.load({
+                  columns: [
+                      JSON.parse(serie1.response)["values"],
+                      JSON.parse(serie1.response)["timestamps"]
+                  ]
+                });
+                serie1.painted=1;
+                readed++;
+              }
+            <?php
+            // *** END ***
+            ?>
+              if ((serie2) && (serie2.status) && (serie2.status == 200) && (serie2.painted == 0)) {
+                chart.load({
+                  columns: [
+                      JSON.parse(serie2.response)["values"],
+                      JSON.parse(serie2.response)["timestamps"]
+                  ]
+                });
+                serie2.painted=1;
+                readed++;
+              }
+
+              if (readed >= restantes) {
+                return;
+              }
+              else {
+                harvest_data();
+              }
+            },1000);
+            }
+
+            (function () {
+            <?php 
+            // Generate as many AJAX calls as graphs to show in the same draw area
+            ?>
+                get_ajax_response("api.php",'action=get_data&args={"oid":396,"custom_tag":"coddns.org"}',serie1);
+                get_ajax_response("api.php",'action=get_data&args={"oid":386,"custom_tag":"senoscasan.net"}',serie2);
+
+                harvest_data();
+            })();
+        </script>
+
+
+
+
+
 
     </article>
     <article class="nav">
