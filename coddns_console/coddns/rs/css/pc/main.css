@@ -12,7 +12,23 @@ html{
 }
 body{
 	width: 100%;
-	padding-bottom: 150px;
+}
+h5#loading_charts_msg {
+    width: 100%;
+    height: 50px;
+    text-align: center;
+    margin-bottom: -50px;
+}
+div#chart_selector{
+    padding-top: 30px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.5s 0s;
+}
+select#chart_list{
+    border: none;
+    height: 250px;
+    display: block;
 }
 div#main{
     margin-left: 200px;

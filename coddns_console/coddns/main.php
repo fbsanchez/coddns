@@ -67,25 +67,67 @@ $dbclient = $config["dbh"];
 ?>
 
 <section style="margin-bottom: 20px; text-align: justify;">
-    <h1>Inicio</h1>
+    <h1>DNS statistics</h1>
     <article>
-        <h3>Resumen general</h3>
+        <br/><br/>
 
+        <h5 id="loading_charts_msg">Loading charts...</h5>
         <div id="graph">
         </div>
-        <center><h4>queries resulted in authoritative answer</h4></center>
+        <center><h5 style="cursor:pointer;" onclick="document.getElementById('chart_selector').style['max-height'] = '350px';">Bind stats</h5></center>
+
+
+
+        <div id="chart_selector"><center>
+        <select multiple="yes" id="chart_list">
+        <?php
+        $options = $dbclient->get_sql_all_objects("select * from stats_item");
+        $default_selected = $dbclient->get_sql_all_objects("select * From stats_item where tag like \"%in auth%\";");
+
+        foreach ($options["data"] as $option) {
+            echo "<option>" . $option->tag . "</option>";
+        }
+        ?>
+        </select>
+
+        <input type="submit" value="Add to chart" onclick="load_charts(); return false;" />
+
+        </center>
+        </div>
 
         <script type="text/javascript">
 
-            <?php
-            // print as many "serieX" as graphs to show in the same draw area
-            ?>
+            function load_charts(){
+                document.getElementById('loading_charts_msg').style["display"] = 'block';
+            }
 
+            var default_objects = {
+                <?php
+                    // print as many "serieX" as graphs to show in the same draw area
+                    foreach ($default_selected["data"] as $option) {
+                       echo 'v' . sha1($option->tag) . ':{status:"",response:"", painted:0},';
+                    }
+                ?>
+            };
+
+            var all_items = {
+                <?php
+                    // print as many "serieX" as graphs to show in the same draw area
+                    foreach ($options["data"] as $option) {
+                       echo 'v' . sha1($option->tag) . ':{status:"",response:"", painted:0},';
+                    }
+                ?>
+            };
+
+            var remaining=<?php echo $default_selected["nitems"];?>;
+
+
+            <?php
+            /*
             var serie1 = {status:"",response:"", painted:0};
             var serie2 = {status:"",response:"", painted:0};
-
-            var series = [];
-            var restantes=2;
+            */           
+            ?>            
 
             var chart = c3.generate({
               bindto: '#graph',
@@ -94,11 +136,20 @@ $dbclient = $config["dbh"];
                 xs: {
             <?php
             // Also print X-Y mappping references
-            ?>
+            /*
                   'coddns.org':'t_coddns.org',
-                  'senoscasan.net':'t_senoscasan.net'
+                  'senoscasan.net':'t_senoscasan.net',
+            */
+            foreach ($options["data"] as $option) {
+                echo "'" . $option->tag . "':'t_" . $option->tag . "',";
+            }
+            ?>
                 },
                 columns: []
+              },
+              point: {
+                show: false,
+                r: 0,
               },
               axis: {
                   x: {
@@ -107,43 +158,50 @@ $dbclient = $config["dbh"];
                               format: '%Y-%m-%d %H:%M:%S'
                       }
                   }
-              }
+              },
+
+
+/*
+            transition: {
+                duration: 400
+            }
+			subchart: {
+                show: true
+			},
+			size: {
+                height: 480
+            }
+*/
             });
 
 
+            function load_chart(data) {
+                if ((data) && (data.status) && (data.status == 200) && (data.painted == 0)) {
+                    chart.load({
+                      columns: [
+                          JSON.parse(data.response)["values"],
+                          JSON.parse(data.response)["timestamps"]
+                      ],
+                      type: 'spline', <?php /* spline, bar, area, stacked-area, pie*/?>
+                    });
+                    data.painted=1;
+                    return 1;
+                }
+                return 0;
+            }
 
             function harvest_data() {
 
             setTimeout(function () {
               var readed = 0;
-            <?php
-            // Print entire block as many times as graphs to show in the same draw area
-            ?>
-              if ((serie1) && (serie1.status) && (serie1.status == 200) && (serie1.painted == 0)) {
-                chart.load({
-                  columns: [
-                      JSON.parse(serie1.response)["values"],
-                      JSON.parse(serie1.response)["timestamps"]
-                  ]
-                });
-                serie1.painted=1;
-                readed++;
-              }
-            <?php
-            // *** END ***
-            ?>
-              if ((serie2) && (serie2.status) && (serie2.status == 200) && (serie2.painted == 0)) {
-                chart.load({
-                  columns: [
-                      JSON.parse(serie2.response)["values"],
-                      JSON.parse(serie2.response)["timestamps"]
-                  ]
-                });
-                serie2.painted=1;
-                readed++;
+
+              for (var item in default_objects) {
+                console.log("Analizando: " + default_objects[item]);
+                  readed+=load_chart(default_objects[item]);
               }
 
-              if (readed >= restantes) {
+              if (readed >= remaining) {
+                document.getElementById('loading_charts_msg').style["display"] = 'none';
                 return;
               }
               else {
@@ -155,10 +213,18 @@ $dbclient = $config["dbh"];
             (function () {
             <?php 
             // Generate as many AJAX calls as graphs to show in the same draw area
-            ?>
+            
+            // print as many "serieX" as graphs to show in the same draw area
+            foreach ($default_selected["data"] as $option) {
+               echo "get_ajax_response('api.php','action=get_data&args={\"oid\":" . $option->id . ",\"custom_tag\":\"" . $option->tag . "\"}', default_objects.v" . sha1($option->tag) . ");";
+               //'v' . sha1($option->tag) . ':{status:"",response:"", painted:0},';
+            }
+
+            /*
                 get_ajax_response("api.php",'action=get_data&args={"oid":396,"custom_tag":"coddns.org"}',serie1);
                 get_ajax_response("api.php",'action=get_data&args={"oid":386,"custom_tag":"senoscasan.net"}',serie2);
-
+            */
+            ?>
                 harvest_data();
             })();
         </script>
@@ -169,6 +235,7 @@ $dbclient = $config["dbh"];
 
 
     </article>
+<!--
     <article class="nav">
         <h3>Navegaci&oacute;n r&aacute;pida</h3>
 
@@ -186,6 +253,7 @@ $dbclient = $config["dbh"];
         </div>
         
     </article>
+-->
 </section>
 
 <?php
