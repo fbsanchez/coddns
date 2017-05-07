@@ -358,7 +358,7 @@ function close_ajax_message(){
   }
 }
 window.onmouseup = function (e){
-  if(item){
+  if((item) && (item.style!= null)){
     item.style.cursor="auto";
     item=null;
     document.body.style["user-select"]= "auto";
@@ -369,11 +369,11 @@ window.onmouseup = function (e){
   }
 };
 window.onmousemove = function (e){ 
-  if(item){
-    item.style.top=(e.clientY)+"px";
-    item.style.left=(e.clientX)+"px"; 
-    item.style.position="fixed";
-    item.style.cursor="all-scroll";
+  if((item) && (item.style!= null)){
+    item.style["top"]=(e.clientY)+"px";
+    item.style["left"]=(e.clientX)+"px"; 
+    item.style["position"]="fixed";
+    item.style["cursor"]="all-scroll";
   }
 };
 

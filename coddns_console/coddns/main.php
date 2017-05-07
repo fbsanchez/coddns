@@ -82,33 +82,39 @@ $dbclient = $config["dbh"];
         <select multiple="yes" id="chart_list">
         <?php
         $options = $dbclient->get_sql_all_objects("select * from stats_item");
-        $default_selected = $dbclient->get_sql_all_objects("select * From stats_item where tag like \"%in auth%\";");
+        $default_selected = $dbclient->get_sql_all_objects("select * From stats_item where tag like \"Name server%in auth%\";");
 
         foreach ($options["data"] as $option) {
-            echo "<option>" . $option->tag . "</option>";
+            echo "<option id='" . $option->id . "' value='v" . sha1($option->tag) . "'>" . $option->tag . "</option>";
         }
         ?>
         </select>
 
-        <input type="submit" value="Add to chart" onclick="load_charts(); return false;" />
+        <input type="submit" value="Add to chart" onclick="add_charts(); return false;" />
+        <input type="submit" value="Clear all" onclick="clear_charts(); return false;" />
 
         </center>
         </div>
 
         <script type="text/javascript">
 
-            function load_charts(){
-                document.getElementById('loading_charts_msg').style["display"] = 'block';
+            function clear_charts() {
+                chart.unload();
             }
 
-            var default_objects = {
-                <?php
-                    // print as many "serieX" as graphs to show in the same draw area
-                    foreach ($default_selected["data"] as $option) {
-                       echo 'v' . sha1($option->tag) . ':{status:"",response:"", painted:0},';
-                    }
-                ?>
-            };
+            function add_charts(){
+                document.getElementById('loading_charts_msg').style["display"] = 'block';
+                var selected = document.getElementById("chart_list").selectedOptions;
+                for( var i=0; i<selected.length; i++) {
+                    //default_objects.push();
+                    var obj_name = selected[i].value;
+                    queue[obj_name] = {status:"",response:"", painted:0};
+                    queue_handler.push(obj_name);
+                    get_ajax_response("api.php",'action=get_data&args={"oid":' + selected[i].id + ',"custom_tag":"' + selected[i].text + '"}', queue[obj_name]);
+                    remaining++;
+                };
+                harvest_data();
+            }
 
             var all_items = {
                 <?php
@@ -119,6 +125,8 @@ $dbclient = $config["dbh"];
                 ?>
             };
 
+            var queue = {};
+            var queue_handler = [];
             var remaining=<?php echo $default_selected["nitems"];?>;
 
 
@@ -176,7 +184,7 @@ $dbclient = $config["dbh"];
 
 
             function load_chart(data) {
-                if ((data) && (data.status) && (data.status == 200) && (data.painted == 0)) {
+                if ((data != null) && (data.status != null) && (data.status == 200) && (data.painted == 0)) {
                     chart.load({
                       columns: [
                           JSON.parse(data.response)["values"],
@@ -187,28 +195,40 @@ $dbclient = $config["dbh"];
                     data.painted=1;
                     return 1;
                 }
+                if ((data != null) && (data.painted==1)) {
+                    return 1;
+                }
                 return 0;
             }
 
             function harvest_data() {
+                setTimeout(function () {
+                    for (var i = 0; i < queue_handler.length; i++) {
+                        item=queue_handler.pop()
+                        var ret =load_chart(queue[item]);
+                        if(ret > 0) {
+                            remaining -= ret;
+                        }
+                        else {
+                            // enqueue again
+                            queue_handler.push(item);
+                        }
 
-            setTimeout(function () {
-              var readed = 0;
+                    }
 
-              for (var item in default_objects) {
-                console.log("Analizando: " + default_objects[item]);
-                  readed+=load_chart(default_objects[item]);
-              }
-
-              if (readed >= remaining) {
-                document.getElementById('loading_charts_msg').style["display"] = 'none';
-                return;
-              }
-              else {
-                harvest_data();
-              }
-            },1000);
+                    if (remaining <= 0) {
+                        document.getElementById('loading_charts_msg').style["display"] = 'none';
+                        return;
+                    }
+                    else {
+                        harvest_data();
+                    }
+                },1000);
             }
+
+        </script>
+
+        <script type="text/javascript">
 
             (function () {
             <?php 
@@ -216,8 +236,13 @@ $dbclient = $config["dbh"];
             
             // print as many "serieX" as graphs to show in the same draw area
             foreach ($default_selected["data"] as $option) {
-               echo "get_ajax_response('api.php','action=get_data&args={\"oid\":" . $option->id . ",\"custom_tag\":\"" . $option->tag . "\"}', default_objects.v" . sha1($option->tag) . ");";
-               //'v' . sha1($option->tag) . ':{status:"",response:"", painted:0},';
+                $obj_name = "v" . sha1($option->tag);
+                ?>
+            queue.<?php echo $obj_name; ?> = {status:"",response:"", painted:0};
+            console.log("initialized: [<?php echo $obj_name; ?>]" + queue);
+            queue_handler.push("<?php echo $obj_name; ?>");
+            <?php
+                echo "get_ajax_response('api.php','action=get_data&args={\"oid\":" . $option->id . ",\"custom_tag\":\"" . $option->tag . "\"}', queue.v" . sha1($option->tag) . ");\n";
             }
 
             /*
@@ -225,7 +250,8 @@ $dbclient = $config["dbh"];
                 get_ajax_response("api.php",'action=get_data&args={"oid":386,"custom_tag":"senoscasan.net"}',serie2);
             */
             ?>
-                harvest_data();
+            harvest_data();
+            
             })();
         </script>
 
