@@ -39,42 +39,49 @@ function load_extra_config($cnf){
 /**
  * Encrypt (basic)
  */
-function coddns_encrypt($str){
+function coddns_encrypt($str, $password = null, $iv = null){
+    global $config;
+
     $out = "";
 
-    if ((! isset($str)) || ($str == "")){
-        return null;
+    if (!isset($password)){
+        $password = $config["salt"];
     }
 
-    $chars = str_split($str);
-    $nchars = count($chars);
-    $i = 0;
-    foreach ($chars as $char){
-        $out .= pow(ord($char)+($i++),2);
-        if ($i < $nchars){
-             $out .= "-";
-        }
+    $hash = substr(base64_encode(hash_hmac("sha256",$password,'',true)), 0, 16);
+
+    if (!isset($iv)) {
+        $iv = "1234123443214321";
     }
-    return $out;
+
+    $str = openssl_encrypt($str, "AES-128-CBC", $hash, true, $iv);
+
+    $b64str = base64_encode($str);
+
+    return $b64str;
 }
 
 /**
  * Decrypt (basic)
  */
 function coddns_decrypt($str){
+    global $config;
+
     $out = "";
 
-    if ((! isset($str)) || ($str == "")){
-        return null;
+    if (!isset($password)){
+        $password = $config["salt"];
     }
 
-    $chars = explode("-", $str);
-    $nchars = count($chars);
-    $i = 0;
-    foreach ($chars as $char){
-        $out .= chr(sqrt($char)-($i++));
+    $hash = substr(base64_encode(hash_hmac("sha256",$password,'',true)), 0, 16);
+
+    if (!isset($iv)) {
+        $iv = "1234123443214321";
     }
-    return $out;   
+
+    $str = openssl_decrypt(base64_decode($str), "AES-128-CBC", $hash,true,$iv) . "\n";
+
+    return $str;
 }
 
 
