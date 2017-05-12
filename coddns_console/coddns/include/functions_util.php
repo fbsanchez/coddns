@@ -79,7 +79,7 @@ function coddns_decrypt($str){
         $iv = "1234123443214321";
     }
 
-    $str = openssl_decrypt(base64_decode($str), "AES-128-CBC", $hash,true,$iv) . "\n";
+    $str = openssl_decrypt(base64_decode($str), "AES-128-CBC", $hash,true,$iv);
 
     return $str;
 }
