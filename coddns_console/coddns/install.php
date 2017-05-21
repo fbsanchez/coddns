@@ -697,6 +697,9 @@ elseif ($phase == 3){
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	$zone_id = $dbclient->last_id();
 
+	// TODO XXX: Also create zone in bind server (local) if available
+	// TODO2 XXX: Maybe we should ask for server credentials here...
+
 
 	// Add zone <-> server relation
 	$q = "insert into zone_server (id_zone,id_server,id_master) values ($zone_id,$server_id,$server_id)";
@@ -710,13 +713,13 @@ elseif ($phase == 3){
 	$str_config .= "/*\n";
 	$str_config .= " * Database configuration\n";
 	$str_config .= " */\n";
-	$str_config .= "\$db_config = array(\"engine\"  =>\"" . $config["engine"] . "\", // Could be mysql or postgresql\n";
-	$str_config .= "                   \"username\"=>\"" . $config["username"] . "\",\n";
-	$str_config .= "                   \"password\"=>'" . $config["password"] . "',\n";
-	$str_config .= "                   \"hostname\"=>\"" . $config["hostname"] . "\",\n";
-	$str_config .= "                   \"port\"    =>\"" . $config["port"] . "\",\n";
-	$str_config .= "                   \"name\"    =>\"" . $config["name"] . "\",\n";
-	$str_config .= "                   \"schema\"  =>\"" . $config["schema"] . "\");\n";
+	$str_config .= "\$db_config = array(\"engine\"   =>\"" . $config["engine"]   . "\", // Could be mysql or postgresql\n";
+	$str_config .= "                    \"username\" =>\"" . $config["username"] . "\",\n";
+	$str_config .= "                    \"password\" =>'"  . $config["password"] . "',\n";
+	$str_config .= "                    \"hostname\" =>\"" . $config["hostname"] . "\",\n";
+	$str_config .= "                    \"port\"     =>\"" . $config["port"]     . "\",\n";
+	$str_config .= "                    \"name\"     =>\"" . $config["name"]     . "\",\n";
+	$str_config .= "                    \"schema\"   =>\"" . $config["schema"]   . "\");\n";
 	$str_config .= "\n";
 	$str_config .= "// domain name: FQDN base for the system\n";
 	$str_config .= "// html_root: if you want to access http://yousite.yourdomain/coddns\n";

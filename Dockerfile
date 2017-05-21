@@ -23,8 +23,10 @@ WORKDIR /opt/coddns/
 RUN yum install -y epel-release  && \
     rpm -Uvh /tmp/docker/remi-release-7.rpm && \
     rpm -ivh /tmp/docker/mysql-community-release-el7-5.noarch.rpm && \
-    yum install -y httpd php php-pecl-ssh2 php-mysql which nmap sudo && \
-    systemctl enable httpd.service
+    yum install -y httpd php php-pecl-ssh2 php-mysql which nmap sudo openssl openssh-server && \
+    systemctl enable httpd.service && \
+    systemctl enable sshd.service && \
+    usermod --password $(echo coddns | openssl passwd -1 -stdin) root
 
 # install and enable mysqld
 RUN yum install -y mysql-server && \
@@ -34,7 +36,10 @@ RUN yum install -y mysql-server && \
 
 # install and enable bind
 RUN yum install -y bind bind-utils && \
-    systemctl enable named.service
+    systemctl enable named.service && \
+    mkdir -p /share/ddns && \
+    rndc-confgen | head -5 > /share/ddns/rndc.key && \
+    sed -i '1s/^/include "\/share\/ddns\/rndc.key";\n/' /etc/named.conf
 
 
 RUN mkdir -p /opt/coddns/spool && \
@@ -43,10 +48,11 @@ RUN mkdir -p /opt/coddns/spool && \
     mv /tmp/coddns_core/opencore/* /opt/coddns/ && \
     ln -s /opt/coddns/dnsmgr.sh /usr/bin/dnsmgr && \
     echo '<meta http-equiv="refresh" content="0; url=/coddns/index.php">' > /var/www/html/index.html && \
+    chown -R apache. /opt/coddns/spool && \
     systemctl enable mysqld.service && \
     systemctl enable named.service
 
-# Final update & mysql fix
+# Final update
 RUN yum update -y
 
 # Exposing ports for: HTTP, HTTPS, Bind
