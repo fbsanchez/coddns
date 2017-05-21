@@ -1,0 +1,11 @@
+Docker installation
+-------------------
+
+Launch:
+docker run --privileged --name httpd -v /sys/fs/cgroup:/sys/fs/cgroup:ro -p 80:80 -d coddns/coddns:2.0-prealpha
+
+
+MySQL default password (empty)
+MySQL default user: root
+
+

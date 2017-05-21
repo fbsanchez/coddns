@@ -491,7 +491,7 @@ elseif ($phase == 2) {
 		if ($create_database_ok == 1){
 			switch ($engine){
 				case "mysql":
-					if ("$dbpass" == ""){
+					if ("$dbrpass" == "") {
 						$command = "mysql -u $dbroot -h $dbhost -P $dbport $dbname < $sql_file";
 					}
 					else {
@@ -500,7 +500,7 @@ elseif ($phase == 2) {
 					exec ($command . " 2>&1", $sql_file_exec, $return);
 					break;
 				case "postgresql":
-					putenv("PGPASSWORD=$dbpass");
+					putenv("PGPASSWORD=$dbrpass");
 
 					$command = "psql -U $dbuser -w -h $dbhost -p $dbport -d $dbname -f $sql_file";
 					exec ($command . " 2>&1"	, $sql_file_exec, $return);
