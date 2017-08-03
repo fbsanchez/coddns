@@ -1,9 +1,16 @@
+@font-face {
+  font-family: 'Roboto';
+  src: url(../../fonts/Roboto-Regular.ttf);
+}
+
+
 *{
     margin: 0;
     padding: 0;
-    font-family: Roboto,'Source Sans Pro';
+    font-family: Roboto, arial;
     box-sizing: border-box;
 }
+
 html{
 	width: 100%;
 	background: #424242;

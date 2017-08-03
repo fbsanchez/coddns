@@ -53,19 +53,8 @@ function print_header($phase) {
 <!DOCTYPE HTML>
 <hmtl>
 <head>
-<title>CODDNS Installer - Integrated management of name resolution services</title>
+<title>CODDNS Installer - Integrated management of DNS services</title>
 
-<?php
-    if (isset($_SERVER["HTTPS"]) && $_SERVER['SERVER_PORT'] == '443') {
-?>
-<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
-<?php
-} else {
-?>
-<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
-<?php
-}
-?>
 <link rel="icon" href="rs/img/coddns.ico">
 <link rel="stylesheet" type="text/css" href="rs/css/pc/install.css">
 <script type="text/javascript">
@@ -147,6 +136,9 @@ $writable_config_ok = 0;
 // check named service:
 exec ("rndc 2>&1 | tail | grep Version", $service_output, $return);
 if ($return == 0) { $named_ok  = 1; }
+else {
+	$service_output[0] = "Not found.";
+}
 
 // check ddns_manager is present
 exec ("which dnsmgr | wc -l", $dnsmgr_output, $return);
@@ -180,36 +172,36 @@ if ($ssh2_ok+$writable_config_ok == 2) {
 	<?php print_header(1) ?>
 	<article>
 		<div>
-			<h1>Bienvenido a CODDNS</h1>
-			<p>Gracias por elegir CODDNS como su sistema de gesti&oacute;n integral de servicios de resoluci&oacute;n de nombres de dominio.</p>
+			<h1>CODDNS installer</h1>
+			<p>Thank you for choose CODDNS for your DNS management.</p>
 			<br />
-			<p>Por favor, antes de continuar, verifique que se cumplen todos los requisitos, aquellos que est&eacute;n en negrita son <b>imprescindibles</b>.</p>
+			<p>Please, before you can continue the installation process, you must verify all requirements are accomplished. Those on <b>bold</b> are mandatory.</p>
 		</div>
 		<div class="t_label" onclick="toggle(requeriments);">
-			<div class="status <?php echo check_item($global_ok);?>">&nbsp;</div>Requisitos
+			<div class="status <?php echo check_item($global_ok);?>">&nbsp;</div>Requirements
 		</div>
 		<div class="tab" id="requeriments" <?php if ($global_ok !=1) echo "style='max-height:1000px;'";?> >
-			<i>Consola de administraci&oacute;n</i>
+			<i>Web portal</i>
 			<ul>
 				<li>
-					<div class="status ok">&nbsp;</div> <b>Servidor web</b>
+					<div class="status ok">&nbsp;</div> <b>Web server</b>
 				</li>
 				<li>
 					<div class="status ok">&nbsp;</div> <b>PHP</b>
 				</li>
 				<li>
 					<div class="status <?php check_item($writable_config_ok);?>">&nbsp;</div>
-						<b>Permisos de escritura sobre el directorio de configuraci&oacute;n</b>
+						<b>Writable configuration directory</b>
 				</li>
 				<li>
 					<div class="status <?php check_item($ssh2_ok);?>">&nbsp;</div> <b>PHP PECL SSH2</b>
 					<?php if ($ssh2_ok != 1) {?>
-					<br><span style="font-size: 0.9em;margin-left: 25px;">Librer&iacute;as acceso SSH: yum install php-pecl-ssh2</span>
-					<br><span style="font-size: 0.9em;margin-left: 25px;">Librer&iacute;as acceso SSH: apt-get install php5-ssh2</span>
+					<br><span style="font-size: 0.9em;margin-left: 25px;">SSH library (centos): yum install php-pecl-ssh2</span>
+					<br><span style="font-size: 0.9em;margin-left: 25px;">SSH library (debian): apt-get install php5-ssh2</span>
 					<?php }?>
 				</li>
 			</ul>
-			<b><i>Conectores a bases de datos</i></b> <span style="font-size:0.65em;">(al menos uno)</span>
+			<b><i>Database connector</i></b> <span style="font-size:0.65em;">(at least one)</span>
 			<ul>
 				<li>
 					<div class="status <?php check_item($mysqli_ok);?>">&nbsp;</div> PHP MySQLi
@@ -218,18 +210,18 @@ if ($ssh2_ok+$writable_config_ok == 2) {
 					<div class="status <?php check_item($pgsql_ok);?>">&nbsp;</div> PHP PostgreSQL (&gt; 9.X)
 				</li>
 			</ul>
-			<i>Administraci&oacute;n de servidor local</i> <span style="font-size:0.65em;">(opcional)</span>
+			<i>Local DNS management</i> <span style="font-size:0.65em;">(optional)</span>
 			<ul>
 				<li>
 					<div class="status <?php check_item($named_ok);?>">&nbsp;</div>
-						Bind - Servicio DNS<br><span style="font-size: 0.9em;margin-left: 25px;"> <?php echo $service_output[0];?> </span>
+						Bind - DNS service<br><span style="font-size: 0.9em;margin-left: 25px;"><?php echo $service_output[0];?></span>
 				</li>
 				<li>
 					<div class="status <?php check_item($dnsmgr_ok);?>">&nbsp;</div>
 						DNS manager script
 				</li>
 			</ul>
-			<i>Herramientas</i> <span style="font-size:0.65em;">(opcional)</span>
+			<i>Tools</i> <span style="font-size:0.65em;">(optional)</span>
 			<ul>
 				<li>
 					<div class="status <?php check_item($nmap_ok);?>">&nbsp;</div> nmap
@@ -241,13 +233,13 @@ if ($ssh2_ok+$writable_config_ok == 2) {
 			if($global_ok == 1) {
 		?>
 		<div class="t_label" onclick="toggle(data);">
-			<div class="status">&nbsp;</div>Datos
+			<div class="status">&nbsp;</div>Your information
 		</div>
 		<div class="tab" id="data" <?php if ($global_ok ==1) echo "style='max-height:1000px;'";?>>
 			<form id="mysql" name="dbdata" method="POST" onsubmit="dbrpass.value=btoa(dbrpass.value);dbpass.value=btoa(dbpass.value);">
-				<label>Motor de la base de datos:</label>
+				<label>Database engine:</label>
 				<select id="engine" name="engine" onchange="update_data_form();">
-					<option value="" selected>Seleccione</option>
+					<option value="" selected>Please select</option>
 					<?php
 					if ($mysqli_ok) {
 					?>
@@ -276,37 +268,37 @@ if ($ssh2_ok+$writable_config_ok == 2) {
 				}
 				</script>
 					<li>
-						<label>Servidor:</label><input name="dbhost" type="text" value="localhost" onchange="check_dbhost(this);"/>
+						<label>DB server:</label><input name="dbhost" type="text" value="localhost" onchange="check_dbhost(this);"/>
 					</li>
 					<li id="myip_li" style="display: none;">
-						<label>IP origen:</label><input id="myip" name="myip" type="text"/>
+						<label>Source IP:</label><input id="myip" name="myip" type="text"/>
 					</li>
 					<li>
-						<label>Puerto:</label><input id="dbp" name="dbport" type="number" value="3306"/>
+						<label>Port:</label><input id="dbp" name="dbport" type="number" value="3306"/>
 					</li>
 					<li>
-						<label>Base de datos:</label><input name="dbname" type="text" value="coddns"/>
+						<label>DB name:</label><input name="dbname" type="text" value="coddns"/>
 					</li>
 					<li id="schema" style="padding:0;max-height:0;overflow:hidden;">
-						<label>Esquema:</label><input name="schema" type="text" value="ddnsp" required/>
+						<label>Schema:</label><input name="schema" type="text" value="ddnsp" required/>
 					</li>
 					<li>
-						<label>Usuario:</label><input name="dbroot" type="text" value="root"/>
+						<label>User:</label><input name="dbroot" type="text" value="root"/>
 					</li>
 					<li>
-						<label>Contrase&ntilde;a:</label><input id="dbrpass" name="dbrpass" type="password"/>
+						<label>Password:</label><input id="dbrpass" name="dbrpass" type="password"/>
 					</li>
 					<li>
-						<label>Nuevo usuario:</label><input name="dbuser" type="text" value="coddns"/>
+						<label>New user:</label><input name="dbuser" type="text" value="coddns"/>
 					</li>
 					<li>
-						<label>Nueva contrase&ntilde;a:</label><input id="dbpass" name="dbpass" type="password"/>
+						<label>New password:</label><input id="dbpass" name="dbpass" type="password"/>
 					</li>
 					<li>
-						<label>Realizar instalaci&oacute;n limpia:</label><input name="dbdrop" type="checkbox" checked/>
+						<label>Perform clean install:</label><input name="dbdrop" type="checkbox" checked/>
 					</li>
 					<li>
-						<input type="submit" value="Instalar"/>
+						<input type="submit" value="Install"/>
 					</li>
 				</ul>
 			</form>
@@ -568,12 +560,12 @@ elseif ($phase == 2) {
 	?>
 	<article>
 		<div>
-			<p>Resultados del proceso de instalaci&oacute;n:</p>
+			<p>Installation steps:</p>
 			
 			<br />
 			<ul style="width: auto;">
 				<li>
-					<div class="status <?php check_item($sql_connection_ok);?>">&nbsp;</div> Conexi&oacute;n con el servidor
+					<div class="status <?php check_item($sql_connection_ok);?>">&nbsp;</div> Connect to DB server
 			<?php
 				if(isset($connection_message)) {
 					echo "<div onclick='toggle(this);' class='err'>Error: $connection_message</div>";
@@ -584,7 +576,7 @@ elseif ($phase == 2) {
 				if ("$dbdrop" == "on") {
 			?>
 				<li>
-					<div class="status <?php check_item($drop_database_ok);?>">&nbsp;</div> Eliminado de base de datos <?php echo $dbname;?> previa
+					<div class="status <?php check_item($drop_database_ok);?>">&nbsp;</div> Clear previous DB: <?php echo $dbname;?>
 			<?php
 					if(isset($drop_message)) {
 						echo "<div onclick='toggle(this);' class='err'>Error: $drop_message</div>";
@@ -595,7 +587,7 @@ elseif ($phase == 2) {
 				}
 			?>
 				<li>
-					<div class="status <?php check_item($create_database_ok);?>">&nbsp;</div> Creaci&oacute;n de base de datos <?php echo $dbname;?>
+					<div class="status <?php check_item($create_database_ok);?>">&nbsp;</div> Create new DB: <?php echo $dbname;?>
 			<?php
 				if(isset($create_message)) {
 					echo "<div onclick='toggle(this);' class='err'>Error: $create_message</div>";
@@ -603,7 +595,7 @@ elseif ($phase == 2) {
 			?>
 				</li>
 				<li>
-					<div class="status <?php check_item($sql_process_ok);?>">&nbsp;</div> Procesado de scripts de despliegue
+					<div class="status <?php check_item($sql_process_ok);?>">&nbsp;</div> Process deployment scripts
 			<?php
 				if(isset($sql_script_message)) {
 					echo "<div onclick='toggle(this);' class='err'>Error: ";
@@ -615,7 +607,7 @@ elseif ($phase == 2) {
 			?>
 				</li>
 				<li>
-					<div class="status <?php check_item($grant_user_ok);?>">&nbsp;</div> Asignaci&oacute;n de permisos a <?php echo $dbuser; ?>
+					<div class="status <?php check_item($grant_user_ok);?>">&nbsp;</div> Fix grants to <?php echo $dbuser; ?>
 			<?php
 				if(isset($grant_message)) {
 					echo "<div onclick='toggle(this);' class='err'>Error: $grant_message</div>";
@@ -626,9 +618,11 @@ elseif ($phase == 2) {
 		</div>
 		<?php
 			if ($sql_process_ok == 1) {
+
+				/* FORM STEP 3*/
 		?>
 		<div class="t_label" onclick="toggle(data);">
-			<div class="status">&nbsp;</div>Configuraci&oacute;n final del sitio:
+			<div class="status">&nbsp;</div>Final site settings:
 		</div>
 		<div class="tab" style="max-height: 1000px" id="data">
 			<form id="mysql" name="finalcfg" method="POST" onsubmit="pass.value=btoa(pass.value);">
