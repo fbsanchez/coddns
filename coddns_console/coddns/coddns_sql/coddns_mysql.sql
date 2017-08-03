@@ -311,6 +311,7 @@ INSERT INTO settings(field,value)
  values
     ("dbschema", "1"),
     ("slack_url", ""),
+    ("first_steps", "1"),
     ("installdir", "/opt/coddns/"),
     ("spooldir", "/opt/coddns/spool/"),
     ("max_age", "7"),

@@ -38,14 +38,14 @@ class MyClient{
   }
 
   function connect(){
-    $err_level = error_reporting(0); 
+//    $err_level = error_reporting(0); 
     // avoid warnings: Headers and client lib minor version mismatch
     $this->link = mysqli_connect($this->hostname,
                             $this->username,
                             $this->password,
                             $this->db,
                             $this->port);
-    error_reporting($err_level);
+//    error_reporting($err_level);
     if(!$this->link){
       $this->error =  mysqli_connect_errno() . PHP_EOL;
       return false;

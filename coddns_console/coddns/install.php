@@ -43,7 +43,7 @@ function print_header($phase) {
 	?>
 	<header>
 		<img src="rs/img/coddns_225.png" alt="logo"/>
-		<p style="float: right;margin: 17px 1em 0px 0px;color: #fff;font-size: 0.72em;">Fase <?php echo $phase;?>/3</p>
+		<p style="float: right;margin: 17px 1em 0px 0px;color: #fff;font-size: 0.72em;">Step <?php echo $phase;?>/3</p>
 	</header>
 	<?php
 }
@@ -106,7 +106,6 @@ if(    (!isset ($_POST["engine"]))
 	if(    (!isset($_POST["html_root"]))
 		|| (!isset($_POST["user"]))
 		|| (!isset($_POST["pass"]))
-		|| (!isset($_POST["domain"]))
 		|| (!isset($_POST["hash"]))
 	) { // NO PHASE 3 expected values received, I must be on 1
 		$phase = 1;
@@ -116,6 +115,7 @@ else { // PHASE 2 expected values received: I should be on 2
 	$phase = 2;
 }
 
+print_header($phase);
 
 if ($phase == 1) {
 // TESTS BEGIN
@@ -169,7 +169,6 @@ if ($ssh2_ok+$writable_config_ok == 2) {
 //$service_requeriments = $named_ok + $dnsmgr_ok;
 //$global_requeriments = $service_requeriments + 
 ?>
-	<?php print_header(1) ?>
 	<article>
 		<div>
 			<h1>CODDNS installer</h1>
@@ -310,7 +309,6 @@ if ($ssh2_ok+$writable_config_ok == 2) {
 <?php
 }
 elseif ($phase == 2) {
-	print_header(2);
 
 	$engine  = DBClient::prepare($_POST["engine"],"insecure_text");
 	$dbroot  = DBClient::prepare($_POST["dbroot"],"insecure_text");
@@ -365,7 +363,7 @@ elseif ($phase == 2) {
 			break;
 	}
 
-	file_exists($sql_file) or die ("Scrips SQL no encontrados.");
+	file_exists($sql_file) or die ("SQL database scripts don't found.");
 	
 
 	// Initialize flags
@@ -380,6 +378,9 @@ elseif ($phase == 2) {
 
 	if($dbclient->connect()) {
 		$sql_connection_ok = 1;
+	}
+	else {
+		$connection_message = "Couldn't connect to DB server. " . $dbclient->lq_error();
 	}
 	if ($sql_connection_ok == 1){
 		$engine  = $dbclient->prepare($_POST["engine"],"letters");
@@ -619,32 +620,31 @@ elseif ($phase == 2) {
 		<?php
 			if ($sql_process_ok == 1) {
 
-				/* FORM STEP 3*/
+				/* FORM STEP 3 */
 		?>
+
+
 		<div class="t_label" onclick="toggle(data);">
-			<div class="status">&nbsp;</div>Final site settings:
+			<div class="status">&nbsp;</div>Final installation steps:
 		</div>
 		<div class="tab" style="max-height: 1000px" id="data">
 			<form id="mysql" name="finalcfg" method="POST" onsubmit="pass.value=btoa(pass.value);">
 				<input type="hidden" name="myip" value="<?php echo $myip;?>"/>
 				<ul>
 					<li>
-						<label>Dominio principal:</label><input name="domain" type="text" value="coddns.lan"/>
+						<label>Main HTML directory</label><input name="html_root" type="text" value="<?php echo preg_replace("/\/install\.php$/","",$_SERVER['REQUEST_URI']);?>"/>
 					</li>
 					<li>
-						<label>Directorio HTML principal</label><input name="html_root" type="text" value="<?php echo preg_replace("/\/install\.php$/","",$_SERVER['REQUEST_URI']);?>"/>
+						<label>Administrator account:</label><input name="user" type="email" required="yes" />
 					</li>
 					<li>
-						<label>Cuenta de administraci&oacute;n:</label><input name="user" type="email" required="yes" />
+						<label>Password:</label><input id="pass" name="pass" type="password" required="yes"/>
 					</li>
 					<li>
-						<label>Contrase&ntilde;a:</label><input id="pass" name="pass" type="password" required="yes"/>
+						<label>Hash seed:</label><input name="hash" type="text" value="<?php echo base64_encode(time());?>"/>
 					</li>
 					<li>
-						<label>Semilla hash:</label><input name="hash" type="text" value="<?php echo base64_encode(time());?>"/>
-					</li>
-					<li>
-						<input type="submit" value="Completar instalaci&oacute;n"/>
+						<input type="submit" value="Finish installation"/>
 					</li>
 				</ul>
 			</form>
@@ -661,9 +661,6 @@ elseif ($phase == 3){
 	$config = $_SESSION["config"];
 	session_write_close();
 
-	print_header(3);
-
-
 	$dbclient  = new DBClient($config);
 	$dbclient->connect() or die ($dbclient->lq_error());
 
@@ -673,14 +670,13 @@ elseif ($phase == 3){
 	$html_root = $_POST["html_root"];
 	$user      = $_POST["user"];
 	$rq_pass   = base64_decode($_POST["pass"]);
-	$domain    = $dbclient->prepare($_POST["domain"],"url_get");
 	$salt      = $_POST["hash"];
 	$myip      = $dbclient->prepare($_POST["myip"], "ip");
 
 	if (!isset($myip) || ($myip == "")){
 		$myip = $dbclient->prepare("127.0.0.1", "ip");
 	}
-
+/*
 	// Add current server to database
 	$q = "insert into servers (ip) values ('" . $myip . "')";
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
@@ -700,7 +696,7 @@ elseif ($phase == 3){
 	$dbclient->exeq($q) or die ($dbclient->lq_error());
 	
 	$dbclient->disconnect();
-
+*/
 	// BUILD FINAL CONFIGURATION FILE
 	$str_config  = "<?php\n";
 	$str_config .= "\n";
@@ -718,8 +714,7 @@ elseif ($phase == 3){
 	$str_config .= "// domain name: FQDN base for the system\n";
 	$str_config .= "// html_root: if you want to access http://yousite.yourdomain/coddns\n";
 	$str_config .= "//            set it to /coddns, is the nav location\n";
-	$str_config .= "\$config = array (\"domainname\" => \"" . $domain . "\",\n";
-	$str_config .= "                  \"html_root\"  => \"" . $html_root . "\",\n";
+	$str_config .= "\$config = array (\"html_root\"  => \"" . $html_root . "\",\n";
 	$str_config .= "                  \"salt\"       => \"" . $salt . "\",\n";
 	$str_config .= "                  \"db_config\"  => \$db_config);\n";
 	$str_config .= "\n";
@@ -737,7 +732,7 @@ elseif ($phase == 3){
 	$file = __DIR__ . "/include/config.php";
 
 	if (! is_writable(__DIR__ . "/include")){
-		die("El directorio " . __DIR__ . "/include" . "no es accesible por el instalador, por favor verifique los requisitos");
+		die("Directory " . __DIR__ . "/include" . " is not writable by the installer, please check requirements.");
 	}
 	file_put_contents($file, $str_config);
 
@@ -767,10 +762,10 @@ elseif ($phase == 3){
 	    $dbclient->exeq($q) or die ("<div onclick='toggle(this);' class='err'>Error: " . $dbclient->lq_error() . "</div>");
 
 	    // Welcome mail to user
-	    $text_sender               = "CODDNS";
-		$email_sender              = "noreply@" . $config["domainname"];
-		$text_mail_welcome_body    = "Hola!\n\n Gracias por instalar CODDNS,\nPuedes acceder a la herramienta desde el enlace siguiente:\n " . $_SERVER['HTTP_ORIGIN'] . $html_root . "\n";
-		$text_mail_welcome_subject = "CODDNS Instalacion completada!";
+	    $text_sender               = "Coddns";
+//		$email_sender              = "noreply@" . $config["domainname"];
+		$text_mail_welcome_body    = "Hi!\n\n Thank your for install Coddns,\nYou can access the tool at:\n " . $_SERVER['HTTP_ORIGIN'] . $html_root . "\n\nWe hope you enjoy it.\n\nKind regards,\n\nThe Coddns team.\n";
+		$text_mail_welcome_subject = "CODDNS installation completed!";
 
 	    $recipient = $user;                    //recipient
 	    $mail_body = $text_mail_welcome_body;  //mail body
@@ -779,7 +774,7 @@ elseif ($phase == 3){
 	    mail($recipient, $subject, $mail_body, $header); //mail command :)
 	}
 	else {
-	    die ("<div onclick='toggle(this);' class='err'>Error: Ese usuario ya existe</div>");
+	    die ("<div onclick='toggle(this);' class='err'>Error: user already defined</div>");
 	    exit(1);
 	}
 
@@ -789,23 +784,23 @@ elseif ($phase == 3){
 	require_once (__DIR__ . "/lib/coduser.php");
 	$objUser = new CODUser();
 	if ($objUser->login($user, $rq_pass) == null ) {
-		die ("Problem loading user, please rerun the installation process.");
+		die ("<p>Problem loading user, please rerun the installation process.</p>");
 	}
 	// CONFIG WRITTEN
 ?>
-	<article>
+	<article style="text-align: center;">
 	<div style="width: 100px; height: 100px; margin: 15px auto;">
 		<img src="<?php echo $html_root . "/rs/img/ok.png"?>" alt="END" />
 	</div>
-	<p>El proceso de instalaci&oacute;n ha finalizado correctamente.</p>
+	<p>Installation successfully completed!</p>
 	<br>
-	<p><b>Datos de acceso</b> (pasar por encima de <i>"contrase&ntilde;a"</i> para visualizarla):</p>
+	<p><b>Access information</b> (over the <i>"password"</i> field to display it):</p>
 
-	<ul style="font-size: 0.8em;">
-		<li>Usuario: <?php echo $user;?></li>
-		<li onmouseout="pass.style['display']='none';" onmouseover="pass.style['display']='inline-block';">Contrase&ntilde;a: <div id="pass" style="display:none;"><?php echo base64_decode($_POST["pass"]);?></div></li>
+	<ul style="font-size: 0.8em; width: 50%; margin: 25px auto;text-align: left;">
+		<li>User: <?php echo $user;?></li>
+		<li onmouseout="pass.style['display']='none';" onmouseover="pass.style['display']='inline-block';">Password: <div id="pass" style="display:none;"><?php echo base64_decode($_POST["pass"]);?></div></li>
 	</ul>
-	<p>Haga click <a href="<?php echo $_SERVER['HTTP_ORIGIN'] . $html_root; ?>">aqu&iacute;</a> para acceder a la herramienta.</p>
+	<p>Please click <a href="<?php echo $_SERVER['HTTP_ORIGIN'] . $html_root; ?>">here</a> to access the tool.</p>
 
 	</article>
 

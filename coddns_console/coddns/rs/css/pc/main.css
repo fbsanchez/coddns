@@ -1,3 +1,12 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url(../../fonts/Roboto-Regular.ttf);
+}
+@font-face {
+    font-family: 'Source Sans Pro';
+    src: url(../../fonts/SourceSansPro-Regular.ttf);
+}
+
 *{
     margin: 0;
     padding: 0;
@@ -149,12 +158,17 @@ section.uarea{
     min-width: 600px;
     margin: 0 auto;
 }
+ol {
+    margin: 5px auto 20px;
+    width: 100%;
+    padding-left: 2em;
+}
 ul{
     list-style-type: none;
     width: 350px;
     margin: 20px auto;
 }
-li {
+ul > li {
     padding-bottom: 1.2em;
 }
 li label{

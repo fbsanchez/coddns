@@ -358,7 +358,7 @@ $text["de"]["reg_type"]      = "DNS record type";
     <?php
     }
     else {
-        echo "<p>No tienes permisos para crear entradas. Por favor, contacta con el administrador.</p>";
+        echo "<p>You don't have rigths to register new hosts. Please check zone configuration or  contact administrator.</p>";
     }
     ?>
 </section>

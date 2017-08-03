@@ -46,7 +46,10 @@ class DBClient {
   }
 
   function is_connected(){
-    return $this->client->is_connected();
+    if (isset ($this->client)) {
+      return $this->client->is_connected();
+    }
+    return false;
   }
   function connect(){
     if($this->is_connected()){
