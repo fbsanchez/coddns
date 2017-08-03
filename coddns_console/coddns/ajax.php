@@ -584,7 +584,7 @@ function list_servers() {
 			</a>
 			<div class="server_summary">
 			<p>Server: <?php echo $r->tag;?></p>
-			<p>IP/FQDN: <?php echo $r->ip;?></p>
+			<p>IP/FQDN: <?php echo _long2ip($r->ip);?></p>
 			<p>Status: <?php echo $status;?></p>
 			<p>Zones loaded: <?php echo $r->nzones;?></p>
 			</div>

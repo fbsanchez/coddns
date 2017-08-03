@@ -32,3 +32,11 @@ li {
 	height: auto;
 	width: auto;
 }
+
+a.delete {
+	color: #fa0000;
+}
+
+a.delete:hover {
+	border-bottom: 1px solid #fa0000;
+}

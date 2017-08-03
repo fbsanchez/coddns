@@ -49,17 +49,21 @@ $server = new CODServer($servername);
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/server_control.css";?>" />
 </head>
 <body>
-<form>
+<form name="edit_server" action="" method="POST" onsubmit="fsgo('edit_server', 'ajax_message','<?php echo $config["html_root"]; ?>/adm/server/server_rq_options.php', true,raise_ajax_message);return false;">
+	<input type="hidden" name="op" value="edit"/>
+	<input type="hidden" name="sid" value="<?php echo $server->id; ?>"/>
 	<ul>
 	<li><label>Server name (tag)</label><input type="text" name="tag" value="<?php echo $server->name;?>"></li>
-	<li><label>IP Address/ FQDN</label><input type="text" name="tag" value="<?php echo $server->ip;?>"></li>
-	<li><label>Port</label><input type="number" name="tag" value="<?php echo $server->port;?>"></li>
-	<li><label>User</label><input type="text" name="tag" value="<?php echo $server->user;?>"></li>
-	<li><label>Password</label><input type="password" name="tag" value=""></li>
-	<li><label>Main configuration file path</label><input type="text" name="tag" value="<?php echo $server->main_config_file;?>"></li>
-	<li><label>Group</label><input type="text" name="tag" value="<?php echo get_group_name($server->gid);?>"></li>
+	<li><label>IP Address/ FQDN</label><input type="text" name="ip" value="<?php echo $server->ip;?>"></li>
+	<li><label>Port</label><input type="number" name="port" value="<?php echo $server->port;?>"></li>
+	<li><label>User</label><input type="text" name="u" value="<?php echo $server->user;?>"></li>
+	<li><label>Password</label><input type="password" name="p" value=""></li>
+	<li><label>Main configuration file path</label><input type="text" name="cf" value="<?php echo $server->main_config_file;?>"></li>
+	<li><label>Group</label><input type="text" name="g" value="<?php echo get_group_name($server->gid);?>"></li>
+	<li><input type="submit" value="Save changes"/></li>
 	</ul>
 </form>
 
+<a class="delete" href="#options" onclick="if(confirm('Are you sure?')){updateContent('ajax_message', '<?php echo $config["html_root"]; ?>/adm/server/server_rq_options.php','sn=<?php echo $servername;?>&sid=<?php echo $server->id; ?>&op=del',null,raise_ajax_message); return true;}return false;">Delete this server</a>
 </body>
 </html>

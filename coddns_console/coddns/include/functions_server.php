@@ -104,7 +104,7 @@ function transfer_conf_files($config, $sshclient, $serverid, $remote_configfile)
 	else {
 		error_log("Failed to copy file " . $remote_configfile . " copied to " . $localfolder);
 	}
-	return undef;
+	return null;
 }
 
 

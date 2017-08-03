@@ -1,6 +1,6 @@
 <?php
 /**
- * <copyright company="CODDNS">
+ * <copyright compa)ny="CODDNS">
  * Copyright (c) 2013 All Right Reserved, http://coddns.es/
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
@@ -33,7 +33,7 @@ catch (Exception $e) {
 
 // retrieve and escape data received
 $data["tag"]  = secure_get("tag",  "text");
-$data["ip"]   = secure_get("ip",   "url_get");
+$data["ip"]   = _ip2long(secure_get("ip",   "url_get"));
 $data["port"] = secure_get("port", "number");
 $data["user"] = secure_get("user", "text");
 $data["pass"] = coddns_encrypt(secure_get("pass", "base64"));
