@@ -105,7 +105,7 @@ $text["de"]["reg_type"]      = "DNS record type";
 
     function checkHostName(obj,z){
         if(/^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)/.test(obj.value))
-            updateContent("rec_info", "ajax.php", "action=check_host&h="+obj.value+"&z="+z.value);
+            updateContent("rec_info", "ajax.php", "action=check_host&args=" + JSON.stringify("h='"+obj.value+"',z='"+z.value+"'"));
         return false;
     }
     function select_my_ip(){
