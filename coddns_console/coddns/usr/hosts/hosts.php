@@ -90,7 +90,7 @@ $text["de"]["reg_type"]      = "DNS record type";
     <title>Hosts</title>
     <style type="text/css"/>
 		<?php
-		include_once (__DIR__ . "/../../rs/css/pc/hosts.php");
+		include_once (__DIR__ . "/../../rs/css/" . $config["html_view"] . "/hosts.php");
 
 		?>
         
@@ -105,7 +105,7 @@ $text["de"]["reg_type"]      = "DNS record type";
 
     function checkHostName(obj,z){
         if(/^([a-zA-Z]+([0-9]*[a-zA-Z]*)*)/.test(obj.value))
-            updateContent("rec_info", "rest_host.php", "h="+obj.value+"&z="+z.value);
+            updateContent("rec_info", "ajax.php", "action=check_host&h="+obj.value+"&z="+z.value);
         return false;
     }
     function select_my_ip(){

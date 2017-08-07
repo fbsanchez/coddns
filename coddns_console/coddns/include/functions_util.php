@@ -32,6 +32,13 @@ function load_extra_config($cnf){
         $cnf[$row["field"]] = $row["value"];
     }
 
+    // Dynamic CSS load
+    if (check_user_agent('mobile')) {
+        $cnf["html_view"] = "m"; // mobile
+    }
+    else {
+        $cnf["html_view"] = "pc"; // pc
+    }
     return $cnf;
 }
 

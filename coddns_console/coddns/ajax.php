@@ -162,7 +162,7 @@ function list_hosts($data){
 	        ?>
 	        <td><?php echo $row["ttl"];?></td>
 	        <td class='edit' style="url('<?php echo $config["html_root"];?>/rs/img/delete.png')" title='editar' onclick="editip.value='<?php echo $row["value"]; ?>';edith.value='<?php echo $row["tag"]; ?>';change.submit();"></td>
-	        <td class='del' title='eliminar' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Seguro que desea eliminar <?php echo $row["tag"];?>?')) {<?php echo $del_submit;?>}"></td>
+	        <td class='del' title='Delete' onclick="delh.value='<?php echo $row["tag"];?>'; if (confirm('Do you really want to delete <?php echo $row["tag"];?>?')) {<?php echo $del_submit;?>}"></td>
 	    </tr>
 	    <?php
 		}
@@ -199,19 +199,19 @@ function list_users($data) {
 
 	?>
 	<div>
-		<button class="button_users" onclick="toggleDisplay('form_create_users')">Crear usuario</button>
-		<button class="button_users" onclick="toggleDisplay('form_delete_users')">Eliminar usuarios</button>
+		<button class="button_users" onclick="toggleDisplay('form_create_users')">Add user</button>
+		<button class="button_users" onclick="toggleDisplay('form_delete_users')">Delete user</button>
 	</div>
 
 	<table>
 		<thead>
 			<tr>
 				<td>Email</td>
-				<td>Rol</td>
-				<td>&Uacuteltimo acceso</td>
-				<td>Ip &Uacuteltimo acceso</td>
-				<td>Miembro desde</td>
-				<td>Acciones</td>
+				<td>Role</td>
+				<td>Last login</td>
+				<td>Ip last login</td>
+				<td>Member since</td>
+				<td>Actions</td>
 				<td><input type="checkbox" /></td>
 			</tr>
 		</thead>
@@ -226,8 +226,8 @@ function list_users($data) {
 		        <td><?php echo $row["last_login"];?></td>
 		        <td><?php echo $row["first_login"];?></td>
 		        <td>
-		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Editar" /></a>
-		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Eliminar"/></a>
+		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/edit.png";?>" title="Edit" /></a>
+		        	<a href="#"><img src="<?php echo $config["html_root"] . "/rs/img/delete.png";?>" title="Delete"/></a>
 		        </td>
 		        <td><input type="checkbox" /></td>
 		    </tr>
@@ -265,17 +265,17 @@ function list_groups($data) {
 
 	<div>
 		<button class="button_users" onclick="toggleDisplay('form_create_group')">Crear grupo</button>
-		<button class="button_users" onclick="delete_all_groups();toggleDisplay('form_delete_all_group'); ">Eliminar grupos</button>
+		<button class="button_users" onclick="delete_all_groups();toggleDisplay('form_delete_all_group'); ">Delete all groups</button>
 	</div>
 
 	<table>
 		<thead>
 			<tr>
-				<td>Nombre</td>
-				<td>Descripci&oacuten</td>
-				<td>Miembros</td>
-				<td>Grupo Padre</td>
-				<td>Acciones</td>
+				<td>Name</td>
+				<td>Description</td>
+				<td>Memebrs</td>
+				<td>Parent group</td>
+				<td>Actions</td>
 			</tr>
 		</thead>
 	<?php
@@ -366,8 +366,8 @@ function list_acls($data) {
 	<table>
 		<thead>
 			<tr>
-				<td>P&aacutegina</td>
-				<td>Nivel de Aturizaci&oacuten	</td>
+				<td>Web page</td>
+				<td>Auth. level</td>
 			</tr>
 		</thead>
 	<?php
@@ -595,8 +595,55 @@ function list_servers() {
 
 
 
+/**
+ * Returns a message with the availability of a tag
+ * 
+ */
+function usr_check_host($data) {
+	global $config;
+
+	try {
+		$auth_level_required = get_required_auth_level('','rest_host','');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
+
+	session_start();
+	if (!isset($_SESSION["lan"])){
+	    $_SESSION["lan"] = "es";
+	}
+	$lan = $_SESSION["lan"];
+	session_write_close();
+
+	// devuelve la disponibilidad o no de una etiqueta host para un subdominio dado
+	if (   (! isset ($data["h"] ))
+		|| (! isset ($data["z"] )) ){
+	    die("Unauthorized access");
+	}
+
+	if (   ( strlen ($data["h"]) < MIN_HOST_LENGTH )
+	    || ( strlen ($data["h"]) > MAX_HOST_LENGTH )
+	    || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/', $data["h"])) ) {
+	    die ("<div class='r err'>Invalid format</div>");
+	}
+
+	$dbclient = $config["dbh"];
+
+	$host = $dbclient->prepare($data["h"], "letters");
+	$zone = $dbclient->prepare($data["z"], "url_get");
 
 
+	$q = "select * from hosts where lower(tag)=lower('" . $host . "." . $zone . "');";
+	$dbclient->exeq($q);
+	if ( $dbclient->lq_nresults() > 0 )
+		echo "<div class='r err'>Unavailable</div>";
+	else
+		echo "<div class='r ok'>Available</div>";
+}
 
 
 
@@ -636,6 +683,9 @@ switch ($action) {
 		break;
 	case 'clear_cache':
 		adm_server_control_clear_cache($arguments);
+		break;
+	case 'check_host':
+		usr_check_host($arguments);
 		break;
 	default:
 		print "Unknown action";

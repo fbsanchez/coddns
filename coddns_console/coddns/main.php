@@ -337,10 +337,17 @@ else {
 ?>
 <section>
     <article>
-    <h2>Bienvenido a <b>coddns</b></h2>
+    <h2>Welcome to <b>coddns</b></h2>
 
-    <p>Acceda con su cuenta para empezar a utilizar el sistema.</p>
-    <p>En caso de no disponer a&uacute;n de una cuenta v&aacute;lida puede registrarse <a href="<?php echo $config["html_root"] . "/?m=usr&z=users&op=login"?>">aqu&iacute;</a></p>
+    <p>Please use your account to access the system.</p>
+<?php
+if (get_required_auth_level('usr','users','signin') == 0){
+    // SHOW THE SIGNIN FORM IF IT'S ENABLED ON CONFIGURATION
+?>
+    <p>If you haven't an account please use the form provided <a href="<?php echo $config["html_root"] . "/?m=usr&z=users&op=login"?>">here</a> to get one.</p>
+<?php
+}
+?>
     </article>
 
 </section>

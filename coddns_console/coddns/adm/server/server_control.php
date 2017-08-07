@@ -44,7 +44,7 @@ else {
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/server_control.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/server_control.css";?>" />
 
 
 <script type="text/javascript">

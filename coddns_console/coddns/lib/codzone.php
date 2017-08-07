@@ -21,5 +21,42 @@ require_once (__DIR__ . "/../include/functions_util.php");
 // Defines CODZone class
 
 class CODZone {
+/*
+	var $serial; // serial number
+	var $ref; // refresh, 2d
+	var $ret; // update retry, default 15m
+	var $ex;  // expiry, default 2w
+	var $nx;  // nx domain ttl, def. 1h
+*/
+	var $id; // Zone id
+	var $file; // File where the zone is defined
+	var $domain; // domain ~ tag
+	var $gid; // group
+	var $status; // status, last unix timestamp since replication 
+	var $is_public; // flag is public
+
+	function CODZone($data) {
+		$this->id        = $data->id;
+		$this->file      = $data->file;
+		$this->domain    = $data->domain;
+		$this->gid       = $data->gid;
+		$this->status    = $data->status;
+		$this->is_public = $data->is_public;
+
+	}
+
+	/**
+	 * Has file
+	 */
+	function has_file() {
+		global $config;
+
+		if (isset ($this->file)) {
+			if (file_exists($config["spooldir"] . "/" . $this->file)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 }

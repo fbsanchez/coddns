@@ -140,22 +140,9 @@ $text["de"]["nav_logout"]      ="Logout";
 <link rel="icon" type="image/png" sizes="16x16" href="<?php echo $config["html_root"]; ?>/rs/img/favicon.ico">
 
 
-<?php
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/main.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/header.css">
 
-
-//if (! check_user_agent('mobile') ){
-//?>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"]; ?>/rs/css/pc/main.css">
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"]; ?>/rs/css/pc/header.css">
-<?php
-/*
-} else {
-?>
-<link rel="stylesheet" type="text/css" href="rs/css/m/main.css">
-<link rel="stylesheet" type="text/css" href="rs/css/m/header.css">
-<?php
-//}
-*/?>
 <script type="text/javascript" src="<?php echo $config["html_root"]; ?>/rs/js/util.js"></script>
 <script type="text/javascript">
     function checkHostName(){

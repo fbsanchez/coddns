@@ -46,7 +46,7 @@ $server = new CODServer($servername);
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/server_control.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/server_control.css";?>" />
 </head>
 <body>
 <form name="edit_server" action="" method="POST" onsubmit="fsgo('edit_server', 'ajax_message','<?php echo $config["html_root"]; ?>/adm/server/server_rq_options.php', true,raise_ajax_message);return false;">

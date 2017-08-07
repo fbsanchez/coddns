@@ -37,9 +37,19 @@ catch (Exception $e) {
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/pc/service_status.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/zones.css" />
 </head>
 <body>
+
+
+
+
+<?php
+// links to new zone formulary
+
+// Show zones in table view, as cards
+?>
+
 
 <?php
 
@@ -48,10 +58,16 @@ $dbclient = $config["dbh"];
 
 $zones = $dbclient->get_sql_array("select z.*, s.tag as server_tag from zones z, servers s, zone_server zs where zs.id_server=s.id and zs.id_zone=z.id;");
 
+
+// Zone list
+// Steps to create a zone:
+//   1- Define a zone structure file
+//   2- Link zone to server
+//   3- configure grants over the zone
 ?>
 <table class="">
 <tr>
-	<th>Zona</th><th>Servidor</th><th>Acceso p&uacute;blico</th>
+	<th>Zone</th><th>Servidor</th><th>Acceso p&uacute;blico</th>
 </tr>
 <?php
 foreach ($zones["data"] as $zone) {

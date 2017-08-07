@@ -52,9 +52,9 @@ $t = $dbclient->exeq($m) or die ($dbclient->lq_error());
 
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"];?>/rs/css/pc/tabs.css">
-	<link rel="stylesheet" type="text/css" href="rs/css/pc/adm_site.css">
-	<link rel="stylesheet" type="text/css" href="rs/css/pc/pop_up.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/tabs.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/adm_site.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/pop_up.css">
 </head>
 <script languague="javascript">
 	var anchors = location.href.split('#');
