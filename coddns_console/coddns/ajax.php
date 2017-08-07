@@ -620,21 +620,21 @@ function usr_check_host($data) {
 	session_write_close();
 
 	// devuelve la disponibilidad o no de una etiqueta host para un subdominio dado
-	if (   (! isset ($data["h"] ))
-		|| (! isset ($data["z"] )) ){
+	if (   (! isset ($data->h ))
+		|| (! isset ($data->z )) ){
 	    die("Unauthorized access");
 	}
 
-	if (   ( strlen ($data["h"]) < MIN_HOST_LENGTH )
-	    || ( strlen ($data["h"]) > MAX_HOST_LENGTH )
-	    || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/', $data["h"])) ) {
+	if (   ( strlen ($data->h) < MIN_HOST_LENGTH )
+	    || ( strlen ($data->h) > MAX_HOST_LENGTH )
+	    || ( !preg_match('/^[a-zA-Z]+([0-9]*[a-zA-Z]*)*$/', $data->h)) ) {
 	    die ("<div class='r err'>Invalid format</div>");
 	}
 
 	$dbclient = $config["dbh"];
 
-	$host = $dbclient->prepare($data["h"], "letters");
-	$zone = $dbclient->prepare($data["z"], "url_get");
+	$host = $dbclient->prepare($data->h, "letters");
+	$zone = $dbclient->prepare($data->z, "url_get");
 
 
 	$q = "select * from hosts where lower(tag)=lower('" . $host . "." . $zone . "');";
