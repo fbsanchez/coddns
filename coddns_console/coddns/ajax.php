@@ -415,7 +415,7 @@ function adm_server_control_checkconf($data) {
 
 		// Check if we're connected & authenticated into the server
 		if (! $sshclient->is_authenticated()){
-			echo "Datos de acceso no v&aacute;lidos";
+			echo "<p>Cannot connect to server.</p><p>Please check IP, port, user name, password and sshd status.</p>";
 			return false;
 		}
 
@@ -458,7 +458,7 @@ function adm_server_control_restart($data) {
 
 		// Check if we're connected & authenticated into the server
 		if (! $sshclient->is_authenticated()){
-			echo "Datos de acceso no v&aacute;lidos";
+			echo "<p>Cannot connect to server.</p><p>Please check IP, port, user name, password and sshd status.</p>";
 			return false;
 		}
 
@@ -489,7 +489,7 @@ function adm_server_control_clear_cache($data) {
 	if ($sshclient !== false) {
 		// Check if we're connected & authenticated into the server
 		if (! $sshclient->is_authenticated()){
-			echo "Datos de acceso no v&aacute;lidos";
+			echo "<p>Cannot connect to server.</p><p>Please check IP, port, user name, password and sshd status.</p>";
 			return false;
 		}
 
@@ -666,7 +666,7 @@ function usr_check_host($data) {
 	$lan = $_SESSION["lan"];
 	session_write_close();
 
-	// devuelve la disponibilidad o no de una etiqueta host para un subdominio dado
+	// Returns the availability of a host's tag for a defined sub-domain
 	if (   (! isset ($data->h ))
 		|| (! isset ($data->z )) ){
 	    die("Unauthorized access");

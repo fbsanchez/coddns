@@ -59,12 +59,12 @@ $server = get_server_data($db_config, $servername);
 
 <body>
 	<section>
-	<h4>Configuraci&oacute;n del servidor: <i><?php echo $server->tag;?></i></h4>
+	<h4>DNS server <i><?php echo $server->tag;?></i> configuration</h4>
 
 
 <?php
 if ( $server === false ) {
-	echo "No existen credenciales para acceder a este servidor.";
+	echo "There're no credentials defined to access this server.";
 	return 0;
 }
 else { // SERVER CREDENTIALS ARE SET
@@ -80,7 +80,7 @@ else { // SERVER CREDENTIALS ARE SET
 
 	// Check if we're connected & authenticated into the server
 	if (! $sshclient->is_authenticated()){
-		echo "Datos de acceso no v&aacute;lidos";
+		echo "<p>Cannot connect to server.</p><p>Please check IP, port, user name, password and sshd status.</p>";
 		return 0;
 	}
 

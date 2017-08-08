@@ -37,7 +37,7 @@ catch (Exception $e) {
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/service_status.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/service_status.css"/>
 </head>
 
 <body>

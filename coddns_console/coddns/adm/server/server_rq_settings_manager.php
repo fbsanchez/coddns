@@ -64,7 +64,7 @@ $sshclient->connect();
  * 
  */
 if (! $sshclient->is_authenticated()){
-	custom_die("Datos de acceso no v&aacute;lidos");
+	custom_die("<p>Cannot connect to server.</p><p>Please check IP, port, user name, password and sshd status.</p>");
 }
 
 
