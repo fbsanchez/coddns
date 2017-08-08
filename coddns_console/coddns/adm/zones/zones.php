@@ -18,10 +18,11 @@
 require_once(__DIR__ . "/../../include/config.php");
 require_once(__DIR__ . "/../../lib/db.php");
 require_once(__DIR__ . "/../../include/functions_util.php");
+require_once(__DIR__ . "/../../include/functions_server.php");
 require_once(__DIR__ . "/../../lib/coduser.php");
 
 try {
-	$auth_level_required = get_required_auth_level('adm','zones', null);
+	$auth_level_required = get_required_auth_level('adm','zones','');
 	$user = new CODUser();
 	$user->check_auth_level($auth_level_required);
 }
@@ -37,47 +38,34 @@ catch (Exception $e) {
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/zones.css" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/zones.css">
+<script type="text/javascript">
+	function load_servers() {
+		updateContent("zone_list", "ajax.php", "action=list_zones&args=");
+	}
+	document.onload = load_servers();
+</script>
 </head>
+
 <body>
+	<section>
+	<p>Please select the zone you want to manage:</p>
+	<br />
+	<a href="<?php echo $config["html_root"];?>?m=adm&z=zones&op=new">
+		<img class="add" src="<?php echo $config["html_root"] . "/rs/img/add.png";?>" alt="add" />
+		<span>Add a new zone</span>
+	</a>
+	<br />
 
+	<section id="zone_list">
+	<?php
+		echo "<img src='" . $config["html_root"] . "/rs/img/loading.gif' style='width: 10px; margin: 0 15px;'/> Loading...";
+	?>
+	</section>
+	</section>
 
-
-
-<?php
-// links to new zone formulary
-
-// Show zones in table view, as cards
-?>
-
-
-<?php
-
-$dbclient = $config["dbh"];
-
-
-$zones = $dbclient->get_sql_array("select z.*, s.tag as server_tag from zones z, servers s, zone_server zs where zs.id_server=s.id and zs.id_zone=z.id;");
-
-
-// Zone list
-// Steps to create a zone:
-//   1- Define a zone structure file
-//   2- Link zone to server
-//   3- configure grants over the zone
-?>
-<table class="">
-<tr>
-	<th>Zone</th><th>Servidor</th><th>Acceso p&uacute;blico</th>
-</tr>
-<?php
-foreach ($zones["data"] as $zone) {
-	echo "<tr><td>" . $zone["domain"] . "</td><td>" . $zone["server_tag"] . "</td><td>" . $zone["is_public"] . "</td></tr>";
-}
-echo "</table>";
-
-?>
-
-En construcci&oacute;n
+	<section style="margin-top: 40px;clear:both;" id="zone_info">
+	</section>
 </body>
 
 </html>

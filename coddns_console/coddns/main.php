@@ -50,7 +50,7 @@ session_write_close();
 
 <head>
 <title>Overall page</title>
-<link rel="stylesheet" type="text/css" href="rs/css/pc/main_overall.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/main_overall.css">
 <link rel="stylesheet" type="text/css" href='<?php echo $config["html_root"] . "/rs/js/external/c3-0.4.11/c3.min.css";?>'>
 <script src='<?php echo $config["html_root"] . "/rs/js/external/d3-3.5.7/d3.min.js";?>'></script>
 <script src='<?php echo $config["html_root"] . "/rs/js/external/c3-0.4.11/c3.min.js";?>'></script>

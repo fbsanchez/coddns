@@ -36,13 +36,12 @@ class CODZone {
 	var $is_public; // flag is public
 
 	function CODZone($data) {
-		$this->id        = $data->id;
-		$this->file      = $data->file;
-		$this->domain    = $data->domain;
-		$this->gid       = $data->gid;
-		$this->status    = $data->status;
-		$this->is_public = $data->is_public;
-
+		$this->id        = $data["id"];
+		$this->file      = $data["file"];
+		$this->domain    = $data["domain"];
+		$this->gid       = $data["gid"];
+		$this->status    = $data["status"];
+		$this->is_public = $data["is_public"];
 	}
 
 	/**
@@ -57,6 +56,32 @@ class CODZone {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Save zone
+	 * creating if not exists in db, updating it if is already defined
+	 */
+	function save(){
+		global $config;
+		$dbh = $config["dbh"];
+
+		if (!isset($this->id)) {
+			// No ID set, create a new entry in DB
+			// 1. search for duplicates
+			$r = $dbh->do_sql('SELECT count(*) from zones where domain="' . $this->domain . '"');
+			if ($r->nresults > 0) {
+				throw new Exception ("Zone already defined in DB.");
+			}
+			// 2. add to DB
+			$r = $dbh->do_sql('INSERT INTO zones (domain,gid,config,status,is_public) VALUES ('
+				. '"' . $this->domain . '",'
+				. $this->gid . ","
+				. '"' . $this->config . '",'
+				. $this->status . ','
+				. ($this->is_public?"1":"0")
+				. ')');
+		}
 	}
 
 }

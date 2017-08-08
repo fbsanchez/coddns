@@ -54,7 +54,7 @@ if (isset ($_POST["mesage"])){
 
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="rs/css/pc/contact.css">
+	<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/contact.css">
 </head>
 
 <body>

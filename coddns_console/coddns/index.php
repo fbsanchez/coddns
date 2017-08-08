@@ -203,8 +203,14 @@ else {
     $url .= $zone . DIRECTORY_SEPARATOR . $zone . "_" . $operation . ".php";
 }
 
+include_once("header.php");
 
 $auth_level_required = get_required_auth_level($mode,$zone,$operation);
+
+?>
+<div id="main">
+<?php 
+
 
 try {
     $user = new CODUser();
@@ -215,13 +221,6 @@ catch (Exception $e) {
     exit (1);
 }
 
-
-include_once("header.php");
-
-
-?>
-<div id="main">
-<?php 
 
 if (isset($_GET["debug_mode"]) && ($_GET["debug_mode"] == 1)) {
     ?>

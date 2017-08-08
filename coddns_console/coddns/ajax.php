@@ -594,6 +594,53 @@ function list_servers() {
 }
 
 
+/**
+ * List all zones
+ */
+function list_zones() {
+	global $config;
+
+	try {
+		$auth_level_required = get_required_auth_level('adm','servers','');
+		$user = new CODUser();
+		$user->check_auth_level($auth_level_required);
+	}
+	catch (Exception $e) {
+		echo $e->getMessage();
+		exit (1);
+	}
+
+
+	require_once(__DIR__ . "/include/functions_server.php");
+	
+	$dbclient = $config["dbh"];
+
+	$q = "select * from zones;";
+	$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
+
+	while ($r = $dbclient->fetch_object($results)) {
+		?>
+
+		<div class="zone">
+
+			<a id="show_<?php echo $r->domain;?>" href="<?php echo $config["html_root"];?>?m=adm&z=zones&op=manager&id=<?php echo $r->domain; ?>#status">
+			<?php 
+			echo "<img src=\"";
+
+			echo $config["html_root"] . "/rs/img/zone_50.png";
+			$status = "Unknown";
+			
+			echo "\" alt='server status'/>";
+			?>
+			</a>
+			<div class="zone_summary">
+			<p>Domain: <?php echo $r->domain;?></p>
+			</div>
+		</div>
+	<?php
+	}
+}
+
 
 /**
  * Returns a message with the availability of a tag
@@ -671,6 +718,9 @@ switch ($action) {
 		break;
 	case 'list_servers':
 		list_servers($arguments);
+		break;
+	case 'list_zones':
+		list_zones($arguments);
 		break;
 	case 'exist_tag_groups':
 		exist_tag_groups($arguments);

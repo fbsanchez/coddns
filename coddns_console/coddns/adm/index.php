@@ -42,7 +42,7 @@ catch (Exception $e) {
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="rs/css/pc/adm.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/adm.css">
 </head>
 
 <body>

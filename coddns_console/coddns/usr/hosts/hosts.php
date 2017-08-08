@@ -262,12 +262,12 @@ $text["de"]["reg_type"]      = "DNS record type";
 				<div id="launch_help_dns_type" onclick="toggle_help_ns();">&nbsp;</div>
 				<div id="help_dns_type">
 					<div>
-					<p>Los registros de DNS aceptados son:</p>
+					<p>Accepted DNS types:</p>
 					<ol>
-						<li><b>A</b> Registro por defecto, representa un host</li>
-						<li><b>MX</b> Registro de correo, indica que el registro corresponde a un servidor de correo electr&oacute;nico</li>
-						<li><b>CNAME</b> Registro de etiqueta, establece un alias para un host ya registrado</li>
-						<li><b>NS</b> Registro de servidor de nombres, agrega un <i>nameserver</i> que responder&aacute; las peticiones DNS hechas contra su subdominio</li>
+						<li><b>A</b> Default register, it represents a host (IPv4)</li>
+						<li><b>MX</b> Mail register, it represents the register matches a mail server</li>
+						<li><b>CNAME</b> Sets an alias over an existent A or AAAA register.</li>
+						<li><b>NS</b> Domain server registry, it adds a new DNS server. It will answer all queries made against the subdomain.</li>
 					</ol>
 					</div>
 				</div>
@@ -276,7 +276,7 @@ $text["de"]["reg_type"]      = "DNS record type";
         </li>
         <li>
             <div style="float:right;">
-                <span>Grupo:</span> <select style="margin: 0 35px 0 15px; width: 90px;" name="group">
+                <span>Group:</span> <select style="margin: 0 35px 0 15px; width: 90px;" name="group">
                 
                 <?php
                     // Retrieve all Groups with at least read grant available for current user

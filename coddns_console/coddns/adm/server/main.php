@@ -38,7 +38,7 @@ catch (Exception $e) {
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="rs/css/pc/servers.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/servers.css">
 <script type="text/javascript">
 	function load_servers() {
 		updateContent("servers_list", "ajax.php", "action=list_servers&args=");

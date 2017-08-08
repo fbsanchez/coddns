@@ -44,12 +44,12 @@ require_once(__DIR__ . "/../../lib/sshclient.php");
 $server = get_server_data($db_config, $servername);
 
 if ($server === false) {
-	custom_die("No existen credenciales para acceder a este servidor.");
+	custom_die("There're no credentials stored to access this server.");
 }
 
 
 if (empty($server->tag)){
-	echo "No hay servidores registrados con ese nombre.";
+	echo "There're no servers with provided tag.";
 	return 0;
 }
 
@@ -60,7 +60,7 @@ $sshclient->connect();
 
 // Check if we're connected & authenticated into the server
 if (! $sshclient->is_authenticated()){
-	echo "Datos de acceso no v&aacute;lidos";
+	echo "<p>Cannot connect to server.</p><p>Please check IP, port, user name, password and sshd status.</p>";
 	return 0;
 }
 
@@ -73,7 +73,7 @@ $dbclient = $config["dbh"];
 
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/service_status.css";?>" />
+<link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/service_status.css" />
 </head>
 
 <body>

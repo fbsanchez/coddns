@@ -1,0 +1,33 @@
+input[type="checkbox"] {
+	float: right;
+}
+
+div.zone{
+	width: 300px;
+    height: 105px;
+    margin: 15px 0px;
+    clear: both;
+    display: inline-block;
+}
+
+div.zone img{
+	cursor: pointer;
+	float: left;
+	width: 50px;
+	margin: 5px;
+}
+div.zone div{
+	float: left;
+	max-width: 400px;
+	margin: 15px 10px;
+}
+div.zone a{
+	padding: 0;
+	margin: 0;
+}
+div.zone a:hover{
+	border:none;
+}
+div.zone_summary {
+	font-size: 0.8em;
+}

@@ -190,7 +190,7 @@ input[type="email"],li input[type="text"], li input[type="password"], li input[t
     border: none;
     border-bottom: 1px solid #ccc;
     text-indent: 10px;
-    height: 2em;
+/*    height: 2em;*/
 }
 input[type="submit"]{
     margin-top: 10px;
