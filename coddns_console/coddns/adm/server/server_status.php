@@ -81,6 +81,7 @@ $dbclient = $config["dbh"];
 		<h3>Service status</h3>
 
 		<?php
+			$named_ok = 0;
 			// check named service:
 			$result = $sshclient->launch ("ps aux | grep named | grep -v grep | wc -l");
 

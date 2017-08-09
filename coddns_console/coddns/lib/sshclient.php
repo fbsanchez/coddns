@@ -220,6 +220,43 @@ class SSHClient {
 		return $r;
 	}
 
+	function apply_conf($tmp_file, $running_file){
+		if (!$this->connected){
+			$this->_connect();
+		}
+		if (!$this->authenticated){
+			$this->authenticate();
+		}
+		if (!$this->authenticated){
+			return null;
+		}
+
+		$r = $this->launch("mv -f $tmp_file $running_file");
+
+		$this->disconnect();
+		if (($r[0] == "") && ($r[1] == "")) {
+			return true;
+		}
+		return $r;
+	}
+
+	function check_valid_conf($remote_file) {
+		if (!$this->connected){
+			$this->_connect();
+		}
+		if (!$this->authenticated){
+			$this->authenticate();
+		}
+		if (!$this->authenticated){
+			return null;
+		}
+
+		$r = $this->launch("named-checkconf $remote_file");
+
+		$this->disconnect();
+		return $r;
+	}
+
 	function get_file($remote_file, $local_file) {
 		if (!$this->connected){
 			$this->_connect();

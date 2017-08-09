@@ -32,6 +32,7 @@ class CODServer {
 	var $main_config_file;
 	var $mastery;
 	var $server_load;
+	var $tmp_dir;
 
 	/**
 	 * Initializes a CODServer object based on
@@ -94,6 +95,12 @@ class CODServer {
 			else {
 				$this->fingerprint = null;
 			}
+			if (isset($raw["tmp_dir"])) {
+				$this->tmp_dir = $raw["tmp_dir"];
+			}
+			else {
+				$this->tmp_dir = "/tmp";
+			}
 
 			return $this;
 		}
@@ -122,6 +129,7 @@ class CODServer {
 			$this->fingerprint      = $dbclient->decode($r->fingerprint);
 			$this->mastery          = $r->mastery;
 			$this->server_load      = $r->server_load;
+			$this->tmp_dir          = $dbclient->decode($r->tmp_dir);
 
 		}
 		return $this;
@@ -154,6 +162,7 @@ class CODServer {
 		$port = $dbclient->prepare($this->port, "number");
 		$fingerprint      = $dbclient->prepare($this->fingerprint, "text");
 		$main_config_file = $dbclient->prepare($this->main_config_file, "text");
+		$tmp_dir          = $dbclient->prepare($this->tmp_dir, "text");
 
 		// internal data
 		$status      = $this->status;
@@ -166,8 +175,8 @@ class CODServer {
 		// create or update data server information
 		if (!isset($this->id)) {
 			// create new server
-			$q = "insert into servers (tag,ip,port,srv_user,srv_password,main_config_file,fingerprint,status,server_load,mastery) values"
-				. "(\"$tag\", \"$ip\", $port, \"$user\", \"$pass\", \"$main_config_file\", \"$fingerprint\", $status, $server_load, $mastery)";
+			$q = "insert into servers (tag,ip,port,srv_user,srv_password,main_config_file,fingerprint,status,server_load,mastery,tmp_dir) values"
+				. "(\"$tag\", \"$ip\", $port, \"$user\", \"$pass\", \"$main_config_file\", \"$fingerprint\", $status, $server_load, $mastery, \"$tmp_dir\")";
 
 			if($dbclient->do_sql($q)) {
 				$this->id = $dbclient->last_id();
@@ -177,7 +186,7 @@ class CODServer {
 		}
 		else {
 			$q = "udpate servers set tag=\"$tag\", ip=\"$ip\", port=$port, srv_user=\"$user\",srv_password=\"$pass\",main_config_file=\"$main_config_file\" "
-				. ",fingerprint=\"$fingerprint\",status=$status,server_load=$server_load,mastery=$mastery";
+				. ",fingerprint=\"$fingerprint\",status=$status,server_load=$server_load,mastery=$mastery,tmp_dir=\"$tmp_dir\"";
 
 			if($dbclient->do_sql($q)) {
 				return true;

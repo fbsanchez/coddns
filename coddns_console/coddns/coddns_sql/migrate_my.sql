@@ -56,6 +56,7 @@ upgrade_coddns:BEGIN
             ADD COLUMN cluster_id bigint unsigned DEFAULT NULL,
             ADD COLUMN server_load int unsigned DEFAULT 0,
             ADD COLUMN mastery int unsigned DEFAULT 100,
+            ADD COLUMN tmp_dir varchar(255) default "$2Ftmp",
             ADD CONSTRAINT fkey_servers_cluster FOREIGN KEY (cluster_id) REFERENCES clusters(id) ON DELETE SET NULL ON UPDATE CASCADE;
 
         -- Alter column ip to allow FQDN

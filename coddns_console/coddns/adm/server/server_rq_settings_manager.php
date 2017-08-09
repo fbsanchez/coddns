@@ -78,13 +78,20 @@ foreach ($file_manager as $item) {
 		// Update local files 1st
 		write_file($config,$item["local"]);
 
-		// Check local files are still valid conf file
-		$check = check_valid_conf($item["local"]);
-		if ($check["errlevel"] === 0) {
+		// Copy local files to remote tmp
+		if($sshclient->send_file($item["local"], $item["temp"]) === false) {
+			echo "File " . $item["temp"] . " failed...<br>";
+			continue;
+		}
+
+		// Check remotely if the tmp file is valid
+		$check = $sshclient->check_valid_conf($item["temp"]);
+		if (($check[0] == "") && ($check[1] == "")) {
 			// Update server's files
 			echo "File " . $item["remote"] . " OK!<br>";
 
-			$r = $sshclient->send_file($item["local"], $item["remote"]);
+			// Overwrite remote configuration
+			$r = $sshclient->apply_conf($item["temp"], $item["remote"]);
 			if (isset($r)) {
 				echo "&nbsp;&nbsp;&nbsp;&nbsp;Uploaded to $servername<br>";
 				$flag = 1;
@@ -103,6 +110,8 @@ foreach ($file_manager as $item) {
 		}				
 	}
 }
+
+echo "</pre>";
 
 if ($flag == 1) {
 	echo "Please restart the service<br>";

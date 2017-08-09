@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS servers (
     gid bigint unsigned NOT NULL default 1,
     srv_user varchar(200) default "root",
     srv_password text,
-    main_config_file varchar(255) default "/etc/named.conf",
+    main_config_file varchar(255) default "$2Fetc$2Fnamed.conf",
     fingerprint text,
     status int DEFAULT 0,
     pub_key_file varchar(255) default NULL,
@@ -107,6 +107,7 @@ CREATE TABLE IF NOT EXISTS servers (
     cluster_id bigint unsigned DEFAULT NULL,
     server_load int unsigned DEFAULT 0,
     mastery int unsigned DEFAULT 100,
+    tmp_dir varchar(255) default "$2Ftmp",
     CONSTRAINT pkey_servers PRIMARY KEY (id),
     CONSTRAINT fkey_servers_group  FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE,
     CONSTRAINT fkey_servers_cluster FOREIGN KEY (cluster_id) REFERENCES clusters(id) ON DELETE SET NULL ON UPDATE CASCADE

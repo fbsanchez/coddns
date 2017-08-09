@@ -1,9 +1,13 @@
 div.server{
 	width: 300px;
-    height: 105px;
     margin: 15px 0px;
     clear: both;
     display: inline-block;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+div.server:hover {
+    box-shadow: 3px 3px 5px 0px #ddd;
 }
 
 div.server img{
@@ -26,4 +30,15 @@ div.server a:hover{
 }
 div.server_summary {
 	font-size: 0.8em;
+	color: #222;
+}
+div#server_list a {
+	text-decoration: none;
+	color: #222;
+	border: none;
+}
+
+div#server_list a:hover {
+	text-decoration: none;
+	border: none;
 }

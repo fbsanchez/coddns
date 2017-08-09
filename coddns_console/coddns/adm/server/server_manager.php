@@ -174,7 +174,10 @@ $clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $co
 		// Credentials had been set
 		//  show navigation
 	?>
-	
+	<form action="#settings_manager" method="POST" onsubmit="if(!confirm('Are you sure?')) { return false; }">
+		<input type="hidden" value="1" name="forget"/>
+		<input type="submit" value="Disconnect" />
+	</form>
 	<nav>
 		<a id="link_status" href="#status" class="" <?php echo $clickstatus; ?> >
 			Status
@@ -195,11 +198,6 @@ $clickoptions       = "onclick=\"mark(this);updateContent('srv_content','" . $co
 	<div id="srv_content" class="content">
 		
 	</div>
-
-	<form action="#settings_manager" method="POST" onsubmit="if(!confirm('Are you sure?')) { return false; }">
-		<input type="hidden" value="1" name="forget"/>
-		<input type="submit" value="desconectar" />
-	</form>
 
 	<?php
 		// End -- Allowed navigation panel

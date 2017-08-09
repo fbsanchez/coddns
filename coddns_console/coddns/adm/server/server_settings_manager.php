@@ -91,6 +91,7 @@ else { // SERVER CREDENTIALS ARE SET
 	$id=0;
 	$file_manager[$id]["local"]  = $localfile;
 	$file_manager[$id]["remote"] = $server->main_config_file;
+	$file_manager[$id]["temp"]   = $server->tmp_dir . "/" . hash('md5',$server->main_config_file);
 	$file_manager[$id]["target"] = "gconf_input_" . $id;
 
 	// load files
@@ -115,6 +116,7 @@ else { // SERVER CREDENTIALS ARE SET
 		if (isset($local_fin)) {
 			$file_manager[$id]["local"]  = $local_fin;
 			$file_manager[$id]["remote"] = $fin;
+			$file_manager[$id]["temp"]   = $server->tmp_dir . "/" . hash('md5',$fin);
 			$file_manager[$id]["target"] = "gconf_input_" . $id;
 
 			echo "<input type='hidden' name='gconf_input_" . $id . "' id='gconf_input_" . $id . "' />";
@@ -128,7 +130,7 @@ else { // SERVER CREDENTIALS ARE SET
 	?>	
 	<ul>
 		<li>
-			<input type="submit" value="Actualizar" />
+			<input type="submit" value="Update" />
 		</li>
 	</ul>
 	</form>

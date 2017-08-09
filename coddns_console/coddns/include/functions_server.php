@@ -62,6 +62,7 @@ function get_server_data($db_config, $servername) {
 	$server->pass = $server_info["pass"];
 	$check        = _long2ip($server->ip);
 	$server->main_config_file = $dbclient->decode($server->main_config_file);
+	$server->tmp_dir          = $dbclient->decode($server->tmp_dir);
 
 
 	if ($check !== false) {
@@ -117,6 +118,10 @@ function check_valid_conf($conf){
 	exec ("named-checkconf " . $conf
 		,$output
 		,$errlevel);
+
+	echo "<pre>";
+	var_dump($output);
+	echo "</pre>";
 
 	$return["out"]      = $output;
 	$return["errlevel"] = $errlevel;

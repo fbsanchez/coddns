@@ -560,10 +560,8 @@ function list_servers() {
 			}
 
 		?>
-
+		<a id="show_<?php echo $r->tag;?>" href="<?php echo $config["html_root"];?>?m=adm&z=server&op=manager&id=<?php echo $r->tag; ?>#status">
 		<div class="server">
-
-			<a id="show_<?php echo $r->tag;?>" href="<?php echo $config["html_root"];?>?m=adm&z=server&op=manager&id=<?php echo $r->tag; ?>#status">
 			<?php 
 			echo "<img src=\"";
 
@@ -580,8 +578,7 @@ function list_servers() {
 				$status = "Unknown";
 			}
 			echo "\" alt='server status'/>";
-			?>
-			</a>
+			?>			
 			<div class="server_summary">
 			<p>Server: <?php echo $r->tag;?></p>
 			<p>IP/FQDN: <?php echo _long2ip($r->ip);?></p>
@@ -589,6 +586,7 @@ function list_servers() {
 			<p>Zones loaded: <?php echo $r->nzones;?></p>
 			</div>
 		</div>
+		</a>
 	<?php
 	}
 }
@@ -615,15 +613,16 @@ function list_zones() {
 	
 	$dbclient = $config["dbh"];
 
-	$q = "select * from zones;";
+	$q = "select z.*, s.tag as server from zones z, zone_server sz, servers s where z.id=sz.id_zone and s.id=sz.id_server;";
 	$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
-
+	?>
+	<div>
+	<h3>Deployed zones</h3>
+	<?php
 	while ($r = $dbclient->fetch_object($results)) {
 		?>
-
+		<a id="show_<?php echo $r->domain;?>" href="<?php echo $config["html_root"];?>?m=adm&z=zones&op=manager&id=<?php echo $r->domain; ?>#status">
 		<div class="zone">
-
-			<a id="show_<?php echo $r->domain;?>" href="<?php echo $config["html_root"];?>?m=adm&z=zones&op=manager&id=<?php echo $r->domain; ?>#status">
 			<?php 
 			echo "<img src=\"";
 
@@ -632,13 +631,63 @@ function list_zones() {
 			
 			echo "\" alt='server status'/>";
 			?>
-			</a>
 			<div class="zone_summary">
 			<p>Domain: <?php echo $r->domain;?></p>
+			<?php
+			if ($r->is_public > 0) {
+				echo "<p><b>public zone</b></p>";
+			}
+			else {
+				echo "<p>restricted zone</p>";
+			}
+			?>
+			<p>Deployed in: <?php echo $r->server; ?></p>
 			</div>
 		</div>
+		</a>
 	<?php
 	}
+	?>
+	</div>
+	<?php
+
+	$q = "select * from zones where id not in (select distinct id_zone from zone_server);";
+	$results = $dbclient->exeq($q) or die ($dbclient->lq_error());
+	?>
+	<div>
+	<h3>Unassigned zones</h3>
+	<?php
+	while ($r = $dbclient->fetch_object($results)) {
+		?>
+
+		<a id="show_<?php echo $r->domain;?>" href="<?php echo $config["html_root"];?>?m=adm&z=zones&op=manager&id=<?php echo $r->domain; ?>#status">
+		<div class="zone">
+			<?php 
+			echo "<img src=\"";
+
+			echo $config["html_root"] . "/rs/img/zone_50.png";
+			$status = "Unknown";
+			
+			echo "\" alt='server status'/>";
+			?>
+			<div class="zone_summary">
+			<p>Domain: <?php echo $r->domain;?></p>
+			<?php
+			if ($r->is_public > 0) {
+				echo "<p><b>public zone</b></p>";
+			}
+			else {
+				echo "<p>restricted zone</p>";
+			}
+			?>
+			</div>
+		</div>
+		</a>
+	<?php
+	}
+	?>
+	</div>
+	<?php
 }
 
 

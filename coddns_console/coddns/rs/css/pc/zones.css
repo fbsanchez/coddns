@@ -4,10 +4,15 @@ input[type="checkbox"] {
 
 div.zone{
 	width: 300px;
-    height: 105px;
     margin: 15px 0px;
     clear: both;
     display: inline-block;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+div.zone:hover {
+	box-shadow: 3px 3px 5px 0px #ddd;
+	cursor: pointer;
 }
 
 div.zone img{
@@ -30,4 +35,15 @@ div.zone a:hover{
 }
 div.zone_summary {
 	font-size: 0.8em;
+}
+
+section#zone_list a {
+	text-decoration: none;
+	color: #222;
+	border: none;
+}
+
+section#zone_list a:hover {
+	text-decoration: none;
+	border: none;
 }

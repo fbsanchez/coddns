@@ -40,10 +40,10 @@ catch (Exception $e) {
 <head>
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/zones.css">
 <script type="text/javascript">
-	function load_servers() {
+	function load_zones() {
 		updateContent("zone_list", "ajax.php", "action=list_zones&args=");
 	}
-	document.onload = load_servers();
+	document.onload = load_zones();
 </script>
 </head>
 

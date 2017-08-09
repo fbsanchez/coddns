@@ -112,16 +112,16 @@ function select_my_ip(){
             <label>Host:</label><input style="width:50%; border: none; font-size: 1em;text-align: right;" type="text" readonly name="edith" value="<?php echo $host; ?>"></input>
         </li>
         <li>
-            <label>IP actual: </label><span style="float: right;"><?php echo $ip?></span>
+            <label>Current IP: </label><span style="float: right;"><?php echo $ip?></span>
         </li>
         <li>
-            <label>Nueva IP: </label><input style="width:50%; text-align: right;" type="text" name="nip" id="nip" value="<?php echo $current_value?>"></input>
+            <label>New IP: </label><input style="width:50%; text-align: right;" type="text" name="nip" id="nip" value="<?php echo $current_value?>"></input>
         </li>
         </li>
-            <a style="padding: 5px; font-size: 0.8em;" href="#" onclick="select_my_ip();return false;">Coger mi IP actual</a>
+            <a style="padding: 5px; font-size: 0.8em;" href="#" onclick="select_my_ip();return false;">Use current IP</a>
         </li>
         <li>
-            <input type="submit" value="Actualizar" onclick="fsgo('modhost', 'ajax_message','usr/hosts/hosts_rq_mod.php', true,raise_ajax_message);return false;"/>
+            <input type="submit" value="Update" onclick="fsgo('modhost', 'ajax_message','usr/hosts/hosts_rq_mod.php', true,raise_ajax_message);return false;"/>
         </li>
     </ul>
 </form>
