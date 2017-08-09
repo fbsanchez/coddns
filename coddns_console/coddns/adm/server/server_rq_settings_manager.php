@@ -92,7 +92,7 @@ foreach ($file_manager as $item) {
 
 			// Overwrite remote configuration
 			$r = $sshclient->apply_conf($item["temp"], $item["remote"]);
-			if (isset($r)) {
+			if ($r === true) {
 				echo "&nbsp;&nbsp;&nbsp;&nbsp;Uploaded to $servername<br>";
 				$flag = 1;
 			}
@@ -109,6 +109,7 @@ foreach ($file_manager as $item) {
 			}
 		}				
 	}
+	echo "</p>";
 }
 
 echo "</pre>";
