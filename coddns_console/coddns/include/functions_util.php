@@ -218,11 +218,13 @@ function secure_get($argument, $mode = "url_get"){
     require_once(__DIR__ . "/../lib/db.php");
     global $config;
 
-    $securizer = $config["dbh"];
+    if (isset($config["dbh"])) {
+        $securizer = $config["dbh"];
 
-    if (isset ($_REQUEST["$argument"])){
-        $token = $securizer->prepare($_REQUEST["$argument"], $mode);
-        return $token;
+        if (isset ($_REQUEST["$argument"])){
+            $token = $securizer->prepare($_REQUEST["$argument"], $mode);
+            return $token;
+        }
     }
     return null;
 }
