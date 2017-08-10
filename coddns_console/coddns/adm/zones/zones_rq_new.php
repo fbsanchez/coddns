@@ -51,6 +51,11 @@ if (!is_dir($config["spooldir"])){
 	exit (1);
 }
 
+if (strlen ($data["domain"]) < MIN_ZONE_STRLEN) {
+	echo "<p>Domain name does not accomplish requirements.</p>";
+	exit (1);
+}
+
 // 2. check zone file does not exist
 $zone = new CODZone($data);
 

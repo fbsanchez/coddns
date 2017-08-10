@@ -51,7 +51,12 @@ function list_hosts($data){
 
     $dbclient = $config["dbh"];
 
-    $limit = ITEMS_PER_PAGE;
+    if(isset($config["items_per_page"])) {
+    	$limit = $config["items_per_page"];
+    }
+    else {
+    	$limit = ITEMS_PER_PAGE;
+    }
     $text_filter = null;
     $ip_filter   = 0;
 

@@ -37,11 +37,6 @@ if (!isset($_SESSION["lan"])){
 $lan = $_SESSION["lan"];
 session_write_close();
 
-defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
-defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
-defined ("MIN_HOST_LENGTH") or define ("MIN_HOST_LENGTH", 1);
-defined ("MAX_HOST_LENGTH") or define ("MAX_HOST_LENGTH", 200);
-
 if ((!isset($_POST["u"]))
     || (!isset($_POST["p"]))
     || (!isset($_POST["h"])))

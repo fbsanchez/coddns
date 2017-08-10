@@ -1,7 +1,7 @@
 <?php
 /**
  * <copyright company="CODDNS">
- * Copyright (c) 2013 All Right Reserved, http://coddns.es/
+ * Copyright (c) 2017 All Right Reserved, http://coddns.es/
  *
  * THIS CODE AND INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY
  * KIND, EITHER EXPRESSED OR IMPLIED, NO INCLUDING THE WARRANTIES OF
@@ -10,11 +10,13 @@
  * </copyright>
  * <author>Fco de Borja Sanchez</author>
  * <email>fborja.sanchezs@gmail.com</email>
- * <date>2016-02-11</date>
- * <update>2016-02-11</udate>
+ * <date>2017-08-10</date>
+ * <update>2017-08-10</udate>
  * <summary> </summary>
  */
 
+defined("_VALID_INCLUDE") or define ("_VALID_INCLUDE", 1);
+include (__DIR__ . "/constants.php");
 
 /**
  * Read extra configuration from DB

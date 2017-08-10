@@ -19,9 +19,4 @@ $config = array ("domainname" => "coddns.test",
                   "salt"       => "Use a random salt to enforce passwords",
                   "db_config"  => $db_config);
 
-defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
-defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
-defined ("MIN_HOST_LENGTH") or define ("MIN_HOST_LENGTH", 1);
-defined ("MAX_HOST_LENGTH") or define ("MAX_HOST_LENGTH", 200);
-
 ?>

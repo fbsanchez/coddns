@@ -15,7 +15,24 @@
  * <summary> </summary>
  */
 
+require_once (__DIR__ . "/../lib/codzone.php");
 
+function get_zone_from_domain($domain) {
+	global $config;
+	$dbh = $config["dbh"];
+
+	$dom = $dbh->prepare($domain,"url_get");
+
+	$q = 'SELECT * from zones where domain="' . $dom . '"';
+
+	$r = $dbh->get_sql_array($q);
+
+	if ($r["nitems"] == 1) {
+		return new CODZone($r["data"][0]);
+	}
+
+	return $r["nitems"];
+}
 
 
 

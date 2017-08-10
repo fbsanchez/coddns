@@ -18,7 +18,6 @@
 require_once(__DIR__ . "/../../include/config.php");
 require_once(__DIR__ . "/../../lib/db.php");
 require_once(__DIR__ . "/../../include/functions_util.php");
-require_once(__DIR__ . "/../../include/functions_server.php");
 require_once(__DIR__ . "/../../lib/coduser.php");
 
 try {

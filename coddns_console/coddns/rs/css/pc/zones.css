@@ -26,13 +26,7 @@ div.zone div{
 	max-width: 400px;
 	margin: 15px 10px;
 }
-div.zone a{
-	padding: 0;
-	margin: 0;
-}
-div.zone a:hover{
-	border:none;
-}
+
 div.zone_summary {
 	font-size: 0.8em;
 }

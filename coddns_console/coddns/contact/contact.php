@@ -59,13 +59,12 @@ if (isset ($_POST["mesage"])){
 
 <body>
 	<section>
-		<h2>Enviar un mensaje a los desarrolladores</h2>
+		<h2>Send a message to development team</h2>
 
 <?php
 if ((!isset ($config["slack_url"])) || ($config["slack_url"] == '')) {
 ?>
-	<p>No se ha encontrado el token "slack_url" en la configuraci&oacute;n</p>
-	<p>Por favor, ajuste el valor en ajustes.</p>
+	<p>There's no <i>slack_url</i> defined in the configuration.</p><p>Please set it.</p>
 <?php
 }elseif( isset($mesage)
 	&& ( 
@@ -89,7 +88,7 @@ if ((!isset ($config["slack_url"])) || ($config["slack_url"] == '')) {
 
 
 ?>
-	<p> Tu mensaje es:</p>
+	<p>Your message:</p>
 	<pre>
 		<?php
 		echo "Name:" . $name . "\n";
@@ -115,19 +114,19 @@ else {   // DISPLAY FORM
 		<form action="#" method="POST" onsubmit="">
 			<ul>
 				<li>
-					<label>Nombre</label><input name="name" type="text"/>
+					<label>Name</label><input name="name" type="text"/>
 				</li>
 				<li>
 					<label>Email</label><input name="email" type="email"/>
 				</li>
 				<li>
-					<label>Telefono</label><input name="tel" type="text" pattern="(\+[0-9]{2}){0,1}[0-9]{9}" title="Introduce un n&uacute;mero de tel&eacute;fono v&aacute;lido"/>
+					<label>Phone</label><input name="tel" type="text" pattern="(\+[0-9]{2}){0,1}[0-9]{9}" title="Please provide a valid phone number"/>
 				</li>
 			</ul>
-			<textarea id="mesage" name="mesage" placeholder="Escribe tu mensaje aqu&iacute;..."></textarea>
+			<textarea id="mesage" name="mesage" placeholder="Write your message here..."></textarea>
 			<ul>
 				<li>
-					<input type="submit" value="Enviar" />
+					<input type="submit" value="Send" />
 				</li>
 			</ul>
 		</form>

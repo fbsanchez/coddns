@@ -16,10 +16,9 @@
  */
 
 // CODDNS INSTALLER
+defined("_VALID_INCLUDE") or define ("_VALID_INCLUDE", 1);
+include (__DIR__ . "/include/constants.php");
 
-defined ("MIN_USER_LENGTH") or define ("MIN_USER_LENGTH", 4);
-defined ("MIN_PASS_LENGTH") or define ("MIN_PASS_LENGTH", 4);
-defined ("MIN_DB_LENGTH") or define ("MIN_DB_LENGTH", 2);
 
 session_start();
 
@@ -717,12 +716,6 @@ elseif ($phase == 3){
 	$str_config .= "\$config = array (\"html_root\"  => \"" . $html_root . "\",\n";
 	$str_config .= "                  \"salt\"       => \"" . $salt . "\",\n";
 	$str_config .= "                  \"db_config\"  => \$db_config);\n";
-	$str_config .= "\n";
-	$str_config .= "defined (\"MIN_USER_LENGTH\") or define (\"MIN_USER_LENGTH\", 4);\n";
-	$str_config .= "defined (\"MIN_PASS_LENGTH\") or define (\"MIN_PASS_LENGTH\", 4);\n";
-	$str_config .= "defined (\"MIN_HOST_LENGTH\") or define (\"MIN_HOST_LENGTH\", 1);\n";
-	$str_config .= "defined (\"MAX_HOST_LENGTH\") or define (\"MAX_HOST_LENGTH\", 200);\n";
-	$str_config .= "defined (\"ITEMS_PER_PAGE\") or define (\"ITEMS_PER_PAGE\", 15);\n";
 	$str_config .= "\n";
 	$str_config .= "include_once (__DIR__ . \"/../include/functions_util.php\");\n";
 	$str_config .= "\$config = load_extra_config(\$config);\n";

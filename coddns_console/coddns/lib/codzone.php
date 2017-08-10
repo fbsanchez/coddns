@@ -35,13 +35,28 @@ class CODZone {
 	var $status; // status, last unix timestamp since replication 
 	var $is_public; // flag is public
 
-	function CODZone($data) {
-		$this->id        = $data["id"];
-		$this->file      = $data["file"];
-		$this->domain    = $data["domain"];
-		$this->gid       = $data["gid"];
-		$this->status    = $data["status"];
-		$this->is_public = $data["is_public"];
+	function CODZone($data = null) {
+		if ($data === null) {
+			return $this;
+		}
+		if (isset($data["id"])) {
+			$this->id        = $data["id"];
+		}
+		if (isset($data["file"])) {
+			$this->file      = $data["file"];
+		}
+		if (isset($data["domain"])) {
+			$this->domain    = $data["domain"];
+		}
+		if (isset($data["gid"])) {
+			$this->gid       = $data["gid"];
+		}
+		if (isset($data["status"])) {
+			$this->status    = $data["status"];
+		}
+		if (isset($data["is_public"])) {
+			$this->is_public = $data["is_public"];
+		}
 	}
 
 	/**

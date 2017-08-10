@@ -20,6 +20,11 @@ require_once(__DIR__ . "/../../lib/db.php");
 require_once(__DIR__ . "/../../include/functions_util.php");
 require_once(__DIR__ . "/../../lib/coduser.php");
 
+if (! defined("_VALID_ACCESS")) { // Avoid direct access
+    header ("Location: " . $config["html_root"] . "/");
+    exit (1);
+}
+
 try {
 	$auth_level_required = get_required_auth_level('adm','server','new');
 	$user = new CODUser();

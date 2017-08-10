@@ -287,7 +287,7 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','servers','',100,'Server management'),
     ('adm','server','status',100,'Server status'),
     ('adm','server','control',100,'Server control'),
-    ('adm','server','manager',100,'Server management center'),
+    ('adm','server','manager',100,'Server managements'),
     ('adm','server','settings_manager',100,'Server configuration center'),
     ('adm','server','rq_settings_manager',100,'Server configuration center (reception)'),
     ('adm','server','new',100,'New server form'),
@@ -297,6 +297,7 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','zones','',100,'Zone management global'),
     ('adm','zones','new',100,'New zone form'),
     ('adm','zones','rq_new',100,'New zone form (reception)'),
+    ('adm','zones','manager',100,'Zone management'),
     ('cms','','',0,'Documentation');
 
 -- RECORD_TYPES

@@ -14,9 +14,6 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
-
-defined ("DEFAULT_SSH_PORT") or define("DEFAULT_SSH_PORT", 22);
-
 require (__DIR__ . "/../../include/config.php");
 require_once (__DIR__ . "/../../lib/db.php");
 require_once (__DIR__ . "/../../include/functions_util.php");
@@ -46,7 +43,7 @@ session_start();
 
 $server = new CODServer($servername);
 if ((!method_exists($server, 'get_id')) || ($server->get_id() === null)){
-	echo "No hay servidores registrados con ese nombre.";
+	echo "There're no servers registered with this tag.";
 	return 0;
 }
 
