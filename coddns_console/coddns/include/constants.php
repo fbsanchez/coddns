@@ -33,11 +33,11 @@ defined ("ITEMS_PER_PAGE") or define ("ITEMS_PER_PAGE", 15);
 
 if (! defined("_VALID_INCLUDE")) { // Avoid direct access
 	if (!is_file(__DIR__ . "/config.php")) {
-	    header ("Location: " . dirname($_SERVER["REQUEST_URI"]) . "/../" );
+	    redirect (dirname($_SERVER["REQUEST_URI"]) . "/../" );
 	    exit (1);		
 	}
 	include (__DIR__ . "/config.php");
-    header ("Location: " . $config["html_root"] . "/");
+    redirect($config["html_root"] . "/");
     exit (1);
 }
 
