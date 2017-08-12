@@ -413,6 +413,7 @@ function grow(item){
 
   if(item.scrollHeight > item.clientHeight) {
     item.style["height"] = (item.scrollHeight + 10) + "px";
+    item.style["max-height"] = item.style["height"];
   }
 
 

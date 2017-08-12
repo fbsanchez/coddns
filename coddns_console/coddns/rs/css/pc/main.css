@@ -254,3 +254,24 @@ p.subtitle {
     font-size: 0.9em;
 }
 
+pre {
+    border: 2px dashed #888;
+    padding: 10px;
+    background: #DBECEF;
+    border-radius: 15px;
+    margin: 15px auto;
+    resize: none;
+    font-family: courier;
+    outline: none;
+    word-break: break-all;
+}
+
+ul.lvl2 {
+    padding-left: 2em;
+}
+ul.lvl3 {
+    padding-left: 4em;
+}
+ul.lvl4 {
+    padding-left: 6em;
+}

@@ -34,5 +34,23 @@ function get_group_id($group_tag) {
 	return null;
 }
 
+function get_group_name($group_id) {
+	global $config;
+	$dbh = $config["dbh"];
+
+	$gid = $dbh->prepare($group_id, "number");
+
+	if(!isset($gid)){
+		return null;
+	}
+
+	$r = $dbh->get_sql_object('SELECT tag from groups where id=' . $gid);
+	
+	if (isset($r)) {
+		return $r->tag;
+	}
+	return null;
+}
+
 ?>
 

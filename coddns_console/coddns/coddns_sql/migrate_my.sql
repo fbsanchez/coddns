@@ -37,6 +37,10 @@ upgrade_coddns:BEGIN
 
 
     -- Update database schema
+
+    -- ##################################################################
+    -- Patch 1
+    -- ##################################################################
     
     IF (dbschema = 0) THEN
         -- UPGRADE 0 => 1
@@ -67,7 +71,6 @@ upgrade_coddns:BEGIN
             id serial,
             id_zone bigint unsigned NOT NULL,
             id_server bigint unsigned NOT NULL,
-            id_master bigint unsigned DEFAULT NULL,
             rep_status int unsigned DEFAULT NULL,
             ref_type int unsigned DEFAULT NULL,
             CONSTRAINT pkey_zs PRIMARY KEY (id),
@@ -91,14 +94,30 @@ upgrade_coddns:BEGIN
 
         ALTER TABLE users
             ADD COLUMN auth_token varchar(255) DEFAULT NULL;
+
     END IF;
 
 
 
-    -- IF (dbschema = 1) THEN
-        -- UPGRADE 1 => 2
-    -- END IF;
 
+    -- ##################################################################
+    -- Patch 2
+    -- ##################################################################
+
+    IF (dbschema = 1) THEN
+        -- UPGRADE 1 => 2
+        ALTER TABLE zone_server
+            DROP COLUMN id_master;
+
+        ALTER TABLE zones
+            ADD COLUMN master_server bigint unsigned DEFAULT NULL;
+
+    END IF;
+
+    -- IF (dbschema = 2) THEN
+        -- UPGRADE 2 => 3
+        
+    -- END IF;
  
 
     IF `_Exception_Detected` THEN
@@ -117,4 +136,4 @@ DELIMITER ;
 set autocommit = 1;
 
 
-call upgrade_coddns_db(1);
+call upgrade_coddns_db(2);

@@ -122,6 +122,7 @@ CREATE TABLE IF NOT EXISTS zones (
     gid bigint unsigned NOT NULL default 1,
     status int,
     is_public int(1) unsigned NOT NULL default 0,
+    master_server bigint unsigned default NULL,
     CONSTRAINT pkey_zones PRIMARY KEY (id),
     CONSTRAINT fkey_zones_gid FOREIGN KEY (gid) REFERENCES groups(id) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT const_zone_unique_domain UNIQUE (domain)
@@ -133,7 +134,6 @@ CREATE TABLE IF NOT EXISTS zone_server (
     id serial,
     id_zone bigint unsigned NOT NULL,
     id_server bigint unsigned NOT NULL,
-    id_master bigint unsigned DEFAULT NULL,
     rep_status int unsigned DEFAULT NULL,
     ref_type int unsigned DEFAULT NULL,
     CONSTRAINT pkey_zs PRIMARY KEY (id),
@@ -281,6 +281,7 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','site','',100,'Site management global'),
     ('adm','site','manager',100,'Site management'),
     ('adm','site','rq_new_user',100,'New user form (reception)'),
+    ('adm','site','rq_new_group',100,'New group form (reception)'),
     ('adm','center','',100,'Administration center'),
     ('adm','service','status',100,'Service status'),
     ('adm','service','manager',100,'Service manager'),
@@ -298,6 +299,7 @@ INSERT INTO site_acl (m,z,op,auth_level,tag)
     ('adm','zones','new',100,'New zone form'),
     ('adm','zones','rq_new',100,'New zone form (reception)'),
     ('adm','zones','manager',100,'Zone management'),
+    ('adm','zones','rq_manager',100,'Zone management (reception)'),
     ('cms','','',0,'Documentation');
 
 -- RECORD_TYPES

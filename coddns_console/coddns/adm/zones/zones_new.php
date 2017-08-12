@@ -50,7 +50,7 @@ catch (Exception $e) {
 	<form id="new_zone" action="<?php echo $config["html_root"]; ?>/?m=adm&z=center#zones" method="POST" onsubmit="fsgo('new_zone','ajax_message','<?php echo $config["html_root"]; ?>/adm/zones/zones_rq_new.php',false,raise_ajax_message);return false;">
 		<ul>
 			<li><label>Domain</label><input type="text" name="domain" /></li>
-			<li><span>Group:</span> <select style="float:right; min-width: 150px;" name="group"> 
+			<li><span>Group:</span> <select class="input_select" name="group"> 
 				<?php
 					// Retrieve all Groups with at least read grant available for current user
 					$groups = $user->get_read_groups();

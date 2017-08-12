@@ -224,5 +224,26 @@ function get_server_connection($servername) {
 }
 
 
+function get_server_name($server_id) {
+	global $config;
+	$dbh = $config["dbh"];
+
+	$sid = $dbh->prepare($server_id, "number");
+
+	if (!$sid) {
+		return false;
+	}
+
+	$r = $dbh->get_sql_object("SELECT tag from servers where id=" . $sid);
+
+	if ($r !== false) {
+		return $r->tag;
+	}
+	
+	return false;
+
+}
+
+
 
 ?>
