@@ -38,11 +38,13 @@ catch (Exception $e) {
 }
 
 
-if(!isset($servername)){
+if(!isset($domain)){
 	$domain = secure_get("id");
 }
 
-$zone = get_zone_from_domain($domain);
+$zones = get_zone_from_domain($domain);
+$zone  = $zones[0];
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -89,6 +91,8 @@ $zone = get_zone_from_domain($domain);
 				<ul class="lvl2">
 					<?php
 					if (count($zone->servers) == 0) {
+						$zone  = $zones[0];
+
 						echo "<li>No server assigned</li>";
 					}
 					foreach ($zone->servers as $server) {
@@ -134,7 +138,7 @@ $zone = get_zone_from_domain($domain);
         echo "ns1	IN	A	127.0.0.1\n";
 
 		?>
-		</textarea>
+		<textarea>
 		<input style="float:right;" type="submit" <?php 
 			if ($zone->file !== null) {
 				echo 'name="update" value="Update"';
