@@ -34,7 +34,9 @@ upgrade_coddns:BEGIN
 
     END IF;
 
+    COMMIT;
 
+    START TRANSACTION;
 
     -- Update database schema
 
@@ -107,6 +109,7 @@ upgrade_coddns:BEGIN
     IF (dbschema = 1) THEN
         -- UPGRADE 1 => 2
         ALTER TABLE zone_server
+            DROP FOREIGN KEY fkey_zs_master,
             DROP COLUMN id_master;
 
         ALTER TABLE zones
