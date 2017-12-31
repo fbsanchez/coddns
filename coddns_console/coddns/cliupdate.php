@@ -53,7 +53,7 @@ $rq_user = $dbclient->prepare($_POST["u"], "email");
 $rq_pass = base64_decode($_POST["p"]);
 
 if ($user->login($rq_user, $rq_pass) == null ) {
-    echo "ERR: Registrese en http://" . $config["domainname"];
+    echo "ERR: Please register at http://" . $config["domainname"];
     exit (3);
 }
 

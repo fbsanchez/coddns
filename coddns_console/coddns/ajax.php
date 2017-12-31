@@ -704,7 +704,7 @@ function usr_check_host($data) {
 	global $config;
 
 	try {
-		$auth_level_required = get_required_auth_level('','rest_host','');
+		$auth_level_required = get_required_auth_level('','ajax','');
 		$user = new CODUser();
 		$user->check_auth_level($auth_level_required);
 	}
