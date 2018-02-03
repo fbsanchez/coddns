@@ -49,7 +49,6 @@ You can find the documentation inside of the coddns_doc folder.
 
 
 
-
 Thank you, 
 
 Fco de Borja Sánchez

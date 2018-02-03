@@ -145,8 +145,8 @@ else {
 
 
 ?>
-<header id="header">
-<div id="launcher" class="box-shadow-menu" onclick="minimize_menu();return false;">
+<header id="header" style="width:0;">
+<div id="launcher" class="box-shadow-menu" onclick="toggle_menu();return false;">
 </div>
 <a href="<?php echo $config["html_root"];?>/"><img src="<?php echo $config["html_root"];?>/rs/img/coddns_225.png" alt="logo"></a>
 <div id="menu">
@@ -256,18 +256,24 @@ if (check_show($user,null,"logout",null)) {
             <a id="menu_item_cookies" href="#" class="pl" onclick="red(this,'main','terms.html');">Terms of service</a>
         </li>
     </ul>
-    <div class="pics">
-        <div style="display:inline-block;">
-        <a target="_new" title="Fco de Borja S&aacute;nchez" href='https://plus.google.com/104344930735301242497/about'>
-            <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/gp.png') #DA4835 no-repeat center;background-size:30px;"></div>
-        </a>
-        </div>
-        <div style="display: inline-block;margin-left: 15px;">
-        <a target="_new2" title="CODDNS en GitHub" href='https://github.com/fbsanchez/coddns'>
-            <div class="pic" style="background: url('<?php echo $config["html_root"];?>/rs/img/github.png') #FFF no-repeat center;background-size:41px;"></div>
-        </a>
-        </div>
-    </div>
 </div>
+
+<script type="text/javascript">
+    header = document.getElementById("header");
+    var visible_menu = <?php
+        global $config;
+
+        if(isset($config["session"]["visible_menu"])) {
+            echo $config["session"]["visible_menu"];
+        }
+        else {
+            echo "1";
+        }?>;
+    if (visible_menu == 0) {
+        header.className = "minimized";
+        
+    }
+    header.removeAttribute("style");
+</script>
 </header>
 

@@ -704,7 +704,7 @@ function usr_check_host($data) {
 	global $config;
 
 	try {
-		$auth_level_required = get_required_auth_level('','ajax','');
+		$auth_level_required = get_required_auth_level('','rest_host','');
 		$user = new CODUser();
 		$user->check_auth_level($auth_level_required);
 	}
@@ -747,15 +747,24 @@ function usr_check_host($data) {
 }
 
 
-
+function store($args) {
+	if (is_object($args)) {
+		$properties = get_object_vars ($args);
+		foreach ($properties as $k => $v) {
+			$_config[$k] = $v;
+		}
+		update_session_config($_config);
+	}
+}
 
 
 //
 // AJAX API Control
 //
 
-$action    = secure_get("action");
-$arguments = secure_get("args","json");
+$action     = secure_get("action");
+$arguments  = secure_get("args","json");
+$carguments = secure_get("cargs");
 
 switch ($action) {
 	case 'list_hosts':
@@ -790,6 +799,9 @@ switch ($action) {
 		break;
 	case 'check_host':
 		usr_check_host($arguments);
+		break;
+	case 'store':
+		store($arguments);
 		break;
 	default:
 		print "Unknown action";

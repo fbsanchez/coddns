@@ -17,7 +17,6 @@
 
 defined("_VALID_ACCESS") or define ("_VALID_ACCESS", 1);
 
-
 if (!file_exists(__DIR__ . "/include/config.php")){
     header("Location: install.php");
     exit(0);
@@ -229,6 +228,8 @@ if (isset($_GET["debug_mode"]) && ($_GET["debug_mode"] == 1)) {
 echo "Auth_level: " . $user->get_auth_level();
 echo "</div>";
 }
+include_once(__DIR__ . "/include/functions_util.php");
+
 ?>
 
 <?php
@@ -260,6 +261,27 @@ document.onkeyup = function(evt) {
     </div>
 </div>
 </div>
+
+
+<script type="text/javascript">
+    var visible_menu = <?php
+        global $config;
+
+        if(isset($config["session"]["visible_menu"])) {
+            echo $config["session"]["visible_menu"];
+        }
+        else {
+            echo "1";
+        }?>;
+    if (visible_menu == 0) {
+        main = document.getElementById("main");
+        
+        main.style["width"]  = "90%";
+        main.style["margin"] = "0 auto";
+    }
+
+
+</script>
 </body>
 
 </html>

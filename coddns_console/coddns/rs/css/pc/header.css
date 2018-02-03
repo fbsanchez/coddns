@@ -6,7 +6,7 @@ header{
 	background: #1F282B;
 	color: #ddd;
 	overflow: hidden;
-	transition: width 0.2s 0s, height 0.4s 0.2s;
+/*	transition: width 0.2s 0s, height 0.4s 0.2s;*/
 }
 
 header.minimized {

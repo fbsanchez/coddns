@@ -34,6 +34,18 @@ function load_extra_config($cnf){
         $cnf[$row["field"]] = $row["value"];
     }
 
+    if (session_status() == PHP_SESSION_NONE){
+        session_start();
+    }
+    if (is_array($_SESSION["config"])) {
+        foreach ($_SESSION["config"] as $k => $v){
+            $config["session"][$k] = $v;
+        }
+    }
+    if (session_status() != PHP_SESSION_NONE){
+        session_write_close();
+    }
+
     // Dynamic CSS load
     if (check_user_agent('mobile')) {
         $cnf["html_view"] = "m"; // mobile
@@ -44,6 +56,16 @@ function load_extra_config($cnf){
     return $cnf;
 }
 
+function update_session_config($data = array()) {
+    global $config;
+
+    session_start();
+    if(!is_array($config["session"])) {
+        $config["session"] = array();
+    }
+    $_SESSION["config"] = array_merge($config["session"], $data);
+    session_write_close();
+}
 
 /**
  * Encrypt (basic)
@@ -274,4 +296,24 @@ function _long2ip($target) {
         return long2ip($target);
     }
     return $config["dbh"]->prepare($target, "url_get");
+}
+
+/**
+ * debug $var 
+ */
+function debug($var, $tostring = 0) {
+
+    if ($tostring == 0) {
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+    }
+    else {
+        ob_start();
+        echo "<pre>";
+        var_dump($var);
+        echo "</pre>";
+        return ob_get_clean();
+    }
+
 }

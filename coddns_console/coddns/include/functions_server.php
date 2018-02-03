@@ -109,30 +109,6 @@ function transfer_conf_files($config, $sshclient, $serverid, $remote_configfile)
 }
 
 
-
-function check_valid_conf($conf){
-	// execute named-checkconf with the received content
-	// if pass, backup the old conf file
-	// and next update the content.
-
-	exec ("named-checkconf " . $conf
-		,$output
-		,$errlevel);
-
-	echo "<pre>";
-	var_dump($output);
-	echo "</pre>";
-
-	$return["out"]      = $output;
-	$return["errlevel"] = $errlevel;
-
-	return $return;
-
-	// TODO
-	// Save on /var/named/backup the conf files
-	// -> allow the user restore a backuped conf file
-}
-
 /**
  * get_server_connection Returns a new sshclient object
  * @return sshclient session or false if process fails

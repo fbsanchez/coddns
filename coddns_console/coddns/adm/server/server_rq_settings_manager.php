@@ -71,6 +71,7 @@ if (! $sshclient->is_authenticated()){
 $file_manager = $_SESSION["settings_manager"];
 
 $flag = 0;
+
 foreach ($file_manager as $item) {
 	if ($_REQUEST[$item["target"]] != "") {
 		$config = secure_get($item["target"], "base64");
@@ -103,7 +104,7 @@ foreach ($file_manager as $item) {
 		}
 		else {
 			echo "<b>File " . $item["remote"] . ":</b><br>";
-			foreach ($check["out"] as $line) {
+			foreach ($check as $line) {
 				$line = str_replace ($item["local"] . ":", "", $line);
 				echo "&nbsp;&nbsp;&nbsp;&nbsp;$line<br>";
 			}

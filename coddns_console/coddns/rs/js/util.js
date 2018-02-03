@@ -255,6 +255,23 @@ function get_ajax_response(url, data, target, callback) {
   return false;
 }
 
+function ajax_store(url,query,method) {
+  html.url      = url;
+  html.args     = query;
+  html.scroll   = false;
+  if( method )
+    html.method = method;
+  else
+    html.method   = "POST";
+  html.callback = function() {
+    if(html.xmlHttp.readyState == 4 && html.xmlHttp.status == 200){
+      // successfully update
+    }
+  };
+  html.send();
+  return false; 
+}
+
 function fsgo(fid, zoneid, url, reloadSC, launchEvent){
   updateContent(zoneid, url, serialize(document.forms[fid]), reloadSC, launchEvent);
   return false;
@@ -280,16 +297,19 @@ function fsgo(fid, zoneid, url, reloadSC, launchEvent){
 // 	}
 // }
 
-visible_menu = 1;
-function minimize_menu(){
+function toggle_menu() {
+  header.style["transition"] = "width 0.2s 0s, height 0.4s 0.2s";
   if (visible_menu == 1){
     visible_menu = 0;
+    ajax_store("ajax.php", "action=store&args=" + JSON.stringify({"visible_menu":visible_menu}));
+
     main.style["width"]  = "90%";
     main.style["margin"] = "0 auto";
     header.className = "minimized";
     return false;
   }
   visible_menu = 1;
+  ajax_store("ajax.php", "action=store&args=" + JSON.stringify({"visible_menu":visible_menu}));
   header.className = "";
   main.removeAttribute("style");
   return false;
