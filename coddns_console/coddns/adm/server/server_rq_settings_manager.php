@@ -54,21 +54,22 @@ if ($server_credentials === false) {
 	custom_die("No existen credenciales para acceder a este servidor.");
 }
 
+if (isset($config["session"][$servername]) && isset($config["session"][$servername]["settings_manager"])) {
+        $file_manager = $config["session"][$servername]["settings_manager"];
+}
+else {
+        custom_die("<p>Something went wrong</p>");
+}
+
 // initialize ssh client
 $sshclient = new SSHClient($server_credentials);
-//	$output = $sshclient->launch("cat /etc/named.conf");
 
 $sshclient->connect();
-/**
- * Check if we're connected & authenticated into the server
- * 
- */
+
+// Check if we're connected & authenticated into the server
 if (! $sshclient->is_authenticated()){
 	custom_die("<p>Cannot connect to server.</p><p>Please check IP, port, user name, password and sshd status.</p>");
 }
-
-
-$file_manager = $_SESSION["settings_manager"];
 
 $flag = 0;
 
