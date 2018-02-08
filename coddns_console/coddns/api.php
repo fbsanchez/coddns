@@ -74,7 +74,7 @@ function get_data($auth_token, $arguments) {
 		$arguments->custom_tag = "values";
 	}
 
-	$q = " select value,from_unixtime(utimestamp, '%Y-%m-%dT%H:%i:%s') as timestamp from stats_data where id_item=" . $config["dbh"]->prepare($arguments->oid,"number") . " order by utimestamp desc limit 100";
+	$q = " select value,from_unixtime(utimestamp, '%Y-%m-%dT%H:%i:%s') as timestamp from stats_data where id_item=" . $config["dbh"]->prepare($arguments->oid,"number") . " where utimestamp > select * from stats_data where utimestamp > (unix_timestamp(now()) - 604800) order by utimestamp desc";
 	$result_set = $config["dbh"]->get_sql_array($q);
 
 	$out = array();
