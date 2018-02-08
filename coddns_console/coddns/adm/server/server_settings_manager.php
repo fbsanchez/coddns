@@ -46,6 +46,8 @@ $file_manager = array();
 // Retrieve server credentials
 $server = get_server_data($db_config, $servername);
 
+ob_start();
+
 ?>
 
 <!DOCTYPE HTML>
@@ -136,9 +138,18 @@ else { // SERVER CREDENTIALS ARE SET
 	</form>
 
 <?php
-	$_SESSION["settings_manager"] = $file_manager;
+	$tmp_array = array();
+	$tmp_array[$servername] = array();
+	$tmp_array[$servername]["settings_manager"] = $file_manager;
+	
+	update_session_config($tmp_array);
+	
 }
 session_write_close();
+
+// Dump all generated HTML code
+$out = ob_get_clean();
+
 ?>
 	</section>
 </body>
