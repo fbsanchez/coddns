@@ -149,6 +149,7 @@ session_write_close();
 
 // Dump all generated HTML code
 $out = ob_get_clean();
+echo $out;
 
 ?>
 	</section>
