@@ -37,7 +37,7 @@ function load_extra_config($cnf){
     if (session_status() == PHP_SESSION_NONE){
         session_start();
     }
-    if (is_array($_SESSION["config"])) {
+    if (isset($_SESSION["config"]) && is_array($_SESSION["config"])) {
         foreach ($_SESSION["config"] as $k => $v){
             $config["session"][$k] = $v;
         }
@@ -60,7 +60,7 @@ function update_session_config($data = array()) {
     global $config;
 
     session_start();
-    if(!is_array($config["session"])) {
+    if(!isset($config["session"]) || !is_array($config["session"])) {
         $config["session"] = array();
     }
     $_SESSION["config"] = array_merge($config["session"], $data);
