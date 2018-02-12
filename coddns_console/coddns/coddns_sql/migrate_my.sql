@@ -118,10 +118,24 @@ upgrade_coddns:BEGIN
 
     END IF;
 
+
+
+    -- ##################################################################
+    -- Patch 3
+    -- ##################################################################
+
+    IF (dbschema = 2) THEN
+        -- UPGRADE 2 => 3
+        ALTER TABLE stats_item
+            ADD COLUMN last_value int DEFAULT 0;
+
+    END IF;
+
     -- IF (dbschema = 2) THEN
         -- UPGRADE 2 => 3
         
     -- END IF;
+ 
  
 
     IF `_Exception_Detected` THEN
@@ -139,5 +153,4 @@ END$$
 DELIMITER ;
 set autocommit = 1;
 
-
-call upgrade_coddns_db(2);
+select concat("call upgrade_coddns_db(", value +1, ")") as "message" from settings where field = "dbschema";
