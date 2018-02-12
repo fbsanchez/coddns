@@ -73,6 +73,7 @@ upgrade_coddns:BEGIN
             id serial,
             id_zone bigint unsigned NOT NULL,
             id_server bigint unsigned NOT NULL,
+            id_master bigint unsigned NOT NULL,
             rep_status int unsigned DEFAULT NULL,
             ref_type int unsigned DEFAULT NULL,
             CONSTRAINT pkey_zs PRIMARY KEY (id),
