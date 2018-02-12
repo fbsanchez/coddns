@@ -127,7 +127,8 @@ upgrade_coddns:BEGIN
     IF (dbschema = 2) THEN
         -- UPGRADE 2 => 3
         ALTER TABLE stats_item
-            ADD COLUMN last_value int DEFAULT 0;
+            ADD COLUMN last_value int DEFAULT 0,
+            ADD COLUMN last_utimestamp int DEFAULT 0;
 
     END IF;
 

@@ -182,6 +182,7 @@ CREATE TABLE IF NOT EXISTS stats_item (
     id_block bigint unsigned NOT NULL,
     tag varchar(250),
 	last_value int,
+    last_utimestamp int,
     CONSTRAINT pkey_stats_stats_item PRIMARY KEY (id),
     CONSTRAINT fkey_stats_item_block FOREIGN KEY (id_block) REFERENCES stats_szb(id_block) ON DELETE CASCADE ON UPDATE CASCADE
 ) engine=InnodB;
