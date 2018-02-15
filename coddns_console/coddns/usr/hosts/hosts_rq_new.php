@@ -94,8 +94,12 @@ function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl,  $gid = 0,
     else {
         if ($is_external_reference == 0) {
             $q = "insert into hosts (oid, tag, rid, ttl, rtype, gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), (select id from hosts h where lower(tag)=lower('" . $rtag . "')), $ttl, (select id from record_types where tag ='". $rtype_p ."'), $gid);";
-            $dbclient->exeq($q) or die($dbclient->lq_error());
         }
+        else {
+            $q = "insert into hosts (oid, tag, rtag, ttl, rtype, gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), '" . $rtag . "', $ttl, (select id from record_types where tag ='". $rtype_p ."'), $gid);";
+        }
+
+        $dbclient->exeq($q) or die($dbclient->lq_error());
     ?>
         <a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>
         <?php
