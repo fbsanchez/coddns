@@ -21,7 +21,7 @@
 section.uarea ul{
     list-style-type: none;
     width: 100%;
-    margin: 0px auto;
+    margin: 0px auto 20px;
 }
 section.uarea ul li{
     padding: 1em;
@@ -158,4 +158,8 @@ form#search input{
     border-bottom: 1px solid #ccc;
     text-indent: 10px;
     height: 1.2em;
+}
+
+li > input {
+    float:right  !important;
 }

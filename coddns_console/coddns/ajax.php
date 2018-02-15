@@ -100,7 +100,7 @@ function list_hosts($data){
 	}
 
 	// Get total host counter - unlimited
-	$q  = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip) as value, r.tag as record, h.ttl, (select mail from users where id=h.oid) as mail "
+	$q  = "select g.tag as \"group\", h.tag, coalesce((select hh.tag from hosts hh where h.rid=hh.id),h.ip,h.rtag) as value, r.tag as record, h.ttl, (select mail from users where id=h.oid) as mail "
 		. " from hosts h, record_types r, users u, groups g, tusers_groups ug, zones z "
 		. " where z.id=h.zone_id and h.rtype=r.id and h.gid=ug.gid "
 		. "  and ((z.is_public=0 and ug.admin=1 and u.id=ug.oid and ug.gid=g.id) "

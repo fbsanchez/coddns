@@ -132,8 +132,20 @@ upgrade_coddns:BEGIN
 
     END IF;
 
-    -- IF (dbschema = 2) THEN
+
+    -- ##################################################################
+    -- Patch 4
+    -- ##################################################################
+
+    IF (dbschema = 3) THEN
         -- UPGRADE 2 => 3
+        ALTER TABLE hosts
+            ADD COLUMN rtag varchar(250) default NULL;
+
+    END IF;
+
+    -- IF (dbschema = X) THEN
+        -- UPGRADE X => X+1
         
     -- END IF;
  

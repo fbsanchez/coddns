@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS hosts (
     gid bigint unsigned NOT NULL DEFAULT 1,
     rtype bigint unsigned NOT NULL DEFAULT 1,
     rid bigint unsigned default null,
+    rtag varchar(250),
     zone_id bigint unsigned NOT NULL DEFAULT 1,
     ttl int default 12,
     CONSTRAINT pkey_hosts PRIMARY KEY (id),
@@ -316,7 +317,7 @@ INSERT INTO record_types(tag,description,auth_level)
 -- SETTINGS - DEFAULT
 INSERT INTO settings(field,value)
  values
-    ("dbschema", "1"),
+    ("dbschema", "4"),
     ("slack_url", ""),
     ("first_steps", "1"),
     ("installdir", "/opt/coddns/"),

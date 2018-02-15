@@ -73,8 +73,11 @@ function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl,  $gid = 0,
     $q = "select * from hosts where lower(tag)=lower('" . $rtag . "');";
     $dbclient->exeq($q);
 
-    if( $dbclient->lq_nresults()  == 0 )
-        die ("No existen hosts sobre los que hacer la operaci&oacute;n<br>$q");
+    $is_external_reference = 1;
+    if( $dbclient->lq_nresults()  == 0 ) {
+        $is_external_reference = 0;
+    }
+        
 
     // LAUNCH DNS UPDATER
     switch ($rtype_p) {
@@ -89,9 +92,10 @@ function add_referenced_host($dbclient, $host, $rtype_p, $rtag, $ttl,  $gid = 0,
         echo $text[$lan]["err_i"] . "<br> [" .  $out . "] ";
     }
     else {
-        $q = "insert into hosts (oid, tag, rid, ttl, rtype, gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), (select id from hosts h where lower(tag)=lower('" . $rtag . "')), $ttl, (select id from record_types where tag ='". $rtype_p ."'), $gid);";
-        $dbclient->exeq($q) or die($dbclient->lq_error());
-        echo $text[$lan]["ok"];
+        if ($is_external_reference == 0) {
+            $q = "insert into hosts (oid, tag, rid, ttl, rtype, gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), (select id from hosts h where lower(tag)=lower('" . $rtag . "')), $ttl, (select id from record_types where tag ='". $rtype_p ."'), $gid);";
+            $dbclient->exeq($q) or die($dbclient->lq_error());
+        }
     ?>
         <a class="ajax_button" href="#" onclick="close_ajax_message();">OK</a>
         <?php

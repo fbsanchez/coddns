@@ -185,6 +185,11 @@ $text["de"]["reg_type"]      = "DNS record type";
         return false;
     }
 
+    function update_target(target, value) {
+        tid = document.getElementById(target);
+        tid.value = value;
+    }
+
     document.onload = sortHostsBy();
 </script>
 </head>
@@ -326,25 +331,42 @@ $text["de"]["reg_type"]      = "DNS record type";
         </ul>
     </div>
     <div id="rr_CNAME" class="hidden">
-        <ul style="width: 300px; margin: 0;">
+        <input type="hidden" name="rtag_CNAME" id="rtag_CNAME" />
+
+        <b><label>CNAME</label></b>
+        <ul style="width: 400px; margin: 0;">
             <li>
-                <label>CNAME:</label>
-                <select style="float:right; min-width: 150px;" name="rtag_CNAME">
+                <label>Select previously defined</label>
+                <select style="float:right; min-width: 150px;" name="rtag_CNAME_select" onchange="update_target('rtag_CNAME',this.value);">
                 <?php echo $tag_options; ?>
                 </select>
+                
+            </li>
+            <li>
+                <label>Or define your own</label>
+                <input type="text" name="rtag_CNAME_free_text" onkeyup="update_target('rtag_CNAME',this.value);" />
             </li>
         </ul>
+
+        
+
     </div>
     <div id="rr_MX" class="hidden">
-        <ul style="width: 300px; margin: 0;">
+        <input type="hidden" name="rtag_MX" id="rtag_MX" />
+        <b><label>MX</label></b>
+        <ul style="width: 400px; margin: 0;">
             <li>
-                <label>MX:</label>
-                <select style="float:right; min-width: 150px;" name="rtag_MX">
+                <label>Select previously defined</label>
+                <select style="float:right; min-width: 150px;" name="rtag_MX_select" onchange="update_target('rtag_MX',this.value);">
                 <?php echo $tag_options; ?>
                 </select>
             </li>
             <li>
-                <label>Prioridad:</label>
+                <label>Or define your own</label>
+                <input type="text" name="rtag_MX_free_text" onkeyup="update_target('rtag_MX',this.value);" />
+            </li>
+            <li>
+                <label>Priority</label>
                 <input style="width: 150px;" type="number" name="mx_priority" value="10"/>
             </li>
         </ul>
