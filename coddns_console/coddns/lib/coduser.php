@@ -152,6 +152,7 @@ class CODUser {
 	 * ARGUMENTS MUST BE CHECKED OUT HERE
 	 */
 	function signin($rq_user,$rq_pass){
+		global $config;
 		if ($this->logged){
 			error_log("user already logged");
 			return null;
