@@ -290,7 +290,7 @@ class CODUser {
 		$dbclient = $config["dbh"];
 		switch ($item_type){
 			case "host":
-				$q = "select count(tag) as n from hosts where ((oid=(select id from users where lower(mail)=lower('" . $this->mail . "')) and gid=(select id from groups where tag='private')) or (gid in (select g.id from groups g, tusers_groups ug, users u where u.id=ug.oid and g.id=ug.gid and " . $grants ." and lower(u.mail)=lower('" . $this->mail . "')))) and lower(tag)=lower('" . $item . "');";
+				$q = "select count(tag) as n from hosts where ((oid=(select id from users where lower(mail)=lower('" . $this->mail . "')) and gid in (select id from groups where tag='private')) or (gid in (select g.id from groups g, tusers_groups ug, users u where u.id=ug.oid and g.id=ug.gid and " . $grants ." and lower(u.mail)=lower('" . $this->mail . "')))) and lower(tag)=lower('" . $item . "');";
 				$result = $dbclient->get_sql_object($q);
 				if ($result->n >= 1){
 					return true;
