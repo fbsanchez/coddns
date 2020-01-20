@@ -49,6 +49,7 @@ function load_extra_config($cnf){
     // Dynamic CSS load
     if (check_user_agent('mobile')) {
         $cnf["html_view"] = "m"; // mobile
+        $cnf["html_view"] = "pc"; // mobile, XXX override until completed
     }
     else {
         $cnf["html_view"] = "pc"; // pc

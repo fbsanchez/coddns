@@ -234,10 +234,10 @@ switch ($rtype_p){
         }
         else {
             $q = "insert into hosts (oid, tag, ip, ttl, rtype, zone_id, gid) values ( (select id from users where mail=lower('" . $_SESSION["email"] . "')), lower('" . $host . "'), $iip, $ttl, (select id from record_types where tag ='". $rtype_p ."'), $zone_id, $gid);";
-            $dbclient->exeq($q) or die($dbclient->lq_error());
+			$dbclient->exeq($q) or die($dbclient->lq_error());
+			echo $text[$lan]["ok"]; 
         }
         session_write_close();
-
         break;
     }
     case "CNAME":{
