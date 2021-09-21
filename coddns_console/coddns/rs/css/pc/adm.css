@@ -1,18 +1,18 @@
 pre {
-	font-family: Courier;
+    font-family: Courier;
     font-size: 0.7em;
     margin: 15px 0;
 }
 
 nav {
-	width: 85%;
+    width: 85%;
     min-width: 450px;
     margin: 15px auto;
     font-size: 1em;
 }
 
 table {
-	width: 70%;
+    width: 70%;
     padding: 5px;
     margin: 0 auto;
     border-collapse: collapse;
@@ -48,16 +48,16 @@ div.menu_button{
     margin: 15px;
 }
 div.menu_button:hover{
-	box-shadow: 2px 2px 10px #ddd;
+    box-shadow: 2px 2px 10px #ddd;
 }
 div.menu_button img{
-	margin: 15px auto 30px;
-	height: 60px;
+    margin: 15px auto 30px;
+    height: 60px;
 }
 img.add {
-	float: left;
+    float: left;
     margin: 3px 5px 0px;
 }
 #hidden_div_1, #hidden_div_2, #hidden_div_3 {
-	display: none;
+    display: none;
 }

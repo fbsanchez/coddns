@@ -15,57 +15,56 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../../include/config.php");
-require_once (__DIR__ . "/../../lib/db.php");
-require_once (__DIR__ . "/../../include/functions_ip.php");
-require_once (__DIR__ . "/../../include/functions_util.php");
-require_once (__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_ip.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
+    header("Location: " . $config["html_root"] . "/");
+    exit(1);
 }
 
 try {
-    $auth_level_required = get_required_auth_level('usr','hosts','mod');
+    $auth_level_required = get_required_auth_level('usr', 'hosts', 'mod');
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
 session_write_close();
 
-if (  (!isset ($_POST["edith"])) || (! isset ($_POST["editip"]))  ){
-    header ("Location: " . $config["html_root"] . "/?z=hosts&lang=" . $lan);
-    exit (1);
+if ((!isset($_POST["edith"])) || (! isset($_POST["editip"]))) {
+    header("Location: " . $config["html_root"] . "/?z=hosts&lang=" . $lan);
+    exit(1);
 }
 
 $dbclient= $config["dbh"];
 
 $phost = $dbclient->prepare($_POST["edith"], "url_get");
-$fields = explode(".", $phost,2);
+$fields = explode(".", $phost, 2);
 $host   = $fields[0];
 $domain = $fields[1];
 
 
 // Check if user has grants to edit that host
-if (! $user->check_grant_over_item("read", $phost)){
-    die ("ERR: No grants over this item");
+if (! $user->check_grant_over_item("read", $phost)) {
+    die("ERR: No grants over this item");
 }
 
-if(   ( strlen($host) < MIN_HOST_LENGTH )
-   || ( strlen($host) > MAX_HOST_LENGTH )){
- 
-    die ("ERR: nombre de host no valido");
+if (( strlen($host) < MIN_HOST_LENGTH )
+    || ( strlen($host) > MAX_HOST_LENGTH )
+) {
+    die("ERR: nombre de host no valido");
 }
 
 $host =  $dbclient->prepare($host, "letters") . "." . $domain;
@@ -74,20 +73,20 @@ $q   = "select ip from hosts where tag='$host';";
 $r   = $dbclient->exeq($q);
 $obj = $dbclient->fetch_object($r);
 
-if(!isset($obj)){
-	die ("ERR: Consulta erronea");
+if (!isset($obj)) {
+    die("ERR: Consulta erronea");
 }
 
 $ip = long2ip($obj->ip);
-if ($ip == 0){
+if ($ip == 0) {
     $q   = "select hh.tag from hosts h, hosts hh where h.tag='$host' and hh.id=h.rid;";
     $r   = $dbclient->exeq($q);
     $obj = $dbclient->fetch_object($r);
     $ip = $obj->tag;
 }
 
-$current_value = long2ip ($_POST["editip"]);
-if ($current_value == 0){
+$current_value = long2ip($_POST["editip"]);
+if ($current_value == 0) {
     $current_value = $_POST["editip"];
 }
 

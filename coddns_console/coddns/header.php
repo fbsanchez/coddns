@@ -15,18 +15,19 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/include/config.php");
-require_once (__DIR__ . "/lib/coduser.php");
+require_once __DIR__ . "/include/config.php";
+require_once __DIR__ . "/lib/coduser.php";
 
-if (!defined("_VALID_ACCESS")){
+if (!defined("_VALID_ACCESS")) {
     header("Location: " . $config["html_root"] . "/");
-    die ("Unauthorized");
+    die("Unauthorized");
 }
 
-function check_show($user, $mode, $zone, $operation){
-    $auth_level_required = get_required_auth_level($mode,$zone,$operation);
+function check_show($user, $mode, $zone, $operation)
+{
+    $auth_level_required = get_required_auth_level($mode, $zone, $operation);
 
-    if($user->get_auth_level() >= $auth_level_required) {
+    if ($user->get_auth_level() >= $auth_level_required) {
         return true;
     }
     return false;
@@ -34,16 +35,15 @@ function check_show($user, $mode, $zone, $operation){
 
 try {
     $user = new CODUser();
-    $user->check_auth_level(get_required_auth_level(null,"header",null));
-}
-catch (Exception $e) {
+    $user->check_auth_level(get_required_auth_level(null, "header", null));
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
@@ -72,19 +72,17 @@ $enable_logout      = 0;
 $enable_users_login = 0;
 $enable_contact     = 1;
 
-if ( $url == "index.php" ) {
+if ($url == "index.php") {
     $menu_item_main = "pl_select";
-}
-else {
-
+} else {
     switch ($mode) {
         case "adm":
             $menu_item_adm = "pl_select";
             break;
         case "usr":
-            switch($zone){
+            switch ($zone) {
                 case "users":
-                    switch($operation){
+                    switch ($operation) {
                         case "login":
                         case "signin":
                         case "remember":
@@ -102,13 +100,13 @@ else {
                     }
                     break;
                 case "hosts":
-                    switch($operation){
+                    switch ($operation) {
                         case "mod":
                         case "new":
                         case "del":
                         default:
                             $menu_item_priv_zone = "pl_select";
-                        break;
+                            break;
                     }
                     break;
             }
@@ -118,7 +116,7 @@ else {
             break;
         }
         case null:
-            switch($zone){
+            switch ($zone) {
                 case "downloads":
                     $menu_item_downloads = "pl_select";
                     break;
@@ -154,14 +152,14 @@ else {
 
 <?php
     
-if (check_show($user,null,"main",null)) {
+if (check_show($user, null, "main", null)) {
     $enable_main = 1;
-?>
+    ?>
         <li><a id="menu_item_main"      class="<?php echo $menu_item_main;?>"     href="<?php echo $config["html_root"];?>/">Home</a></li>
 <?php } ?>
 
 <?php
-if (check_show($user,null,"downloads",null)) {
+if (check_show($user, null, "downloads", null)) {
     $enable_downloads = 1;?>
         <li><a id="menu_item_downloads" class="<?php echo $menu_item_downloads;?>" href="<?php echo $config["html_root"];?>/?z=downloads">Downloads</a></li>
 <?php } ?>
@@ -174,35 +172,35 @@ if ((file_exists('cms/')) && (check_show($user,"cms",null,null))) {
         <li><a id="menu_item_pub" class="<?php echo $menu_item_pub;?>" href="<?php echo $config["html_root"];?>/?m=cms">Documentaci&oacute;n</a></li>
 <?php } */?>
 <?php
-if (check_show($user,"usr","hosts",null)) {
+if (check_show($user, "usr", "hosts", null)) {
     $enable_hosts = 1;
-?>
+    ?>
         <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=hosts">Host management</a></li>
 <?php } ?>
 <?php
-if (check_show($user,"usr","users","mod")) {
+if (check_show($user, "usr", "users", "mod")) {
     $enable_users_mod = 1;
-?>
+    ?>
         <li><a id="menu_item_user"      class="<?php echo $menu_item_user;?>"       href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=mod">My account</a></li>
 <?php } ?>
 <?php
-if (check_show($user,"adm",null,null)) {
+if (check_show($user, "adm", null, null)) {
     $enable_adm = 1;
-?>
+    ?>
         <li><a id="menu_item_adm"      class="<?php echo $menu_item_adm;?>"       href="<?php echo $config["html_root"];?>/?m=adm">Administration</a></li>
 <?php } ?>
 <?php
-if (($user->get_is_logged()) && (check_show($user,null,"logout",null))) {
+if (($user->get_is_logged()) && (check_show($user, null, "logout", null))) {
     $enable_logout = 1;
-?>
+    ?>
         <li><a id="menu_item_logout"    class="<?php echo $menu_item_logout;?>"     href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=logout">Log off</a></li>
 <?php } ?>
 <?php
-if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"))) {
+if (($user->get_is_logged() == false) && (check_show($user, "usr", "users", "login"))) {
     $enable_users_login = 1;
-?>
+    ?>
         <li><a id="menu_item_priv_zone" class="<?php echo $menu_item_priv_zone;?>"  href="<?php echo $config["html_root"];?>/?m=usr&z=users&op=login">Host management</a></li>
-<?php
+    <?php
 }
 ?>
     </ul>
@@ -231,8 +229,8 @@ if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"
         if ($enable_users_login) {
             echo "menu_item_priv_zone.className='pl';\n";
         }
-    ?>
-		menu_item_contact.className='pl';
+        ?>
+        menu_item_contact.className='pl';
         menu_item_policy.className='pl';
         menu_item_cookies.className='pl';
 
@@ -244,10 +242,10 @@ if (($user->get_is_logged() == false) && (check_show($user,"usr","users","login"
 <div id="contact">
     <ul>
     <?php
-if (check_show($user,null,"logout",null)) {
-?>
+    if (check_show($user, null, "logout", null)) {
+        ?>
         <li><a id="menu_item_contact"    class="<?php echo $menu_item_contact;?>"     href="<?php echo $config["html_root"];?>/?z=contact">Contact</a></li>
-<?php } ?>
+    <?php } ?>
 
         <li>
             <a id="menu_item_policy"  href="#" class="pl" onclick="red(this,'main','cpolicy.html');">Cookie policy</a>
@@ -263,12 +261,11 @@ if (check_show($user,null,"logout",null)) {
     var visible_menu = <?php
         global $config;
 
-        if(isset($config["session"]["visible_menu"])) {
-            echo $config["session"]["visible_menu"];
-        }
-        else {
-            echo "1";
-        }?>;
+    if (isset($config["session"]["visible_menu"])) {
+        echo $config["session"]["visible_menu"];
+    } else {
+        echo "1";
+    }?>;
     if (visible_menu == 0) {
         header.className = "minimized";
         

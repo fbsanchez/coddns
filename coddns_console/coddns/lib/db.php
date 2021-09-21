@@ -14,159 +14,175 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
-require_once (__DIR__ . "/myclient.php");
-require_once (__DIR__ . "/pgclient.php");
-require_once (__DIR__ . "/../include/functions_util.php");
+require_once(__DIR__ . "/myclient.php");
+require_once(__DIR__ . "/pgclient.php");
+require_once(__DIR__ . "/../include/functions_util.php");
 
-class DBClient {
-  var $username;
-  var $password;
-  var $hostname;
-  var $schema;
-  var $port;
-  var $db;
-  var $last_query = null;
-  var $nresutls   = null;
-  var $error      = null;
-  var $client;
-  var $config;
+class DBClient
+{
+    var $username;
+    var $password;
+    var $hostname;
+    var $schema;
+    var $port;
+    var $db;
+    var $last_query = null;
+    var $nresutls   = null;
+    var $error      = null;
+    var $client;
+    var $config;
 
-  function DBClient($cfg){
-    if ($cfg === null){
-      return null;
+    function DBClient($cfg)
+    {
+        if ($cfg === null) {
+            return null;
+        }
+        $this->engine = $cfg["engine"];
+
+        if ($this->engine == "postgresql") {
+            $this->client = new PgClient($cfg);
+        } elseif ($this->engine == "mysql") {
+            $this->client = new MyClient($cfg);
+        }
     }
-    $this->engine = $cfg["engine"];
 
-    if ($this->engine == "postgresql") {
-      $this->client = new PgClient($cfg);
+    function is_connected()
+    {
+        if (isset($this->client)) {
+            return $this->client->is_connected();
+        }
+        return false;
     }
-    elseif ($this->engine == "mysql") {
-      $this->client = new MyClient($cfg);
+    function connect()
+    {
+        if ($this->is_connected()) {
+            return true;
+        }
+        return $this->client->connect();
     }
-  }
-
-  function is_connected(){
-    if (isset ($this->client)) {
-      return $this->client->is_connected();
+    function exeq($query)
+    {
+        return $this->client->exeq($query);
     }
-    return false;
-  }
-  function connect(){
-    if($this->is_connected()){
-      return true;
+    function lq_error()
+    {
+        return $this->client->lq_error();
     }
-    return $this->client->connect();
-  }
-  function exeq($query) {
-    return $this->client->exeq($query);
-  }
-  function lq_error(){
-   return $this->client->lq_error(); 
-  }
-  function lq_nresults(){
-    return $this->client->lq_nresults();
-  }
-  function disconnect(){
-    return $this->client->disconnect();
-  }
-  function fetch_object($result){
-    return $this->client->fetch_object($result);
-  }
-  function fetch_array($result){
-    return $this->client->fetch_array($result);
-  }
-  function last_id(){
-    return $this->client->last_id();
-  }
-
-  function do_sql($query){
-    if ((isset($this->client)) && ($this->is_connected())) {
-      return $this->exeq($query) or die($this->lq_error());
+    function lq_nresults()
+    {
+        return $this->client->lq_nresults();
     }
-    return false;
-  }
-
-  function get_sql_object($query){
-    if ((isset($this->client)) && ($this->is_connected())) {
-      $r   = $this->exeq($query) or die($this->lq_error());
-      $out = $this->fetch_object($r);
-      return $out;
+    function disconnect()
+    {
+        return $this->client->disconnect();
     }
-    return false;
-  }
+    function fetch_object($result)
+    {
+        return $this->client->fetch_object($result);
+    }
+    function fetch_array($result)
+    {
+        return $this->client->fetch_array($result);
+    }
+    function last_id()
+    {
+        return $this->client->last_id();
+    }
+
+    function do_sql($query)
+    {
+        if ((isset($this->client)) && ($this->is_connected())) {
+            return $this->exeq($query) or die($this->lq_error());
+        }
+        return false;
+    }
+
+    function get_sql_object($query)
+    {
+        if ((isset($this->client)) && ($this->is_connected())) {
+            $r   = $this->exeq($query) or die($this->lq_error());
+            $out = $this->fetch_object($r);
+            return $out;
+        }
+        return false;
+    }
 
 
-  function get_sql_all_objects($query) {
-    if ((isset($this->client)) && ($this->is_connected())) {
-      $r      = $this->exeq($query) or error_log($this->lq_error());
-      $nitems = $this->lq_nresults();
-      $out    = array();
+    function get_sql_all_objects($query)
+    {
+        if ((isset($this->client)) && ($this->is_connected())) {
+            $r      = $this->exeq($query) or error_log($this->lq_error());
+            $nitems = $this->lq_nresults();
+            $out    = array();
 
-      // Retrieve all items
-      while($tmp = $this->fetch_object($r)) {
-        array_push($out, $tmp);
-      }
+          // Retrieve all items
+            while ($tmp = $this->fetch_object($r)) {
+                array_push($out, $tmp);
+            }
       
       
-      return array( "nitems" => $nitems, "data" => $out);
+            return array( "nitems" => $nitems, "data" => $out);
+        }
+        return false;
     }
-    return false;
-  }
 
 
-  function get_sql_array($query){
-    if ((isset($this->client)) && ($this->is_connected())) {
-      $r      = $this->exeq($query) or error_log($this->lq_error());
-      $nitems = $this->lq_nresults();
-      $out    = array();
+    function get_sql_array($query)
+    {
+        if ((isset($this->client)) && ($this->is_connected())) {
+            $r      = $this->exeq($query) or error_log($this->lq_error());
+            $nitems = $this->lq_nresults();
+            $out    = array();
 
-      // Retrieve all items
-      while($tmp = $this->fetch_array($r)) {
-        array_push($out, $tmp);
-      }
+          // Retrieve all items
+            while ($tmp = $this->fetch_array($r)) {
+                array_push($out, $tmp);
+            }
       
       
-      return array( "nitems" => $nitems, "data" => $out);
+            return array( "nitems" => $nitems, "data" => $out);
+        }
+        return false;
     }
-    return false;
-  }
 
   /**
    * DB Utilities
    */
 
-  function date_checker($date){
-    list ($y, $m, $d) = explode ("-", $date);
-    if(checkdate($m, $d, $y))
-      return "$y-$m-$d";
-    return null;
-  }
-
-  function datetime_checker($date){
-    list ($y, $m, $d) = explode ("-",$date);
-    if(strstr($d, "T")){
-      list ($d, $h) = explode("T",$d);
-    }
-    else{
-      list ($d, $h) = explode(" ",$d);
-    }
-    list ($h, $mi) = explode(":",$h);
-
-    if ($d>31){
-      $t = $y;
-      $y = $d;
-      $d = $t;
+    function date_checker($date)
+    {
+        list ($y, $m, $d) = explode("-", $date);
+        if (checkdate($m, $d, $y)) {
+            return "$y-$m-$d";
+        }
+        return null;
     }
 
-    $h = intval($h);
-    $mi = intval($mi);
-    if((checkdate($m, $d, $y)) && ($h>=0) && ($h<=23) && ($mi>=0) && ($mi<=59)){
-      return "$y-$m-$d $h:$mi";
-    } else {
-      error_log("Date conversion error: a:$y-m:$m-d:$d h:$h:mi$mi");
-      return null;
+    function datetime_checker($date)
+    {
+        list ($y, $m, $d) = explode("-", $date);
+        if (strstr($d, "T")) {
+            list ($d, $h) = explode("T", $d);
+        } else {
+            list ($d, $h) = explode(" ", $d);
+        }
+        list ($h, $mi) = explode(":", $h);
+
+        if ($d>31) {
+            $t = $y;
+            $y = $d;
+            $d = $t;
+        }
+
+        $h = intval($h);
+        $mi = intval($mi);
+        if ((checkdate($m, $d, $y)) && ($h>=0) && ($h<=23) && ($mi>=0) && ($mi<=59)) {
+            return "$y-$m-$d $h:$mi";
+        } else {
+            error_log("Date conversion error: a:$y-m:$m-d:$d h:$h:mi$mi");
+            return null;
+        }
     }
-  }
 
   /**
    * Clears input for a sql argument
@@ -189,85 +205,101 @@ class DBClient {
    * json
    * base64
    */
-  function prepare($clsqlarg, $type){
+    function prepare($clsqlarg, $type)
+    {
     
-    switch($type){
-      case "email":     return preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg);
-      case "number":    return floatval($clsqlarg);
-      case "url_get":   return preg_replace("/[^a-zA-Z0-9_\.-]/", "", $clsqlarg);
-      case "letters":   return preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg);
-      case "letters++": return preg_replace("/[^a-zA-Z0-9\.]/", "", $clsqlarg);
-      case "ip_addr":   return preg_replace("/[^0-9\.]/", "", $clsqlarg);
-      case "insecure_text":{ // there's no need to use this in a permanent connection
-        $search  = array("<script", "</script>", "%0A");
-        return str_replace("%", "$",(
-            urlencode(
-              strip_tags (
-                str_replace($search,"", $clsqlarg),
-                "")
-            )));
-      }
-      case "text":{
-        $search  = array("<script", "</script>", "%0A");
-        return $this->client->escape_string(
-          str_replace("%", "$",(
-            urlencode(
-              strip_tags (
-                str_replace($search,"", $clsqlarg),
-                "")
-            ))));
-      }
-      case "rich_text":{
-        $search  = array("<script", "</script>", "%0A");
-        $replace = array(""       , ""         , "<br>");
-        return $this->client->escape_string(
-          str_replace("%", "$",(
-            urlencode(
-              strip_tags (
-                str_replace($search,$replace, $clsqlarg),
-                "<b><u><p><a>")
-            ))));
-      }
-      case "url": {
-        $search  = array("<script", "</script>");
-        return $this->client->escape_string(
-          str_replace("%", "$",(
-            urlencode(
-              strip_tags (
-                str_replace($search,"", $clsqlarg),
-                "")
-            ))));
-      }
-      case "date":{
-        if($tmp = $this->date_checker($clsqlarg))
-          $date = new DateTime($tmp);
-          return $date->format("U"); // return unixtimestamp
-        return null;
-      }
-      case "datetime":{
-        if($tmp = $this->datetime_checker($clsqlarg))
-          return $tmp;
-        return null;
-      }
-      case "ip":{
-        return _ip2long($clsqlarg);
-      }
-      case "json":{
-        return json_decode($clsqlarg);
-      }
-      case "base64":{
-        return base64_decode($clsqlarg);
-      }
-      default: return null;
+        switch ($type) {
+            case "email":
+                return preg_replace("/[^a-zA-Z0-9.@]/", "", $clsqlarg);
+            case "number":
+                return floatval($clsqlarg);
+            case "url_get":
+                return preg_replace("/[^a-zA-Z0-9_\.-]/", "", $clsqlarg);
+            case "letters":
+                return preg_replace("/[^a-zA-Z0-9]/", "", $clsqlarg);
+            case "letters++":
+                return preg_replace("/[^a-zA-Z0-9\.]/", "", $clsqlarg);
+            case "ip_addr":
+                return preg_replace("/[^0-9\.]/", "", $clsqlarg);
+            case "insecure_text":{ // there's no need to use this in a permanent connection
+                $search  = array("<script", "</script>", "%0A");
+                return str_replace("%", "$", (
+                urlencode(
+                    strip_tags(
+                        str_replace($search, "", $clsqlarg),
+                        ""
+                    )
+                )));
+            }
+            case "text":{
+                $search  = array("<script", "</script>", "%0A");
+                return $this->client->escape_string(
+                    str_replace("%", "$", (
+                    urlencode(
+                        strip_tags(
+                            str_replace($search, "", $clsqlarg),
+                            ""
+                        )
+                    )))
+                );
+            }
+            case "rich_text":{
+                $search  = array("<script", "</script>", "%0A");
+                $replace = array(""       , ""         , "<br>");
+                return $this->client->escape_string(
+                    str_replace("%", "$", (
+                    urlencode(
+                        strip_tags(
+                            str_replace($search, $replace, $clsqlarg),
+                            "<b><u><p><a>"
+                        )
+                    )))
+                );
+            }
+            case "url": {
+                $search  = array("<script", "</script>");
+                return $this->client->escape_string(
+                    str_replace("%", "$", (
+                    urlencode(
+                        strip_tags(
+                            str_replace($search, "", $clsqlarg),
+                            ""
+                        )
+                    )))
+                );
+            }
+            case "date":{
+                if ($tmp = $this->date_checker($clsqlarg)) {
+                    $date = new DateTime($tmp);
+                }
+                return $date->format("U"); // return unixtimestamp
+                return null;
+            }
+            case "datetime":{
+                if ($tmp = $this->datetime_checker($clsqlarg)) {
+                    return $tmp;
+                }
+                return null;
+            }
+            case "ip":{
+                return _ip2long($clsqlarg);
+            }
+            case "json":{
+                return json_decode($clsqlarg);
+            }
+            case "base64":{
+                return base64_decode($clsqlarg);
+            }
+            default:
+                return null;
+        }
     }
-  }
 
-  function decode($v,$tflag=null){
-    if (isset($tflag)){
-      return date("Y-m-d\TH:i:s\Z", $v);
+    function decode($v, $tflag = null)
+    {
+        if (isset($tflag)) {
+            return date("Y-m-d\TH:i:s\Z", $v);
+        }
+        return urldecode(str_replace("$", "%", ($v)));
     }
-    return urldecode(str_replace("$", "%",($v)));
-  }
 }
-
-?>

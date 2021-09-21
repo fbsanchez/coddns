@@ -15,21 +15,20 @@
  * <summary> </summary>
  */
 
-defined("_VALID_ACCESS") or define ("_VALID_ACCESS", 1);
+defined("_VALID_ACCESS") or define("_VALID_ACCESS", 1);
 
-if (!file_exists(__DIR__ . "/include/config.php")){
+if (!file_exists(__DIR__ . "/include/config.php")) {
     header("Location: install.php");
     exit(0);
 }
 
-require_once(__DIR__ . "/include/config.php");
-require_once(__DIR__ . "/include/functions_ip.php");
-require_once(__DIR__ . "/include/functions_util.php");
-require_once(__DIR__ . "/lib/coduser.php");
+require_once __DIR__ . "/include/config.php";
+require_once __DIR__ . "/include/functions_ip.php";
+require_once __DIR__ . "/include/functions_util.php";
+require_once __DIR__ . "/lib/coduser.php";
 
 /**
  * Language selector
- *
  */
 $en   = array();
 $es   = array();
@@ -38,19 +37,20 @@ $text = array("es"=>$es,"en"=>$en,"de"=>$de);
 
 session_start();
 
-if(isset($_GET["lang"])){
-    switch ($_GET["lang"]){
-        case "es": 
-        case "en": 
-        case "de": 
+if (isset($_GET["lang"])) {
+    switch ($_GET["lang"]) {
+        case "es":
+        case "en":
+        case "de":
             $_SESSION["lan"] = $_GET["lang"];
             break;
-        default: $_SESSION["lan"]   = "en";
+        default:
+            $_SESSION["lan"]   = "en";
     }
-}
-else{
-    if(! isset($_SESSION["lan"]) )
+} else {
+    if (! isset($_SESSION["lan"])) {
         $_SESSION["lan"] = "en";
+    }
 }
 
 /* shorter var name... */
@@ -59,7 +59,7 @@ $lan = $_SESSION["lan"];
 session_write_close();
 
 //disable some errors which aren't really errors:
-ini_set('session.use_cookies',false);
+ini_set('session.use_cookies', false);
 session_cache_limiter(false);
 
 
@@ -169,7 +169,6 @@ $text["de"]["nav_logout"]      ="Logout";
  *
  * In example: coddns.org/index.php?m=usr&z=hosts&op=mod
  * Results in file include: usr/hosts/hosts_mod.php
- *
  */
 
 
@@ -184,64 +183,58 @@ $zone = secure_get("z");
 $operation = secure_get("op");
 $url  = "";
 
-if (isset ($mode)){
+if (isset($mode)) {
     $url = $mode . DIRECTORY_SEPARATOR;
 }
-if (! isset ($zone)){
-    if (!isset ($mode)){ // avoid recursive inclusion on clean call
+if (! isset($zone)) {
+    if (!isset($mode)) { // avoid recursive inclusion on clean call
         $url .= "main.php";
-    }
-    else {
+    } else {
         $url .= "index.php";
     }
-}
-elseif (! isset($operation)){
+} elseif (! isset($operation)) {
     $url .= $zone . "/" . $zone . ".php";
-}
-else {
+} else {
     $url .= $zone . DIRECTORY_SEPARATOR . $zone . "_" . $operation . ".php";
 }
 
-include_once("header.php");
+require_once "header.php";
 
-$auth_level_required = get_required_auth_level($mode,$zone,$operation);
+$auth_level_required = get_required_auth_level($mode, $zone, $operation);
 
 ?>
 <div id="main">
-<?php 
+<?php
 
 
 try {
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 
 if (isset($_GET["debug_mode"]) && ($_GET["debug_mode"] == 1)) {
     ?>
 <div style="width: 200px; height: 200px; position: fixed; top:0; right:0;border:1px solid red;">
-<?php
-echo "Auth_level: " . $user->get_auth_level();
-echo "</div>";
+    <?php
+    echo "Auth_level: " . $user->get_auth_level();
+    echo "</div>";
 }
-include_once(__DIR__ . "/include/functions_util.php");
+require_once __DIR__ . "/include/functions_util.php";
 
 ?>
 
 <?php
 if (! file_exists(__DIR__ . DIRECTORY_SEPARATOR . $url)) {
-    include (__DIR__ . DIRECTORY_SEPARATOR . "err404.php");
-}
-else {
-    if ($auth_level_required === null){
-        include (__DIR__ . DIRECTORY_SEPARATOR . "err502.html");
-    }
-    else {
-        include (__DIR__ . DIRECTORY_SEPARATOR . $url);
+    include __DIR__ . DIRECTORY_SEPARATOR . "err404.php";
+} else {
+    if ($auth_level_required === null) {
+        include __DIR__ . DIRECTORY_SEPARATOR . "err502.html";
+    } else {
+        include __DIR__ . DIRECTORY_SEPARATOR . $url;
     }
 }
 ?>
@@ -267,12 +260,11 @@ document.onkeyup = function(evt) {
     var visible_menu = <?php
         global $config;
 
-        if(isset($config["session"]["visible_menu"])) {
-            echo $config["session"]["visible_menu"];
-        }
-        else {
-            echo "1";
-        }?>;
+    if (isset($config["session"]["visible_menu"])) {
+        echo $config["session"]["visible_menu"];
+    } else {
+        echo "1";
+    }?>;
     if (visible_menu == 0) {
         main = document.getElementById("main");
         

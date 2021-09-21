@@ -15,29 +15,28 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../../include/config.php");
-require_once (__DIR__ . "/../../lib/db.php");
-require_once (__DIR__ . "/../../include/functions_util.php");
-require_once (__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 try {
-	$auth_level_required = get_required_auth_level('usr','users','rq_login');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
-	echo $e->getMessage();
-	exit (1);
+    $auth_level_required = get_required_auth_level('usr', 'users', 'rq_login');
+    $user = new CODUser();
+    $user->check_auth_level($auth_level_required);
+} catch (Exception $e) {
+    echo $e->getMessage();
+    exit(1);
 }
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
 session_write_close();
 
-if ($user->get_is_logged()){
+if ($user->get_is_logged()) {
     redirect($config[html_root] . "/?z=usr&m=hosts");
 }
 
@@ -57,24 +56,22 @@ $text["en"]["welcome"] = "<div class='ok'>Welcome</div><script>location='" . $co
 
 /* DEUTSCH */
 
-if ( (! isset($_POST["u"])) || (! isset($_POST["p"])) ){
+if ((! isset($_POST["u"])) || (! isset($_POST["p"]))) {
     echo $text[$lan]["err1"];
     exit(1);
 }
 
 $rq_pass = base64_decode($_POST["p"]);
 
-if ( ( strlen($_POST["u"]) < MIN_USER_LENGTH) || ( strlen($rq_pass) < MIN_PASS_LENGTH) ){
+if (( strlen($_POST["u"]) < MIN_USER_LENGTH) || ( strlen($rq_pass) < MIN_PASS_LENGTH)) {
     echo $text[$lan]["err2"];
     exit(2);
 }
 
 $objUser = new CODUser();
-if ($objUser->login($_POST["u"], $rq_pass) == null ) {
-	echo $text[$lan]["err3"];
-	exit (3);
+if ($objUser->login($_POST["u"], $rq_pass) == null) {
+    echo $text[$lan]["err3"];
+    exit(3);
 }
 
 echo $text[$lan]["welcome"];
-?>
-

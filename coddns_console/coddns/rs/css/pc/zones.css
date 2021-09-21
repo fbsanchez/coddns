@@ -1,9 +1,9 @@
 input[type="checkbox"] {
-	float: right;
+    float: right;
 }
 
 div.zone{
-	width: 300px;
+    width: 300px;
     margin: 15px 0px;
     clear: both;
     display: inline-block;
@@ -11,33 +11,33 @@ div.zone{
     padding: 5px;
 }
 div.zone:hover {
-	box-shadow: 3px 3px 5px 0px #ddd;
-	cursor: pointer;
+    box-shadow: 3px 3px 5px 0px #ddd;
+    cursor: pointer;
 }
 
 div.zone img{
-	cursor: pointer;
-	float: left;
-	width: 50px;
-	margin: 5px;
+    cursor: pointer;
+    float: left;
+    width: 50px;
+    margin: 5px;
 }
 div.zone div{
-	float: left;
-	max-width: 400px;
-	margin: 15px 10px;
+    float: left;
+    max-width: 400px;
+    margin: 15px 10px;
 }
 
 div.zone_summary {
-	font-size: 0.8em;
+    font-size: 0.8em;
 }
 
 section#zone_list a {
-	text-decoration: none;
-	color: #222;
-	border: none;
+    text-decoration: none;
+    color: #222;
+    border: none;
 }
 
 section#zone_list a:hover {
-	text-decoration: none;
-	border: none;
+    text-decoration: none;
+    border: none;
 }

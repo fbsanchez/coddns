@@ -15,24 +15,23 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../../include/config.php");
-require_once (__DIR__ . "/../../lib/db.php");
-require_once (__DIR__ . "/../../include/functions_util.php");
-require_once (__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
+    header("Location: " . $config["html_root"] . "/");
+    exit(1);
 }
 
 try {
-    $auth_level_required = get_required_auth_level('usr','hosts','');
+    $auth_level_required = get_required_auth_level('usr', 'hosts', '');
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 
@@ -89,10 +88,10 @@ $text["de"]["reg_type"]      = "DNS record type";
 <head>
     <title>Hosts</title>
     <style type="text/css"/>
-		<?php
-		include_once (__DIR__ . "/../../rs/css/" . $config["html_view"] . "/hosts.php");
+        <?php
+        require_once __DIR__ . "/../../rs/css/" . $config["html_view"] . "/hosts.php";
 
-		?>
+        ?>
         
     </style>
 <script type="text/javascript">
@@ -115,13 +114,13 @@ $text["de"]["reg_type"]      = "DNS record type";
     }
 
     function toggle_help_ns(){
-    	if(help_dns_type.style["max-width"] == ""){
-    		help_dns_type.style["max-width"]  = "450px";
-    		help_dns_type.style["max-height"] = "230px";
-    		help_dns_type.style["padding"]    = "5px 0 0 15px";
-    	}
-    	else
-    		help_dns_type.removeAttribute("style");
+        if(help_dns_type.style["max-width"] == ""){
+            help_dns_type.style["max-width"]  = "450px";
+            help_dns_type.style["max-height"] = "230px";
+            help_dns_type.style["padding"]    = "5px 0 0 15px";
+        }
+        else
+            help_dns_type.removeAttribute("style");
     }
 
     function adjustClass(field){
@@ -132,11 +131,11 @@ $text["de"]["reg_type"]      = "DNS record type";
             document.getElementById("td_value").className = "filter";
             document.getElementById("td_ttl").className   = "filter";
             <?php
-                if ($user->is_global_admin()){
+            if ($user->is_global_admin()) {
                 ?>
             document.getElementById("td_owner").className   = "filter";
                 <?php
-                }
+            }
             ?>
             
             document.getElementById("td_" + field).className += " selected";
@@ -210,8 +209,8 @@ $text["de"]["reg_type"]      = "DNS record type";
     $q = "(select z.domain from zones z, tusers_groups ug, users u where z.gid=ug.gid and ug.oid=u.id and mail='" . $_SESSION["email"] . "' and (ug.edit=1 or ug.admin=1))"
         . "UNION (select z.domain from zones z, tusers_groups ug, users u where z.is_public=1)";
     $results  = $dbclient->exeq($q);
-    if ($dbclient->lq_nresults() > 0){ // Display formulary only if the user has grants to create new hosts on a domain
-    ?>
+    if ($dbclient->lq_nresults() > 0) { // Display formulary only if the user has grants to create new hosts on a domain
+        ?>
     <form id="newhost" method="POST" action="" onsubmit="fsgo('newhost', 'ajax_message','usr/hosts/hosts_rq_new.php', true,raise_ajax_message);return false;">
     <ul>
         <li>
@@ -222,16 +221,16 @@ $text["de"]["reg_type"]      = "DNS record type";
             <select style="margin-left: 15px; padding: 0 5px; min-width: 90px;" onchange="checkHostName(document.getElementById('h'), this);" name="zone" id="zone">
                 <?php
                 while ($r = $dbclient->fetch_object($results)) {
-                ?>
+                    ?>
                     <option value="<?php echo $r->domain;?>">.<?php echo $r->domain;?></option>
-                <?php
+                    <?php
                 }
 
-            ?>
+                ?>
             </select>
             </div>
-			<div style="float:right;">
-				<label><?php echo $text[$lan]["reg_type"];?>:</label> 
+            <div style="float:right;">
+                <label><?php echo $text[$lan]["reg_type"];?>:</label> 
                 <script type="text/javascript">
                     function showItem(item){
                         // hide all RR sections
@@ -244,39 +243,39 @@ $text["de"]["reg_type"]      = "DNS record type";
                     }
                 </script>
                 <select style="margin-left: 15px; width: 90px;" onchange="showItem(this.value)" name="rtype">
-				
+                
                 <?php
                     // Retrieve all DNS Record types available from de DB
                 $q = "select h.tag from hosts h, record_types r where oid=(select id from users where mail='" . $_SESSION["email"] . "') and r.id=h.rtype and r.tag='A';";
-                $r = $dbclient->exeq($q) or die ($dbclient->lq_error());
+                $r = $dbclient->exeq($q) or die($dbclient->lq_error());
                 $tag_options = "";
-                while ($row = $dbclient->fetch_array ($r)) {
+                while ($row = $dbclient->fetch_array($r)) {
                     $tag_options .= "<option value='" . $row["tag"] . "'>" . $row["tag"] . "</option>";
                 }
 
                 $results  = $dbclient->exeq("select tag from record_types;");
 
                 while ($r = $dbclient->fetch_object($results)) {
-                ?>
-					<option value="<?php echo $r->tag;?>"><?php echo $r->tag;?></option>
-                <?php
+                    ?>
+                    <option value="<?php echo $r->tag;?>"><?php echo $r->tag;?></option>
+                    <?php
                 }
                 
                 ?>
-				</select>
-				<div id="launch_help_dns_type" onclick="toggle_help_ns();">&nbsp;</div>
-				<div id="help_dns_type">
-					<div>
-					<p>Accepted DNS types:</p>
-					<ol>
-						<li><b>A</b> Default register, it represents a host (IPv4)</li>
-						<li><b>MX</b> Mail register, it represents the register matches a mail server</li>
-						<li><b>CNAME</b> Sets an alias over an existent A or AAAA register.</li>
-						<li><b>NS</b> Domain server registry, it adds a new DNS server. It will answer all queries made against the subdomain.</li>
-					</ol>
-					</div>
-				</div>
-			</div>
+                </select>
+                <div id="launch_help_dns_type" onclick="toggle_help_ns();">&nbsp;</div>
+                <div id="help_dns_type">
+                    <div>
+                    <p>Accepted DNS types:</p>
+                    <ol>
+                        <li><b>A</b> Default register, it represents a host (IPv4)</li>
+                        <li><b>MX</b> Mail register, it represents the register matches a mail server</li>
+                        <li><b>CNAME</b> Sets an alias over an existent A or AAAA register.</li>
+                        <li><b>NS</b> Domain server registry, it adds a new DNS server. It will answer all queries made against the subdomain.</li>
+                    </ol>
+                    </div>
+                </div>
+            </div>
             <div id="rec_info" style="clear:both;"></div>
         </li>
         <li>
@@ -287,13 +286,13 @@ $text["de"]["reg_type"]      = "DNS record type";
                     // Retrieve all Groups with at least read grant available for current user
                     $groups = $user->get_read_groups();
 
-                    if (isset($groups["data"])){
-                        foreach ($groups["data"] as $group) {
-                    ?>
+                if (isset($groups["data"])) {
+                    foreach ($groups["data"] as $group) {
+                        ?>
                         <option value="<?php echo $group["tag"];?>"><?php echo $group["tag"];?></option>
-                    <?php
-                        }
+                        <?php
                     }
+                }
                 
                 ?>
                 </select>
@@ -305,9 +304,9 @@ $text["de"]["reg_type"]      = "DNS record type";
             </div>
         </li>
     </ul>
-    <?php
+        <?php
         // the custom query depends on RR active - ask via AJAX
-    ?>
+        ?>
     <div id="rr_A" class="hidden" style="max-height: 1000px;">
         <ul>
             <li>
@@ -378,9 +377,8 @@ $text["de"]["reg_type"]      = "DNS record type";
         </li>
     </ul>
     </form>
-    <?php
-    }
-    else {
+        <?php
+    } else {
         echo "<p>You don't have rigths to register new hosts. Please check zone configuration or  contact administrator.</p>";
     }
     ?>
@@ -412,11 +410,11 @@ $text["de"]["reg_type"]      = "DNS record type";
             <td id="td_value" class="filter" onclick="sortHostsBy('value');">IP/ VALUE</td>
             <?php
                 // if user is administrator, show the owner of the "private" hosts
-                if($user->is_global_admin()){
-                    ?>
+            if ($user->is_global_admin()) {
+                ?>
                     <td id="td_owner"   class="filter" onclick="sortHostsBy('owner');">Owner</td>
-                    <?php
-                }
+                <?php
+            }
             ?>
             <td id="td_ttl"   class="filter" onclick="sortHostsBy('ttl');">TTL</td>
             <td colspan="2">Ops.</td>

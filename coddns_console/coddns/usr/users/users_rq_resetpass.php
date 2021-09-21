@@ -15,23 +15,22 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../../include/config.php");
-require_once (__DIR__ . "/../../lib/db.php");
-require_once (__DIR__ . "/../../include/functions_util.php");
-require_once (__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 try {
-    $auth_level_required = get_required_auth_level('usr','users','rq_resetpass');
+    $auth_level_required = get_required_auth_level('usr', 'users', 'rq_resetpass');
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
@@ -40,8 +39,7 @@ session_write_close();
 
 if (isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) {
     $url = "https://";
-}
-else {
+} else {
     $url = "http://";
 }
 
@@ -66,10 +64,11 @@ $text["en"]["dberror"] = "<div class='err'>Woooops, we have a problem! please co
 
 /* DEUTSCH */
 
-if (   (! isset($_POST["u"]))
+if ((! isset($_POST["u"]))
     || (! isset($_POST["p"]))
     || (! isset($_POST["cp"]))
-    || (! isset($_POST["t"])) ){
+    || (! isset($_POST["t"]))
+) {
     echo $text[$lan]["err1"];
     exit(1);
 }
@@ -77,14 +76,15 @@ if (   (! isset($_POST["u"]))
 $rq_npass = (base64_decode($_POST["p"]));
 $rq_cpass = (base64_decode($_POST["cp"]));
 
-if (   ( strlen($_POST["u"]) < MIN_USER_LENGTH)
+if (( strlen($_POST["u"]) < MIN_USER_LENGTH)
     || ( strlen($rq_npass) < MIN_PASS_LENGTH)
-    || ( strlen($rq_cpass) < MIN_PASS_LENGTH)){
+    || ( strlen($rq_cpass) < MIN_PASS_LENGTH)
+) {
     echo $text[$lan]["err2"];
     exit(2);
 }
 
-if ($_POST["p"] != $_POST["cp"]){
+if ($_POST["p"] != $_POST["cp"]) {
     echo $text[$lan]["err3"];
     exit(3);
 }
@@ -92,15 +92,15 @@ if ($_POST["p"] != $_POST["cp"]){
 $dbclient = $config["dbh"];
 
 $user  = $dbclient->prepare($_POST["u"], "email");
-$pass  = hash ("sha512",$config["salt"] . $rq_npass);
+$pass  = hash("sha512", $config["salt"] . $rq_npass);
 $token = $dbclient->prepare($_POST["t"], "text");
 
 
 $q = "Select * from users where lower(mail)=lower('" . $user . "') and hash='" . $token . "' and now() < max_time_valid_hash;";
 $dbclient->exeq($q);
-if ($dbclient->lq_nresults() == 0){ // No results, no valid hash
+if ($dbclient->lq_nresults() == 0) { // No results, no valid hash
     echo $text[$lan]["err4"];
-    exit (4);
+    exit(4);
 }
 
 $q = "update users set pass='" . $pass . "' where lower(mail)=lower('" . $user . "');";
@@ -111,5 +111,3 @@ $q = "update users set max_time_valid_hash=null where lower(mail)=lower('" . $us
 $dbclient->exeq($q);
 
 echo $text[$lan]["ok"];
-
-?>

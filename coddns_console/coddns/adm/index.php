@@ -15,23 +15,22 @@
  * <summary> </summary>
  */
 
-require_once(__DIR__ . "/../include/config.php");
-require_once(__DIR__ . "/../lib/db.php");
-require_once(__DIR__ . "/../include/functions_util.php");
-require_once(__DIR__ . "/../lib/coduser.php");
+require_once __DIR__ . "/../include/config.php";
+require_once __DIR__ . "/../lib/db.php";
+require_once __DIR__ . "/../include/functions_util.php";
+require_once __DIR__ . "/../lib/coduser.php";
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
+    header("Location: " . $config["html_root"] . "/");
+    exit(1);
 }
 try {
-	$auth_level_required = get_required_auth_level('adm','','');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
-	echo $e->getMessage();
-	exit (1);
+    $auth_level_required = get_required_auth_level('adm', '', '');
+    $user = new CODUser();
+    $user->check_auth_level($auth_level_required);
+} catch (Exception $e) {
+    echo $e->getMessage();
+    exit(1);
 }
 
 
@@ -46,25 +45,25 @@ catch (Exception $e) {
 </head>
 
 <body>
-	<section>
-		<h2>Administration panel</h2>
-	</section>
-	<nav>
-		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=site#users"?>">
-			<div class="menu_button" style="background: #FCFEFF;">
-			
-				<img src="<?php echo $config["html_root"] . "/rs/img/site_options2_gray.png"; ?>" alt="Site Settings"/>
-				<p>Site settings</p>
-			</div>
-		</a>
+    <section>
+        <h2>Administration panel</h2>
+    </section>
+    <nav>
+        <a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=site#users"?>">
+            <div class="menu_button" style="background: #FCFEFF;">
+            
+                <img src="<?php echo $config["html_root"] . "/rs/img/site_options2_gray.png"; ?>" alt="Site Settings"/>
+                <p>Site settings</p>
+            </div>
+        </a>
 
-		<a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers"?>">
-			<div class="menu_button" style="background: #FEFCFF;">
-				<img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Administation Center"/>
-				<p>Administration center</p>
-			</div>
-		</a>
-	</nav>
+        <a style="color:#2D2D2D;" href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers"?>">
+            <div class="menu_button" style="background: #FEFCFF;">
+                <img src="<?php echo $config["html_root"] . "/rs/img/service_gray.png"; ?>" alt="Administation Center"/>
+                <p>Administration center</p>
+            </div>
+        </a>
+    </nav>
 </body>
 
 </html>

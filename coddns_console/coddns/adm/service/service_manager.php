@@ -15,19 +15,18 @@
  * <summary> </summary>
  */
 
-require_once(__DIR__ . "/../../include/config.php");
-require_once(__DIR__ . "/../../lib/db.php");
-require_once(__DIR__ . "/../../include/functions_util.php");
-require_once(__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 try {
-	$auth_level_required = get_required_auth_level('adm','service','manager');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
-	echo $e->getMessage();
-	exit (1);
+    $auth_level_required = get_required_auth_level('adm', 'service', 'manager');
+    $user = new CODUser();
+    $user->check_auth_level($auth_level_required);
+} catch (Exception $e) {
+    echo $e->getMessage();
+    exit(1);
 }
 
 ?>
@@ -41,31 +40,31 @@ catch (Exception $e) {
 <link rel="stylesheet" type="text/css" href="<?php echo $config["html_root"] . "/rs/css/" . $config["html_view"]; ?>/service_manager.css" />
 
 <script type="text/javascript">
-	function mark(id){
-		document.getElementById("s0").className="";
-		document.getElementById("s1").className="";
-		id.className = "selected";
-	}
+    function mark(id){
+        document.getElementById("s0").className="";
+        document.getElementById("s1").className="";
+        id.className = "selected";
+    }
 </script>
 </head>
 
 <body>
-	<section>
-		<h2>Administraci&oacute;n del servicio</h2>
-		<nav>
-			<a id="s0" class="" onclick="mark(this);updateContent('adm_service_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
-				Estado
-			</a>
+    <section>
+        <h2>Administraci&oacute;n del servicio</h2>
+        <nav>
+            <a id="s0" class="" onclick="mark(this);updateContent('adm_service_content','<?php echo $config["html_root"] . "/adm/service_status.php"?>');">
+                Estado
+            </a>
 
-			<a id="s1" class="" onclick="mark(this);updateContent('adm_service_content','<?php echo $config["html_root"] . "/adm/service.php"?>');">
-				Servidores
-			</a>
-		</nav>
+            <a id="s1" class="" onclick="mark(this);updateContent('adm_service_content','<?php echo $config["html_root"] . "/adm/service.php"?>');">
+                Servidores
+            </a>
+        </nav>
 
-		<div id="adm_service_content" class="content">
-		</div>
+        <div id="adm_service_content" class="content">
+        </div>
 
-	</section>
+    </section>
 </body>
 
 </html>

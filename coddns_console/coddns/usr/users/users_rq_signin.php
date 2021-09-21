@@ -15,29 +15,28 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../../include/config.php");
-require_once (__DIR__ . "/../../lib/db.php");
-require_once (__DIR__ . "/../../include/functions_util.php");
-require_once (__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 try {
-    $auth_level_required = get_required_auth_level('usr','users','rq_signin');
+    $auth_level_required = get_required_auth_level('usr', 'users', 'rq_signin');
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
 session_write_close();
 
-if ($user->get_is_logged()){
+if ($user->get_is_logged()) {
     redirect($config[html_root] . "/?z=usr&m=hosts");
 }
 
@@ -50,19 +49,19 @@ $text["en"]["dberror"] = "<div class='err'>Woooops, we have a problem! please co
 
 /* DEUTSCH */
 
-if ( (! isset($_POST["u"])) || (! isset($_POST["p"])) || (! isset($_POST["pp"])) ){
+if ((! isset($_POST["u"])) || (! isset($_POST["p"])) || (! isset($_POST["pp"]))) {
     echo "<div class='err'>Rellene todos los datos</div>";
     exit(1);
 }
 
 $rq_pass = base64_decode($_POST["p"]);
 
-if ( ( strlen($_POST["u"]) < MIN_USER_LENGTH) || ( strlen($rq_pass) < MIN_PASS_LENGTH) ){
+if (( strlen($_POST["u"]) < MIN_USER_LENGTH) || ( strlen($rq_pass) < MIN_PASS_LENGTH)) {
     echo "<div class='err'>No cumple las longitudes minimas</div>";
     exit(2);
 }
 
-if ($_POST["p"] != $_POST["pp"]){
+if ($_POST["p"] != $_POST["pp"]) {
     echo "<div class='err'>La confirmaci&oacute;n de contrase&ntilde;a no coincide</div>";
     exit(3);
 }
@@ -75,9 +74,9 @@ $text_mail_welcome_subject = "Gracias por registrarte!";
 $user = $_POST["u"];
 
 $objUser = new CODUser();
-if ($objUser->signin($user, $rq_pass) == null ) {
+if ($objUser->signin($user, $rq_pass) == null) {
     echo "<div class='err'>Ese usuario ya existe</div>";
-    exit (3);
+    exit(3);
 }
 
 $recipient = $user;                    //recipient

@@ -16,20 +16,19 @@
  */
 
 
-require_once(__DIR__ . "/../../include/config.php");
-require_once(__DIR__ . "/../../lib/coduser.php");
-require_once(__DIR__ . "/../../lib/codzone.php");
-require_once(__DIR__ . "/../../include/functions_groups.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/coduser.php";
+require_once __DIR__ . "/../../lib/codzone.php";
+require_once __DIR__ . "/../../include/functions_groups.php";
 
 
 try {
-	$auth_level_required = get_required_auth_level('adm','zones','rq_new');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
-	echo $e->getMessage();
-	exit (1);
+    $auth_level_required = get_required_auth_level('adm', 'zones', 'rq_new');
+    $user = new CODUser();
+    $user->check_auth_level($auth_level_required);
+} catch (Exception $e) {
+    echo $e->getMessage();
+    exit(1);
 }
 
 $dbh = $config["dbh"];
@@ -46,32 +45,31 @@ $data["is_public"] = (secure_get("public")=="on")?true:false; // null => false, 
 
 
 // 1. check spool directory
-if (!is_dir($config["spooldir"])){
-	echo "<p>Spool directory <i>" . $config["spooldir"] . "</i> does not exist</p>";
-	exit (1);
+if (!is_dir($config["spooldir"])) {
+    echo "<p>Spool directory <i>" . $config["spooldir"] . "</i> does not exist</p>";
+    exit(1);
 }
 
-if (strlen ($data["domain"]) < MIN_ZONE_STRLEN) {
-	echo "<p>Domain name does not accomplish requirements.</p>";
-	exit (1);
+if (strlen($data["domain"]) < MIN_ZONE_STRLEN) {
+    echo "<p>Domain name does not accomplish requirements.</p>";
+    exit(1);
 }
 
 // 2. check zone file does not exist
 $zone = new CODZone($data);
 
 try {
-	$zone->save();
+    $zone->save();
 } catch (Exception $e) {
-	echo "<p>" . $e->getMessage() . "</p>";
-?>
+    echo "<p>" . $e->getMessage() . "</p>";
+    ?>
 <p>Zone has been sucesfully created!</p>
-<?php	
-}
-finally {
-	?>
+    <?php
+} finally {
+    ?>
 <p>Press "ESC" to stay in this page and add another zone</p>
 <a class="ajax_button" href="<?php echo $config["html_root"] . "/?m=adm&z=center#zones"; ?>">OK</a>
-	<?php	
+    <?php
 }
 
 ?>

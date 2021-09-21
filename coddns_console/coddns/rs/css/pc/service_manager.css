@@ -1,22 +1,22 @@
 pre{
-	font-family: monospace;
-	border-radius: 10px;
-	width: 100%;
-	background: #DBECEF;
-	font-size: 0.9em;
-	word-break: break-word;
-	margin: 15px auto;
-	padding: 15px;
-	border: 2px dashed #365156;	
-	white-space: pre-line;
+    font-family: monospace;
+    border-radius: 10px;
+    width: 100%;
+    background: #DBECEF;
+    font-size: 0.9em;
+    word-break: break-word;
+    margin: 15px auto;
+    padding: 15px;
+    border: 2px dashed #365156;
+    white-space: pre-line;
 }
 
 div#adm_server_section {
-	box-shadow: 0 0 1px #444;
+    box-shadow: 0 0 1px #444;
 }
 
 
 textarea{
-	width: 100%;
+    width: 100%;
     min-height: 250px;
 }

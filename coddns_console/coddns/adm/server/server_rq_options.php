@@ -15,23 +15,22 @@
  * <summary> </summary>
  */
 
-require_once(__DIR__ . "/../../include/config.php");
-require_once(__DIR__ . "/../../lib/codserver.php");
-require_once(__DIR__ . "/../../include/functions_util.php");
-require_once(__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/codserver.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 try {
-	$auth_level_required = get_required_auth_level('adm','server','rq_options');
-	$user = new CODUser();
-	$user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
-	echo $e->getMessage();
-	exit (1);
+    $auth_level_required = get_required_auth_level('adm', 'server', 'rq_options');
+    $user = new CODUser();
+    $user->check_auth_level($auth_level_required);
+} catch (Exception $e) {
+    echo $e->getMessage();
+    exit(1);
 }
 
 
-$servername = secure_get("sn", "url_get"); 
+$servername = secure_get("sn", "url_get");
 $option     = secure_get("op", "letters");
 $sid        = secure_get("sid", "number");
 $ip         = secure_get("ip", "url_get");
@@ -40,15 +39,14 @@ $password   = secure_get("p", "password");
 
 
 if ($option == "del") {
-	// Delete server
-	$q = "DELETE FROM servers WHERE tag = \"" . $servername . "\" AND id=" . $sid;
+    // Delete server
+    $q = "DELETE FROM servers WHERE tag = \"" . $servername . "\" AND id=" . $sid;
 
-	$config["dbh"]->do_sql($q) or die("Cannot delete target: " . $config["dbh"]->lq_error());
-	echo "Server deleted.";
-}
-elseif ($option == "edit") {
-	// Edit server
-	echo "edit server";
+    $config["dbh"]->do_sql($q) or die("Cannot delete target: " . $config["dbh"]->lq_error());
+    echo "Server deleted.";
+} elseif ($option == "edit") {
+    // Edit server
+    echo "edit server";
 }
 
 

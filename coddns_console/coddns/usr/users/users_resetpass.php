@@ -15,28 +15,27 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../../include/config.php");
-require_once (__DIR__ . "/../../lib/db.php");
-require_once (__DIR__ . "/../../include/functions_util.php");
-require_once (__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
+    header("Location: " . $config["html_root"] . "/");
+    exit(1);
 }
 
 try {
-    $auth_level_required = get_required_auth_level('usr','users','resetpass');
+    $auth_level_required = get_required_auth_level('usr', 'users', 'resetpass');
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];

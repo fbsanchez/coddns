@@ -15,34 +15,33 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../../include/config.php");
-require_once (__DIR__ . "/../../lib/db.php");
-require_once (__DIR__ . "/../../include/functions_util.php");
-require_once (__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
+    header("Location: " . $config["html_root"] . "/");
+    exit(1);
 }
 
 try {
-    $auth_level_required = get_required_auth_level('usr','users','login');
+    $auth_level_required = get_required_auth_level('usr', 'users', 'login');
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
 session_write_close();
 
-if ($user->get_is_logged()){
+if ($user->get_is_logged()) {
     redirect($config[html_root] . "/?z=usr&m=hosts");
 }
 
@@ -97,9 +96,9 @@ $text["en"]["remember"]    = "Did you forgot your password?";
 </section>
 
 <?php
-if (get_required_auth_level('usr','users','signin') == 0){
+if (get_required_auth_level('usr', 'users', 'signin') == 0) {
     // SHOW THE SIGNIN FORM IF IT'S ENABLED ON CONFIGURATION
-?>
+    ?>
 <section id="signin">
     <h2><?php echo $text[$lan]["main_reg"];?></h2>
     <form id="signinf" method="POST" action="#" onsubmit="fsgo('signinf', 'signin_response','usr/users/users_rq_signin.php', true);return false;">
@@ -130,16 +129,15 @@ if (get_required_auth_level('usr','users','signin') == 0){
     <div id="signin_response"></div>
     </form>
 </section>
-<?php
-}
-else {
-?>
+    <?php
+} else {
+    ?>
 <section>
     <article style="margin-top: 50px;">
         <p>&gt; El registro no est&aacute; disponible, por favor, p&oacute;ngase en contacto con el administrador del sistema para recibir sus credenciales.</p>
     </article>
 </section>
-<?php
+    <?php
 }
 ?>
 

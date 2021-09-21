@@ -1,15 +1,15 @@
 textarea{
-	width: 80%;
-	height: 200px;
-	overflow-y: auto;
-	word-break: break-all;
-	white-space: pre-wrap;
-	margin: 30px auto;
-	display: block;
-	resize: none;
+    width: 80%;
+    height: 200px;
+    overflow-y: auto;
+    word-break: break-all;
+    white-space: pre-wrap;
+    margin: 30px auto;
+    display: block;
+    resize: none;
 }
 
 form ul {
-	width: 300px;
-	margin: 0 auto;
+    width: 300px;
+    margin: 0 auto;
 }

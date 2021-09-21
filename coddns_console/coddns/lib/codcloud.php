@@ -14,20 +14,16 @@
  * <update>2016-02-11</udate>
  * <summary> </summary>
  */
-require_once (__DIR__ . "/../lib/db.php");
-require_once (__DIR__ . "/../include/functions_ip.php");
+require_once __DIR__ . "/../lib/db.php";
+require_once __DIR__ . "/../include/functions_ip.php";
 
 // Defines CODUser class
 
-class CODCloud {
-	var $ip;
-	var $port;
-	var $pass;
-	var $user;
-	var $status;
-	
+class CODCloud
+{
+    var $ip;
+    var $port;
+    var $pass;
+    var $user;
+    var $status;
 }
-
-
-
-?>

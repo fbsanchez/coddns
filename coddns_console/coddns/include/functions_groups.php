@@ -16,41 +16,40 @@
  */
 
 
-function get_group_id($group_tag) {
-	global $config;
-	$dbh = $config["dbh"];
+function get_group_id($group_tag)
+{
+    global $config;
+    $dbh = $config["dbh"];
 
-	$gt = $dbh->prepare($group_tag, "url_get");
+    $gt = $dbh->prepare($group_tag, "url_get");
 
-	if(!isset($gt)){
-		return null;
-	}
+    if (!isset($gt)) {
+        return null;
+    }
 
-	$r = $dbh->get_sql_object('SELECT id from groups where tag="' . $gt . '"');
-	
-	if (isset($r)) {
-		return $r->id;
-	}
-	return null;
+    $r = $dbh->get_sql_object('SELECT id from `groups` where tag="' . $gt . '"');
+    
+    if (isset($r)) {
+        return $r->id;
+    }
+    return null;
 }
 
-function get_group_name($group_id) {
-	global $config;
-	$dbh = $config["dbh"];
+function get_group_name($group_id)
+{
+    global $config;
+    $dbh = $config["dbh"];
 
-	$gid = $dbh->prepare($group_id, "number");
+    $gid = $dbh->prepare($group_id, "number");
 
-	if(!isset($gid)){
-		return null;
-	}
+    if (!isset($gid)) {
+        return null;
+    }
 
-	$r = $dbh->get_sql_object('SELECT tag from groups where id=' . $gid);
-	
-	if (isset($r)) {
-		return $r->tag;
-	}
-	return null;
+    $r = $dbh->get_sql_object('SELECT tag from `groups` where id=' . $gid);
+    
+    if (isset($r)) {
+        return $r->tag;
+    }
+    return null;
 }
-
-?>
-

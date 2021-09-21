@@ -29,12 +29,12 @@ section.uarea ul li{
     padding-right: 0;
 }
 div#launch_help_dns_type{
-	cursor: pointer;
-	float:right;
-	margin-left: 15px;
-	width: 20px;
-	height: 20px;
-	background: url('<?php echo $config["html_root"] . "/rs/img/question_20.png";?>') no-repeat center;
+    cursor: pointer;
+    float:right;
+    margin-left: 15px;
+    width: 20px;
+    height: 20px;
+    background: url('<?php echo $config["html_root"] . "/rs/img/question_20.png";?>') no-repeat center;
     background-size: 15px;
 }
 div#help_dns_type {
@@ -82,10 +82,10 @@ tbody *{
     padding: 5px;
 }
 td:nth-child(1), td:nth-child(4) {
-	width: 44%;
+    width: 44%;
 }
 td:nth-child(2), td:nth-child(3) {
-	text-align: center;
+    text-align: center;
 }
 td {
     border: 1px solid #ddd;

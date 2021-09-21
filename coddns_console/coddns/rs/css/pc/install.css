@@ -12,44 +12,44 @@
 }
 
 html{
-	width: 100%;
-	background: #424242;
+    width: 100%;
+    background: #424242;
 }
 header {
-	height: 50px;
-	width: 100%;
-	background: #1F282B;
+    height: 50px;
+    width: 100%;
+    background: #1F282B;
 }
 header img{
-	width: 125px;
+    width: 125px;
     height: 100%;
     margin-left: 2em;
 }
 section#main_wizard {
-	width: 650px;
-	height: 50%;
-	min-height: 400px;
-	background: #fdfdfd;
-	color: #222;
-	margin: 15px auto;
-	box-shadow: 0px 5px 10px #111;
+    width: 650px;
+    height: 50%;
+    min-height: 400px;
+    background: #fdfdfd;
+    color: #222;
+    margin: 15px auto;
+    box-shadow: 0px 5px 10px #111;
 }
 section article{
-	padding: 15px;
-	width: 100%;
+    padding: 15px;
+    width: 100%;
 }
 div.t_label{
-	margin: 15px 5% 5px;
-	cursor: pointer;
+    margin: 15px 5% 5px;
+    cursor: pointer;
 }
 
 div.tab{
-	width: 90%;
-	margin-left: 10%;
-	max-height: 0;
-	overflow: hidden;
-	font-size: 0.9em;
-	transition: max-height 0.5s 0s;
+    width: 90%;
+    margin-left: 10%;
+    max-height: 0;
+    overflow: hidden;
+    font-size: 0.9em;
+    transition: max-height 0.5s 0s;
 }
 
 div.status{
@@ -63,14 +63,14 @@ div.status{
 }
 
 div.ok{
-	background: green;
+    background: green;
 }
 
 div.fail{
-	background: red;
+    background: red;
 }
 div.err{
-	font-size: 0.8em;
+    font-size: 0.8em;
     width: 90%;
     overflow: hidden;
     text-indent: 30px;
@@ -79,13 +79,13 @@ div.err{
     transition: max-height 0.5s 0s;
 }
 ul{
-	list-style-type: none;
-	margin: 2px 50px 10px;
-	width: 350px;
+    list-style-type: none;
+    margin: 2px 50px 10px;
+    width: 350px;
 }
 
 ul li{
-	padding: 2px;
+    padding: 2px;
 }
 li input{
     float: right;

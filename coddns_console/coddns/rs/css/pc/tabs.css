@@ -2,29 +2,29 @@ nav {
     min-width: 570px;
 }
 section nav a{
-	padding: 10px;
-	font-size: 1em;
-	border: 1px solid #ddd;
-	margin: -1px 15px -1px;
-	cursor: pointer;
-	text-decoration: none;
-	color:#2D2D2D;
-	background: #efefef;
-	display: inline-block;
-	transition: background 0.1s 0s;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    margin: -1px 15px -1px;
+    cursor: pointer;
+    text-decoration: none;
+    color:#2D2D2D;
+    background: #efefef;
+    display: inline-block;
+    transition: background 0.1s 0s;
 }
 section nav a.selected {
-	background: #fff;
+    background: #fff;
     border-bottom: 1px solid #fff;
 }
 section nav a:active {
-	background: #EC8606;
-	color: #fff;
+    background: #EC8606;
+    color: #fff;
 }
 div.content {
-	min-width: 570px;
-	transition: padding-left 0.6s 0s;
-	padding: 20px 40px 50px;
+    min-width: 570px;
+    transition: padding-left 0.6s 0s;
+    padding: 20px 40px 50px;
     border: 1px solid #ddd;
 }
 

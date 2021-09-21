@@ -1,21 +1,21 @@
 pre{
-	font-family: monospace;
-	border-radius: 10px;
-	width: 100%;
-	background: #DBECEF;
-	font-size: 0.9em;
-	word-break: break-word;
-	margin: 15px auto;
-	padding: 15px;
-	border: 2px dashed #365156;	
-	white-space: pre-line;
+    font-family: monospace;
+    border-radius: 10px;
+    width: 100%;
+    background: #DBECEF;
+    font-size: 0.9em;
+    word-break: break-word;
+    margin: 15px auto;
+    padding: 15px;
+    border: 2px dashed #365156;
+    white-space: pre-line;
 }
 
 div#adm_server_section {
-	box-shadow: 0 0 1px #444;
+    box-shadow: 0 0 1px #444;
 }
 textarea{
-	width: 100%;
+    width: 100%;
     height: 100px;
     border: 2px dashed #888;
     padding: 10px;
@@ -27,10 +27,10 @@ textarea{
     outline: none;
 }
 textarea:focus{
-	background: #fff;
-	border-color: #174850;
+    background: #fff;
+    border-color: #174850;
 }
 
 p {
-	margin-top: 30px;	
+    margin-top: 30px;
 }

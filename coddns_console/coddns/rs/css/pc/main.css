@@ -15,12 +15,12 @@
     text-rendering: optimizeLegibility;
 }
 html{
-	width: 100%;
+    width: 100%;
     background: #fff;
 
 }
 body{
-	width: 100%;
+    width: 100%;
 }
 h5#loading_charts_msg {
     width: 100%;
@@ -41,7 +41,7 @@ select#chart_list{
 }
 div#main{
     margin-left: 200px;
-	padding: 25px;
+    padding: 25px;
     padding-top: 50px;
     background: #fff;
 }
@@ -63,7 +63,7 @@ h3 {
 }
 section {
     min-width: 500px;
-    margin: 0 auto; 
+    margin: 0 auto;
     overflow: hidden;
 }
 

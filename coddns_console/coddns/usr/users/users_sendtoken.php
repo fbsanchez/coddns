@@ -15,23 +15,22 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../../include/config.php");
-require_once (__DIR__ . "/../../lib/db.php");
-require_once (__DIR__ . "/../../include/functions_util.php");
-require_once (__DIR__ . "/../../lib/coduser.php");
+require_once __DIR__ . "/../../include/config.php";
+require_once __DIR__ . "/../../lib/db.php";
+require_once __DIR__ . "/../../include/functions_util.php";
+require_once __DIR__ . "/../../lib/coduser.php";
 
 try {
-    $auth_level_required = get_required_auth_level('usr','users','sendtoken');
+    $auth_level_required = get_required_auth_level('usr', 'users', 'sendtoken');
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
@@ -54,10 +53,10 @@ $text["en"]["err3"] = "<div class='err'>There's no user with the providen data, 
 $text["en"]["dberror"] = "<div class='err'>Woooops, we have a problem! please contact the site administrator.</div>";
 
 
-if( !isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     session_write_close();
-    header ("Location: /?lang=es");
-    exit (1);
+    header("Location: /?lang=es");
+    exit(1);
 }
 
 $lan = $_SESSION["lan"];
@@ -65,13 +64,13 @@ $lan = $_SESSION["lan"];
 session_write_close();
 
 
-if ( ! isset($_POST["u"]) ){
+if (! isset($_POST["u"])) {
     echo $text[$lan]["err1"];
     exit(1);
 }
 
 
-if ( strlen($_POST["u"]) < MIN_USER_LENGTH){
+if (strlen($_POST["u"]) < MIN_USER_LENGTH) {
     echo $text[$lan]["err2"];
     exit(2);
 }
@@ -81,23 +80,22 @@ $dbclient = $config["dbh"];
 $user = $dbclient->prepare($_POST["u"], "email");
 
 $q = "Select * from users where lower(mail)=lower('" . $user . "');";
-$r = $dbclient->fetch_object ($dbclient->exeq($q));
-if ($dbclient->lq_nresults() == 0){ // USER NON EXISTENT OR PASSWORD ERROR
+$r = $dbclient->fetch_object($dbclient->exeq($q));
+if ($dbclient->lq_nresults() == 0) { // USER NON EXISTENT OR PASSWORD ERROR
     echo $text[$lan]["err3"];
-    exit (3);
+    exit(3);
 }
 
 // Generate hash code
 $strenght = 4;
-$hash = hash ("sha256",$config["salt"] . openssl_random_pseudo_bytes($strenght) . rand());
+$hash = hash("sha256", $config["salt"] . openssl_random_pseudo_bytes($strenght) . rand());
 
 $url = "";
 
 if (isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] == "on")) {
-	$url = "https://";
-}
-else {
-	$url = "http://";
+    $url = "https://";
+} else {
+    $url = "http://";
 }
 
 $url .= $_SERVER["HTTP_HOST"] . $config["html_root"];
@@ -158,7 +156,3 @@ mail($recipient, $subject, $mail_body, $header); //mail command :)
 
 
 echo $text[$lan]["ok"];
-
-
-?>
-

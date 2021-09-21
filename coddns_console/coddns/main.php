@@ -15,28 +15,27 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/include/config.php");
-require_once (__DIR__ . "/include/functions_util.php");
-require_once (__DIR__ . "/lib/graphs.php");
-require_once (__DIR__ . "/lib/coduser.php");
+require_once __DIR__ . "/include/config.php";
+require_once __DIR__ . "/include/functions_util.php";
+require_once __DIR__ . "/lib/graphs.php";
+require_once __DIR__ . "/lib/coduser.php";
 
 if (! defined("_VALID_ACCESS")) { // Avoid direct access
-    header ("Location: " . $config["html_root"] . "/");
-    exit (1);
+    header("Location: " . $config["html_root"] . "/");
+    exit(1);
 }
 
 try {
-    $auth_level_required = get_required_auth_level('','main','');
+    $auth_level_required = get_required_auth_level('', 'main', '');
     $user = new CODUser();
     $user->check_auth_level($auth_level_required);
-}
-catch (Exception $e) {
+} catch (Exception $e) {
     echo $e->getMessage();
-    exit (1);
+    exit(1);
 }
 
 session_start();
-if (!isset($_SESSION["lan"])){
+if (!isset($_SESSION["lan"])) {
     $_SESSION["lan"] = "es";
 }
 $lan = $_SESSION["lan"];
@@ -59,12 +58,12 @@ session_write_close();
 <body>
 
 <?php
-if ($user->get_is_logged()){
+if ($user->get_is_logged()) {
     // USER ZONE - OVERALL STATUS VIEW
 
-$dbclient = $config["dbh"];
+    $dbclient = $config["dbh"];
 
-?>
+    ?>
 
 <section style="margin-bottom: 20px; text-align: justify;">
     <article>
@@ -142,9 +141,9 @@ $dbclient = $config["dbh"];
                 var all_items = {
                     <?php
                         // print as many "serieX" as graphs to show in the same draw area
-                        foreach ($options["data"] as $option) {
-                           echo 'v' . sha1($option->tag) . ':{status:"",response:"", painted:0},';
-                        }
+                    foreach ($options["data"] as $option) {
+                        echo 'v' . sha1($option->tag) . ':{status:"",response:"", painted:0},';
+                    }
                     ?>
                 };
 
@@ -157,7 +156,7 @@ $dbclient = $config["dbh"];
                 /*
                 var serie1 = {status:"",response:"", painted:0};
                 var serie2 = {status:"",response:"", painted:0};
-                */           
+                */
                 ?>            
 
                 var chart = c3.generate({
@@ -196,10 +195,10 @@ $dbclient = $config["dbh"];
                 transition: {
                     duration: 400
                 }
-    			subchart: {
+                subchart: {
                     show: true
-    			},
-    			size: {
+                },
+                size: {
                     height: 480
                 }
     */
@@ -254,7 +253,7 @@ $dbclient = $config["dbh"];
             <script type="text/javascript">
 
                 (function () {
-                <?php 
+                <?php
                 // Generate as many AJAX calls as graphs to show in the same draw area
                 
                 // print as many "serieX" as graphs to show in the same draw area
@@ -264,7 +263,7 @@ $dbclient = $config["dbh"];
                 queue.<?php echo $obj_name; ?> = {status:"",response:"", painted:0};
                 console.log("initialized: [<?php echo $obj_name; ?>]" + queue);
                 queue_handler.push("<?php echo $obj_name; ?>");
-                <?php
+                    <?php
                     echo "get_ajax_response('api.php','action=get_data&args={\"oid\":" . $option->id . ",\"custom_tag\":\"" . $option->tag . "\"}', queue.v" . sha1($option->tag) . ");\n";
                 }
 
@@ -277,7 +276,7 @@ $dbclient = $config["dbh"];
                 
                 })();
             </script>
-        <?php
+            <?php
             // close graph view
         }
         ?>
@@ -295,10 +294,10 @@ $dbclient = $config["dbh"];
             <a href="<?php echo $config["html_root"] . "/?m=usr&z=hosts"; ?>">Gestionar hosts</a>
             <?php
             if ($user->is_global_admin()) {
-            ?>
+                ?>
             <a href="<?php echo $config["html_root"] . "/?m=adm&z=center#servers"; ?>">Admininistrar servidores</a>
             <a href="<?php echo $config["html_root"] . "/?m=adm&z=site#users"; ?>">Admininistrar el sitio</a>
-            <?php
+                <?php
             }
             ?>
             
@@ -308,9 +307,8 @@ $dbclient = $config["dbh"];
 -->
 </section>
 
-<?php
-}
-else {
+    <?php
+} else {
     // PUBLIC ZONE
 
     /* CASTELLANO */
@@ -334,20 +332,20 @@ else {
     $text["en"]["remember"]    = "Did you forgot your password?";
 
 
-?>
+    ?>
 <section>
     <article>
     <h2>Welcome to <b>coddns</b></h2>
 
     <p>Please use your account to access the system.</p>
-<?php
-if (get_required_auth_level('usr','users','signin') == 0){
-    // SHOW THE SIGNIN FORM IF IT'S ENABLED ON CONFIGURATION
-?>
+    <?php
+    if (get_required_auth_level('usr', 'users', 'signin') == 0) {
+        // SHOW THE SIGNIN FORM IF IT'S ENABLED ON CONFIGURATION
+        ?>
     <p>If you haven't an account please use the form provided <a href="<?php echo $config["html_root"] . "/?m=usr&z=users&op=login"?>">here</a> to get one.</p>
-<?php
-}
-?>
+        <?php
+    }
+    ?>
     </article>
 
 </section>
@@ -376,7 +374,7 @@ if (get_required_auth_level('usr','users','signin') == 0){
     </form>
 </section>
 
-<?php
+    <?php
 }
 
 ?>

@@ -15,51 +15,50 @@
  * <summary> </summary>
  */
 
-require_once (__DIR__ . "/../lib/codzone.php");
+require_once __DIR__ . "/../lib/codzone.php";
 
 /**
  * Returns an array of zone objects from a given domain
  */
-function get_zone_from_domain($domain) {
-	global $config;
-	$dbh = $config["dbh"];
+function get_zone_from_domain($domain)
+{
+    global $config;
+    $dbh = $config["dbh"];
 
-	$dom = $dbh->prepare($domain,"url_get");
+    $dom = $dbh->prepare($domain, "url_get");
 
-	$q = 'SELECT id from zones where domain="' . $dom . '"';
+    $q = 'SELECT id from zones where domain="' . $dom . '"';
 
-	$r = $dbh->get_sql_all_objects($q);
+    $r = $dbh->get_sql_all_objects($q);
 
-	$zones = array();
-	if ($r["nitems"] > 0) {
-		foreach ($r["data"] as $zone) {
-			$z = get_zone_from_id($zone->id);
-			if ($z !== false) {
-				array_push($zones, $z);
-			}
-		}
-	}
+    $zones = array();
+    if ($r["nitems"] > 0) {
+        foreach ($r["data"] as $zone) {
+            $z = get_zone_from_id($zone->id);
+            if ($z !== false) {
+                array_push($zones, $z);
+            }
+        }
+    }
 
-	return $zones;
+    return $zones;
 }
 
 /**
  * Returns a zone object from a zone id
  */
-function get_zone_from_id($zone_id) {
-	global $config;
-	$dbh = $config["dbh"];
+function get_zone_from_id($zone_id)
+{
+    global $config;
+    $dbh = $config["dbh"];
 
-	$zid = $dbh->prepare($zone_id, "number");
-	$q = "SELECT * from zones where id=$zid";
-	$r = $dbh->get_sql_array($q);
+    $zid = $dbh->prepare($zone_id, "number");
+    $q = "SELECT * from zones where id=$zid";
+    $r = $dbh->get_sql_array($q);
 
-	if ($r["nitems"] > 0) {
-		return new CODZone($r["data"][0]);
-	}
+    if ($r["nitems"] > 0) {
+        return new CODZone($r["data"][0]);
+    }
 
-	return false;
-
+    return false;
 }
-
-?>
