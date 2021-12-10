@@ -29,16 +29,16 @@ class CODZone
     var $ex;  // expiry, default 2w
     var $nx;  // nx domain ttl, def. 1h
     */
-    var $id; // Zone id
-    var $file; // File where the zone is defined
-    var $domain; // domain ~ tag
-    var $gid; // group
-    var $status; // status, last unix timestamp since replication
-    var $is_public; // flag is public
-    var $master_server; // master server where the zone is defined
-    var $servers; // array of servers where zone is defined
+    public $id; // Zone id
+    public $file; // File where the zone is defined
+    public $domain; // domain ~ tag
+    public $gid; // group
+    public $status; // status, last unix timestamp since replication
+    public $is_public; // flag is public
+    public $master_server; // master server where the zone is defined
+    public $servers; // array of servers where zone is defined
 
-    function CODZone($data = null)
+    public function __construct($data = null)
     {
         if ($data === null) {
             return $this;
@@ -74,7 +74,7 @@ class CODZone
     /**
      * Has file
      */
-    function has_file()
+    public function has_file()
     {
         global $config;
 
@@ -90,7 +90,7 @@ class CODZone
      * Save zone
      * creating if not exists in db, updating it if is already defined
      */
-    function save()
+    public function save()
     {
         global $config;
         $dbh = $config["dbh"];
@@ -145,7 +145,7 @@ class CODZone
     /**
      * Retrieve master server
      */
-    function get_master_server()
+    public function get_master_server()
     {
         return $this->master_server;
     }
@@ -153,7 +153,7 @@ class CODZone
     /**
      * Mark server id as master server
      */
-    function set_master_server($server_id)
+    public function set_master_server($server_id)
     {
         global $config;
         $dbh = $config["dbh"];
@@ -179,7 +179,7 @@ class CODZone
     /**
      * Add target server to server list
      */
-    function add_server_reference($server_id)
+    public function add_server_reference($server_id)
     {
         global $config;
         $dbh = $config["dbh"];

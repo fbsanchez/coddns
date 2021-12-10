@@ -17,18 +17,18 @@
 
 class MyClient
 {
-    var $username;
-    var $password;
-    var $hostname;
-    var $schema;
-    var $port;
-    var $db;
-    var $link = null;
-    var $last_query = null;
-    var $nresutls = null;
-    var $error = null;
+    public $username;
+    public $password;
+    public $hostname;
+    public $schema;
+    public $port;
+    public $db;
+    public $link = null;
+    public $last_query = null;
+    public $nresutls = null;
+    public $error = null;
 
-    function MyClient($db_config)
+    public function __construct($db_config)
     {
 
         $this->username = $db_config["username"];
@@ -39,7 +39,7 @@ class MyClient
         $this->schema   = $db_config["schema"];
     }
 
-    function connect()
+    public function connect()
     {
         //    $err_level = error_reporting(0);
         // avoid warnings: Headers and client lib minor version mismatch
@@ -58,7 +58,7 @@ class MyClient
         return true;
     }
 
-    function is_connected()
+    public function is_connected()
     {
         if ($this->link) {
             return mysqli_ping($this->link);
@@ -69,7 +69,7 @@ class MyClient
     /**
      * Beware of use without prepare the query first
      */
-    function exeq($query)
+    public function exeq($query)
     {
         $this->last_query = $query;
         $result = mysqli_query($this->link, $query);
@@ -85,34 +85,34 @@ class MyClient
         return $result;
     }
 
-    function lq_error()
+    public function lq_error()
     {
         return $this->error;
     }
 
-    function lq_nresults()
+    public function lq_nresults()
     {
         return $this->nresults;
     }
 
-    function disconnect()
+    public function disconnect()
     {
         mysqli_close($this->link);
     }
 
-    function fetch_object($result)
+    public function fetch_object($result)
     {
         return mysqli_fetch_object($result);
     }
-    function fetch_array($result)
+    public function fetch_array($result)
     {
         return mysqli_fetch_array($result);
     }
-    function escape_string($str)
+    public function escape_string($str)
     {
         return mysqli_real_escape_string($this->link, $str);
     }
-    function last_id()
+    public function last_id()
     {
         return mysqli_insert_id($this->link);
     }

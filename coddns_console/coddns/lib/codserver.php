@@ -22,18 +22,18 @@ require_once __DIR__ . "/../include/functions_util.php";
 
 class CODServer
 {
-    var $ip;
-    var $tag;
-    var $port;
-    var $pass;
-    var $user;
-    var $status;
-    var $config;
-    var $gid;
-    var $main_config_file;
-    var $mastery;
-    var $server_load;
-    var $tmp_dir;
+    public $ip;
+    public $tag;
+    public $port;
+    public $pass;
+    public $user;
+    public $status;
+    public $config;
+    public $gid;
+    public $main_config_file;
+    public $mastery;
+    public $server_load;
+    public $tmp_dir;
 
     /**
      * Initializes a CODServer object based on
@@ -42,7 +42,7 @@ class CODServer
      * @param  server_name $server_name
      * @return Int returns the ID of the server (if any)
      */
-    public function CODServer($raw = false)
+    public function __construct($raw = false)
     {
         global $config;
 

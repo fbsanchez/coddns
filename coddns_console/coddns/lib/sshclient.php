@@ -31,23 +31,23 @@ require_once __DIR__ . "/../include/functions_ip.php";
 
 class SSHClient
 {
-    var $ip   = null;
-    var $user = null;
-    var $pass = null;
-    var $port = 22;
+    public $ip   = null;
+    public $user = null;
+    public $pass = null;
+    public $port = 22;
 
 
-    var $server = null;
+    public $server = null;
 
-    var $connection    = false;
-    var $authenticated = false;
-    var $connected     = false;
+    public $connection    = false;
+    public $authenticated = false;
+    public $connected     = false;
 
-    var $stream      = null;
-    var $errorStream = null;
+    public $stream      = null;
+    public $errorStream = null;
 
     // Builder
-    function SSHClient($ssh_config)
+    public function __construct($ssh_config)
     {
         $this->load_cfg();
 
@@ -68,28 +68,28 @@ class SSHClient
         return $this;
     }
 
-    function load_cfg()
+    public function load_cfg()
     {
         include __DIR__ . "/../include/config.php";
         $this->config = $config;
     }
 
-    function is_connected()
+    public function is_connected()
     {
         return $this->connected;
     }
 
-    function is_authenticated()
+    public function is_authenticated()
     {
         return $this->authenticated;
     }
 
     /**
-     * This function only connects to remote IP:port,
+     * This public function only connects to remote IP:port,
      * The user must authenticate after check fingerprint.
      * Native adaptation of the ssh library for php
      */
-    function _connect()
+    public function _connect()
     {
         if ($this->connected) {
             return $this->connected;
@@ -102,7 +102,7 @@ class SSHClient
     }
 
 
-    function authenticate()
+    public function authenticate()
     {
         if ($this->connected === false) {
             return false;
@@ -123,7 +123,7 @@ class SSHClient
      * @return boolean true  connected & authenticated
      *                 false any other possibility
      */
-    function connect()
+    public function connect()
     {
         if (!$this->connected) {
             $this->_connect();
@@ -137,7 +137,7 @@ class SSHClient
         return true;
     }
 
-    function exec($command)
+    public function exec($command)
     {
         if ($this->connected === false) {
             return null;
@@ -160,16 +160,16 @@ class SSHClient
         return $return;
     }
 
-    function get_output()
+    public function get_output()
     {
         return stream_get_contents($this->stream);
     }
-    function get_stderr()
+    public function get_stderr()
     {
         return stream_get_contents($this->errorStream);
     }
 
-    function disconnect()
+    public function disconnect()
     {
         if ($this->connected === false) {
             return null;
@@ -190,7 +190,7 @@ class SSHClient
         $this->authenticated = false;
     }
 
-    function launch($command)
+    public function launch($command)
     {
         if (!$this->connected) {
             $this->_connect();
@@ -217,7 +217,7 @@ class SSHClient
         return $out;
     }
 
-    function send_file($local_file, $remote_file)
+    public function send_file($local_file, $remote_file)
     {
         if (!$this->connected) {
             $this->_connect();
@@ -235,7 +235,7 @@ class SSHClient
         return $r;
     }
 
-    function apply_conf($tmp_file, $running_file)
+    public function apply_conf($tmp_file, $running_file)
     {
         if (!$this->connected) {
             $this->_connect();
@@ -256,7 +256,7 @@ class SSHClient
         return $r;
     }
 
-    function check_valid_conf($remote_file)
+    public function check_valid_conf($remote_file)
     {
         if (!$this->connected) {
             $this->_connect();
@@ -274,7 +274,7 @@ class SSHClient
         return $r;
     }
 
-    function get_file($remote_file, $local_file)
+    public function get_file($remote_file, $local_file)
     {
         if (!$this->connected) {
             $this->_connect();
@@ -292,12 +292,12 @@ class SSHClient
         return $r;
     }
 
-    function set_server_info($server)
+    public function set_server_info($server)
     {
         $this->server = $server;
     }
 
-    function get_server_info()
+    public function get_server_info()
     {
         return $this->server;
     }

@@ -18,9 +18,8 @@
 class HTMLWriter
 {
 
-    function HTMLWriter()
+    public function __construct()
     {
-        return $this;
     }
     /**
      * Expands all attributes defined in a hash into a string
@@ -28,7 +27,7 @@ class HTMLWriter
      * @param  hash $attributes hashed attributes 'attribute' => 'value'
      * @return string           string transformation
      */
-    function extract_hashed_attributes($attributes)
+    public function extract_hashed_attributes($attributes)
     {
         $out = "";
         foreach ($attributes as $attr => $value) {
@@ -60,9 +59,9 @@ class HTMLWriter
      * @param  boolean $print dump to output or not
      * @return string         returns the generated form (text)
      */
-    function form($form, $print = true)
+    public function form($form, $print = true)
     {
-        $out = "<form" . extract_hashed_attributes($form["attr"]) . ">";
+        $out = "<form" . $this->extract_hashed_attributes($form["attr"]) . ">";
         $out .= "<ul>";
         $inputs = $form["inputs"];
 
@@ -73,7 +72,7 @@ class HTMLWriter
                     $out .= "<label>" . $label . "</label>";
                 }
             }
-            $out .= "<input ". extract_hashed_attributes($input) . "/>";
+            $out .= "<input ". $this->extract_hashed_attributes($input) . "/>";
             if ($input["type"] != "hidden") {
                 $out .= "</li>";
             }
@@ -108,7 +107,7 @@ class HTMLWriter
      * @param  boolean $print print the element or not
      * @return String         returns the string with the code of the element
      */
-    function div($div, $print = true)
+    public function div($div, $print = true)
     {
         $out = "<div";
         foreach ($div["att"] as $k => $v) {
@@ -170,7 +169,7 @@ class HTMLWriter
      * @param  boolean $print print the element or not
      * @return String         returns the string with the code of the element
      */
-    function table($table, $print = true)
+    public function table($table, $print = true)
     {
         $out = "";
 

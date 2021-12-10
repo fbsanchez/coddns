@@ -20,19 +20,19 @@ require_once(__DIR__ . "/../include/functions_util.php");
 
 class DBClient
 {
-    var $username;
-    var $password;
-    var $hostname;
-    var $schema;
-    var $port;
-    var $db;
-    var $last_query = null;
-    var $nresutls   = null;
-    var $error      = null;
-    var $client;
-    var $config;
+    public $username;
+    public $password;
+    public $hostname;
+    public $schema;
+    public $port;
+    public $db;
+    public $last_query = null;
+    public $nresutls   = null;
+    public $error      = null;
+    public $client;
+    public $config;
 
-    function DBClient($cfg)
+    public function __construct($cfg)
     {
         if ($cfg === null) {
             return null;
@@ -46,50 +46,50 @@ class DBClient
         }
     }
 
-    function is_connected()
+    public function is_connected()
     {
         if (isset($this->client)) {
             return $this->client->is_connected();
         }
         return false;
     }
-    function connect()
+    public function connect()
     {
         if ($this->is_connected()) {
             return true;
         }
         return $this->client->connect();
     }
-    function exeq($query)
+    public function exeq($query)
     {
         return $this->client->exeq($query);
     }
-    function lq_error()
+    public function lq_error()
     {
         return $this->client->lq_error();
     }
-    function lq_nresults()
+    public function lq_nresults()
     {
         return $this->client->lq_nresults();
     }
-    function disconnect()
+    public function disconnect()
     {
         return $this->client->disconnect();
     }
-    function fetch_object($result)
+    public function fetch_object($result)
     {
         return $this->client->fetch_object($result);
     }
-    function fetch_array($result)
+    public function fetch_array($result)
     {
         return $this->client->fetch_array($result);
     }
-    function last_id()
+    public function last_id()
     {
         return $this->client->last_id();
     }
 
-    function do_sql($query)
+    public function do_sql($query)
     {
         if ((isset($this->client)) && ($this->is_connected())) {
             return $this->exeq($query) or die($this->lq_error());
@@ -97,7 +97,7 @@ class DBClient
         return false;
     }
 
-    function get_sql_object($query)
+    public function get_sql_object($query)
     {
         if ((isset($this->client)) && ($this->is_connected())) {
             $r   = $this->exeq($query) or die($this->lq_error());
@@ -108,7 +108,7 @@ class DBClient
     }
 
 
-    function get_sql_all_objects($query)
+    public function get_sql_all_objects($query)
     {
         if ((isset($this->client)) && ($this->is_connected())) {
             $r      = $this->exeq($query) or error_log($this->lq_error());
@@ -127,7 +127,7 @@ class DBClient
     }
 
 
-    function get_sql_array($query)
+    public function get_sql_array($query)
     {
         if ((isset($this->client)) && ($this->is_connected())) {
             $r      = $this->exeq($query) or error_log($this->lq_error());
@@ -149,7 +149,7 @@ class DBClient
    * DB Utilities
    */
 
-    function date_checker($date)
+    public function date_checker($date)
     {
         list ($y, $m, $d) = explode("-", $date);
         if (checkdate($m, $d, $y)) {
@@ -158,7 +158,7 @@ class DBClient
         return null;
     }
 
-    function datetime_checker($date)
+    public function datetime_checker($date)
     {
         list ($y, $m, $d) = explode("-", $date);
         if (strstr($d, "T")) {
@@ -205,7 +205,7 @@ class DBClient
    * json
    * base64
    */
-    function prepare($clsqlarg, $type)
+    public function prepare($clsqlarg, $type)
     {
     
         switch ($type) {
@@ -295,7 +295,7 @@ class DBClient
         }
     }
 
-    function decode($v, $tflag = null)
+    public function decode($v, $tflag = null)
     {
         if (isset($tflag)) {
             return date("Y-m-d\TH:i:s\Z", $v);

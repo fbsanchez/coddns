@@ -21,18 +21,18 @@ require_once __DIR__ . "/../include/functions_ip.php";
 
 class CODUser
 {
-    var $mail;
-    var $time;
-    var $pass;
-    var $oid;    // user id
-    var $groups; // user's groups
-    var $rol;
-    var $auth_level = null;
-    var $logged     = false;
-    var $config;
-    var $auth_token;
+    public $mail;
+    public $time;
+    public $pass;
+    public $oid;    // user id
+    public $groups; // user's groups
+    public $rol;
+    public $auth_level = null;
+    public $logged     = false;
+    public $config;
+    public $auth_token;
 
-    function CODUser($auth_token = null)
+    function __construct($auth_token = null)
     {
         $this->load_cfg();
         $checks = 0;

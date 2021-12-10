@@ -21,9 +21,9 @@ require_once __DIR__ . "/../include/functions_ip.php";
 
 class CODCloud
 {
-    var $ip;
-    var $port;
-    var $pass;
-    var $user;
-    var $status;
+    public $ip;
+    public $port;
+    public $pass;
+    public $user;
+    public $status;
 }
